@@ -1,0 +1,46 @@
+/**
+ * Andy Mina
+ * 
+ * Helper file that define constants to be used throughout the project
+*/
+#ifndef constants_h
+#define constants_h
+
+#include "pch.h"
+
+namespace SeamCarving {
+  /** Shorthand for defining an image. */
+  typedef cv::Mat Image;
+
+  /** A Enum to help better describe what direction to use in functions and seams. */
+  enum Dir { VERT, HORZ };
+  
+  /**
+    Helper class to describe a seam.
+    @p dir the direction of the seam. must be one of [Dir.VERT, Dir.HORZ].
+
+      data {std::vector<int>} -- a list representation of the seam. If the seam is vertical, then the element at a
+      given index represents the column from which the pixel was removed in the row at that index.
+      For example, a vertical seam would be:
+
+        arr: [0, 3, 1, 2]
+        idx:  0  1  2  3
+
+      Pixels removed would be (row 0, column 0), (row 1, column 3), (row 2, column 1), and
+      (row 3, column 2).
+      
+      The converse is true for horizontal seams. The index represents the column
+      and the value represents the row.
+  */
+  struct Seam {
+    Dir dir;
+    std::vector<int> data;
+
+    Seam(const Dir &dir_, const std::vector<int> &data_): 
+      dir{dir_}, data{data_} {}
+  };
+
+
+}
+
+#endif /* constants_h */

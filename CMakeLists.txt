@@ -14,5 +14,5 @@ set(PYBIND11_FINDPYTHON ON)
 add_subdirectory(deps/pybind11) # path to pybind11
 
 # build
-pybind11_add_module(module_name SHARED cpp/src/bind.cpp) # path to cpp bindings
-target_link_libraries(module_name PRIVATE ${OpenCV_LIBS})
+pybind11_add_module(seam_carving SHARED cpp/src/bind.cpp) # path to cpp bindings
+target_link_libraries(seam_carving PRIVATE ${OpenCV_LIBS})

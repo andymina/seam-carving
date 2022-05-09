@@ -1,7 +1,6 @@
 #ifndef pch_h
 #define pch_h
 
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -12,7 +11,6 @@
 
 #include "constants.h"
 
-using std::cout;
 using std::string;
 using std::vector;
 

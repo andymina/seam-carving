@@ -50,18 +50,18 @@ namespace SeamCarving {
       // setup
       int rows = energy_img.rows;
       int cols = energy_img.cols;
-      Image energy_map = Image(rows, cols, CV_16U, cv::Scalar(0.0));
+      Image energy_map = Image(rows, cols, CV_32S, cv::Scalar(0.0));
       energy_img.row(rows - 1).copyTo(energy_map.row(rows - 1));
 
       for (int row = rows - 2; row >= 0; row--) {
         for (int col = 0; col < cols; col++) {
           // compute vals
-          const int &center = energy_map.at<uchar>(row + 1, col);
-          const int &left = (col - 1 >= 0) ? energy_map.at<uchar>(row + 1, col + 1) : INT_MAX;
-          const int &right = (col + 1 < cols) ? energy_map.at<uchar>(row + 1, col + 1) : INT_MAX;
+          const int &center = energy_map.at<int>(row + 1, col);
+          const int &left = (col - 1 >= 0) ? energy_map.at<int>(row + 1, col + 1) : INT_MAX;
+          const int &right = (col + 1 < cols) ? energy_map.at<int>(row + 1, col + 1) : INT_MAX;
 
           // take the min energy plus self
-          energy_map.at<uchar>(row, col) = energy_img.at<uchar>(row, col) + std::min({center, left, right});
+          energy_map.at<int>(row, col) = energy_img.at<int>(row, col) + std::min({center, left, right});
         }
       }
 

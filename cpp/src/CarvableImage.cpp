@@ -1,6 +1,4 @@
 #include "CarvableImage.h"
-#include "energy.h"
-#include <algorithm>
 
 namespace SeamCarving {
   /**
@@ -8,7 +6,7 @@ namespace SeamCarving {
    * 
    * @param path file path to the Image to be carved
   */
-  CarvableImage::CarvableImage(const string &path) {
+  CarvableImage::CarvableImage(const std::string &path) {
     this->original = cv::imread(path);
     if (this->original.empty()) {
       std::cout << "Failed to read image: " << path << "\n";
@@ -16,8 +14,7 @@ namespace SeamCarving {
     }
 
     this->res_img = this->original.clone();
-    this->trans_img = this->res_img.clone();
-    cv::transpose(this->res_img, this->trans_img);
+    this->trans_img = this->res_img.clone().t();
   }
 
   /**
@@ -121,7 +118,7 @@ namespace SeamCarving {
    * 
    * @returns a new Image with the k seams highlighted 
   */
-  Image CarvableImage::HighlightKSeams(const vector<Seam> &seams, const cv::Vec3b &color) {
+  Image CarvableImage::HighlightKSeams(const std::vector<Seam> &seams, const cv::Vec3b &color) {
     Image res = this->res_img.clone();
     for (const Seam &seam: seams)
       this->__HighlightSeam(res, seam, color);
@@ -191,6 +188,27 @@ namespace SeamCarving {
    * @returns a new Image with the seam removed
   */
   Image CarvableImage::__RemoveSeam(const Seam &seam, const Image &img) {
-    /** TODO: complete this and test existing functionality in standalone build*/
+    /** TODO: complete this and test existing functionality in standalone build */
+    Image res = Image(img.rows, img.cols - 1, CV_8U);
+
+    for (int idx = 0; idx < seam.data.size(); idx++) {
+      const cv::Mat &current_row = img.row(idx);
+
+      if (seam.data[idx] == 0) {
+        // exclude first val
+        current_row.colRange(1, img.cols).copyTo(res.row(idx));
+      } else if (seam.data[idx] == img.cols - 1) {
+        // exclude last val
+        current_row.colRange(0, img.cols - 1).copyTo(res.row(idx));
+      } else {
+        // merge two halves
+        cv::hconcat(
+          current_row.colRange(0, seam.data[idx]),
+          current_row.colRange(seam.data[idx] + 1, img.cols),
+          res.row(idx)
+        );
+      }      
+    }
+    return res;  
   }
 }

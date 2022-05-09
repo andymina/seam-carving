@@ -1,5 +1,10 @@
-#include "pch.h"
+#include <algorithm>
+#include <vector>
 #include <iostream>
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include "constants.h"
+#include "energy.h"
 
 namespace SeamCarving {
   class CarvableImage {
@@ -15,9 +20,12 @@ namespace SeamCarving {
 
     public:
       /** Constructors */
-      CarvableImage(const string &path);
+      CarvableImage(const std::string &path);
       
       /** Getters */
+      inline const Image& GetOriginal() const { return this->original; };
+      inline const Image& GetResult() const { return this->res_img; };
+      inline const Image& GetTranspose() const { return this->trans_img; };
       inline int num_rows() const { return this->rows_; };
       inline int num_cols() const { return this->cols_; };
 
@@ -28,6 +36,6 @@ namespace SeamCarving {
 
       /** Highlighting */
       Image HighlightSeam(const Seam &seam, const cv::Vec3b &color);
-      Image HighlightKSeams(const vector<Seam> &seams, const cv::Vec3b &color);
+      Image HighlightKSeams(const std::vector<Seam> &seams, const cv::Vec3b &color);
   };
 }

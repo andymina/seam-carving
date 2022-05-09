@@ -15,7 +15,7 @@ namespace SeamCarving {
      * 
      * @returns an image representing the energy of the original image
     */
-    Image ComputeEnergy(const Image &src, const string &kernel) {
+    Image ComputeEnergy(const Image &src, const std::string &kernel) {
       // apply gaussian and convert grayscale
       Image res;
       cv::GaussianBlur(src, res, cv::Size(3, 3), 0, 0);

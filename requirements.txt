@@ -1,0 +1,9 @@
+appdirs==1.4.4
+jedi==0.18.1
+parso==0.8.3
+prompt-toolkit==3.0.29
+ptpython==3.0.20
+Pygments==2.12.0
+PyInquirer==1.0.0
+regex==2022.4.24
+wcwidth==0.2.5

@@ -31,6 +31,7 @@ namespace SeamCarving {
    * and the value represents the row.
   */
   struct Seam {
+    public:
     Dir dir;
     std::vector<int> data;
 
@@ -38,7 +39,8 @@ namespace SeamCarving {
       dir{dir_}, data{data_} {}
   };
 
-
+  /** Helper enum to define the 5 types of images within a CarvableImage. */
+  enum ImageType { ORIGINAL, RESULT, TRANSPOSE, ENERGY, VERT_MAP, HORZ_MAP };
 }
 
 #endif /* constants_h */

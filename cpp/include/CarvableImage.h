@@ -3,6 +3,7 @@
 #include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
 #include "constants.h"
 #include "energy.h"
 
@@ -37,5 +38,8 @@ namespace SeamCarving {
       /** Highlighting */
       Image HighlightSeam(const Seam &seam, const cv::Vec3b &color);
       Image HighlightKSeams(const std::vector<Seam> &seams, const cv::Vec3b &color);
+
+      /** Display */
+      void Export(const ImageType &type, const std::string &path);
   };
 }

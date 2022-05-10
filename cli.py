@@ -1,18 +1,20 @@
+from PIL import Image
 from clint.textui import colored, puts, indent
 import cmd, sys, os
-
+import build.seam_carving as sc
 class SeamCarvingShell(cmd.Cmd):
-  intro = colored.red("Seam Carving Shell (SCS)\nType 'help' or '?' to list commands.\n")
+  intro = colored.magenta("Seam Carving Shell (SCS)\nType 'help' or '?' to list commands.\n")
   noop = colored.yellow("This command hasn't been implemented yet.")
 
   def __init__(self):
     cmd.Cmd.__init__(self)
     self.prompt = colored.blue(">>> ")
     self.sample_imgs = self.load_samples("samples/")
+    self.carver = None
 
   # region - helpers
 
-  def load_samples(self, path: str) -> list[str]:
+  def load_samples(self, path: str):
     """Loads the images in samples/ by name to be used.
 
     Arguments:
@@ -28,6 +30,33 @@ class SeamCarvingShell(cmd.Cmd):
         imgs.append(file.split(".")[0])
 
     return imgs
+
+  def str_to_enum(self, s: str):
+    """Maps strings to enums in the sc module.
+
+    Arguments:
+        s {str} -- the string to be matched
+
+    Returns:
+        enum -- the matching enum from the sc module
+    """
+    key = {
+      "ORIGINAL": sc.ORIGINAL,
+      "RESULT": sc.RESULT,
+      "TRANSPOSE": sc.TRANSPOSE,
+      "ENERGY": sc.ENERGY,
+      "VERT_MAP": sc.VERT_MAP,
+      "HORZ_MAP": sc.HORZ_MAP,
+      "VERT": sc.VERT,
+      "HORZ": sc.HORZ
+    }
+
+    if key.get(s) is None:
+      puts(colored.red("Error: enum not found."))
+      return None
+    else:
+      return key.get(s)
+
 
   # endregion
 
@@ -73,14 +102,14 @@ class SeamCarvingShell(cmd.Cmd):
     """
     puts(self.noop)
 
-  def do_set(self, img):
+  def do_set(self, img_name):
     """
     Sets the specified image to be prepared for seam carving.
 
     Arguments:
         img_name {str} -- the name and extension of the image to be set for seam carving.
     """
-    puts(self.noop)
+    self.carver = sc.SeamCarver("samples/dali.jpeg")
 
   def do_which(self, arg):
     """
@@ -126,16 +155,62 @@ class SeamCarvingShell(cmd.Cmd):
 
   def do_show(self, path):
     """
-    Opens a window to display the selected image.
-    Close the image with 'esc'. Save the image with 's'.
+    Opens a window to display the selected image. Downloads a temporary image in out/ to show.
     """
     puts(self.noop)
 
-  def do_showres(self, arg):
+  def do_show_carver(self, args):
     """
-    Displays the result of the seam carving operation.
+    Displays the specified image of the SeamCarver. img at out/out.jpg will be overwritten.
+
+    Arguments:
+        type {str} -- must be one of sc.ImageType
     """
-    puts(self.noop)
+    # make sure we've set an image
+    if self.carver is None:
+      puts(colored.red("Error: image has not been selected with 'set'."))
+      return
+
+    # arg checking
+    args = args.split()
+    if len(args) != 1:
+      puts(colored.red("Error: bad syntax. Expected one arguments: type."))
+      return
+
+    sc_enum = self.str_to_enum(args[0])
+    if sc_enum is None:
+      puts(colored.red("Error: type must be one of sc.ImageType"))
+
+    path = "out/out.jpg"
+    self.carver.export(sc_enum, path)
+    img = Image.open(path)
+    img.show()
+
+  def do_export(self, args):
+    """
+    Exports the specified img type of the carving. Can only output jpg :(
+
+    Arguments:
+        type {str} -- must be one of sc.ImageType
+        path {str} -- the path to output the image to. extension must be .jpg
+    """
+    # make sure we've set an image
+    if self.carver is None:
+      puts(colored.red("Error: image has not been selected with 'set'."))
+      return
+    
+    # arg checking
+    args = args.split()
+    if len(args) != 2:
+      puts(colored.red("Error: bad syntax. Expected two arguments: type path."))
+      return
+
+    sc_enum = self.str_to_enum(args[0])
+    if sc_enum is None:
+      puts(colored.red("Error: type must be one of sc.ImageType"))
+    
+    # op
+    self.carver.export(sc_enum, args[1])
 
   # endregion
 

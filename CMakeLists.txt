@@ -2,17 +2,19 @@
 cmake_minimum_required(VERSION 3.4)
 project(seam-carving)
 set(CMAKE_CXX_STANDARD 14)
+set(PROJ_INCLUDE_DIR cpp/include)
 
 # opencv
 set(OpenCV_DIR /Users/andymina/Coding/libs/opencv) # path to opencv dir
 find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
 link_directories(${OpenCV_LIBRARY_DIRS})
 
 # pybind
+include_directories(${OpenCV_INCLUDE_DIRS})
 set(PYBIND11_FINDPYTHON ON)
 add_subdirectory(deps/pybind11) # path to pybind11
 
 # build
-pybind11_add_module(seam_carving SHARED cpp/src/bind.cpp) # path to cpp bindings
+include_directories(${PROJ_INCLUDE_DIR})
+pybind11_add_module(seam_carving SHARED cpp/src/bind.cpp cpp/src/CarvableImage.cpp cpp/src/energy.cpp) # path to cpp bindings
 target_link_libraries(seam_carving PRIVATE ${OpenCV_LIBS})

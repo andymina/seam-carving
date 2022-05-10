@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 #include "constants.h"
@@ -18,7 +19,7 @@ namespace SeamCarving {
      * 
      * @returns an image representing the energy of the original image
     */
-    Image ComputeEnergy(const Image &src, const std::string &kernel = "sobel");
+    Image ComputeEnergy(const Image &img, const std::string &kernel = "sobel");
     
     /**
      * Computes the vertical energy map and the path map for a given energy image.

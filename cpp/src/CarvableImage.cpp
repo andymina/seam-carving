@@ -126,6 +126,51 @@ namespace SeamCarving {
   }
 
   /**
+   * Displays the target image which is specified 
+   * 
+   * @param target 
+  */
+  void CarvableImage::Export(const ImageType &type, const std::string &path) {    
+    switch (type) {
+      case ORIGINAL: {
+        cv::imwrite(path, this->original);
+        break;
+      }
+      
+      case RESULT: {
+        cv::imwrite(path, this->res_img);
+        break;
+      }
+
+      case TRANSPOSE: {
+        cv::imwrite(path, this->trans_img);
+        break;
+      }
+      
+      case ENERGY: {
+        cv::imwrite(path, Energy::ComputeEnergy(this->res_img, "sobel"));
+        break;
+      }
+
+      case VERT_MAP: {
+        Image map = Energy::ComputeEnergyMap(Energy::ComputeEnergy(this->res_img, "sobel"));
+        cv::normalize(map, map, 0, 255, cv::NORM_MINMAX); // normalize to correct range
+        cv::imwrite(path, map);
+        break;
+      }
+
+      case HORZ_MAP: {
+        Image map = Energy::ComputeEnergyMap(Energy::ComputeEnergy(this->trans_img, "sobel"));
+        cv::normalize(map, map, 0, 255, cv::NORM_MINMAX); // normalize to correct range
+        cv::transpose(map, map);
+        cv::imwrite(path, map);
+        break;
+      }
+    }
+  }
+  
+  /**
+   * 
    * Returns the optimal vertical seam in the given image.
    * 
    * @param img the Image to find the optimal seam in

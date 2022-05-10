@@ -15,24 +15,24 @@ namespace SeamCarving {
      * 
      * @returns an image representing the energy of the original image
     */
-    Image ComputeEnergy(const Image &src, const std::string &kernel) {
+    Image ComputeEnergy(const Image &img, const std::string &kernel) {
       // apply gaussian and convert grayscale
-      Image res;
-      cv::GaussianBlur(src, res, cv::Size(3, 3), 0, 0);
-      cv::cvtColor(res, res, cv::COLOR_BGR2GRAY);
+      Image src;
+      cv::GaussianBlur(img, src, cv::Size(3, 3), 0, 0);
+      cv::cvtColor(src, src, cv::COLOR_BGR2GRAY);
 
       // apply kernel
       Image x_edges, y_edges;
       int ksize = (kernel == "scharr") ? -1 : 3;
-      cv::Sobel(res, x_edges, CV_16S, 1, 0, ksize);
-      cv::Sobel(res, y_edges, CV_16S, 0, 1, ksize);
+      cv::Sobel(src, x_edges, CV_8U, 1, 0, ksize);
+      cv::Sobel(src, y_edges, CV_8U, 0, 1, ksize);
 
       // convert and merge
       Image abs_x, abs_y;
       cv::convertScaleAbs(x_edges, abs_x);
       cv::convertScaleAbs(y_edges, abs_y);
-      cv::addWeighted(abs_x, 0.5, abs_y, 0.5, 0, res);
-      return res;
+      cv::addWeighted(abs_x, 0.5, abs_y, 0.5, 0, src);
+      return src;
     }
 
     /**
@@ -50,22 +50,22 @@ namespace SeamCarving {
       // setup
       int rows = energy_img.rows;
       int cols = energy_img.cols;
-      Image energy_map = Image(rows, cols, CV_32S, cv::Scalar(0.0));
+      Image energy_map = Image(rows, cols, CV_32S); //, cv::Scalar(0.0));
       energy_img.row(rows - 1).copyTo(energy_map.row(rows - 1));
 
       for (int row = rows - 2; row >= 0; row--) {
         for (int col = 0; col < cols; col++) {
           // compute vals
           const int &center = energy_map.at<int>(row + 1, col);
-          const int &left = (col - 1 >= 0) ? energy_map.at<int>(row + 1, col + 1) : INT_MAX;
+          const int &left = (col - 1 >= 0) ? energy_map.at<int>(row + 1, col - 1) : INT_MAX;
           const int &right = (col + 1 < cols) ? energy_map.at<int>(row + 1, col + 1) : INT_MAX;
 
           // take the min energy plus self
-          energy_map.at<int>(row, col) = energy_img.at<int>(row, col) + std::min({center, left, right});
+          energy_map.at<int>(row, col) = energy_img.at<uchar>(row, col) + std::min({center, left, right});
         }
       }
 
-      return energy_img;
+      return energy_map;
     }
   }
 }

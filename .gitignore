@@ -4,3 +4,4 @@ build/
 .vscode
 .DS_Store
 *.cfg
+__pycache__

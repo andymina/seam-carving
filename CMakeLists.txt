@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(PROJ_INCLUDE_DIR cpp/include)
 
 # opencv
-set(OpenCV_DIR /Users/andymina/Coding/libs/opencv) # path to opencv dir
+set(OpenCV_DIR /Users/andymina/Coding/libs/opencv) # path to opencv dir, build from source with option -DBUILD_ZLIB=OFF
 find_package(OpenCV REQUIRED)
 link_directories(${OpenCV_LIBRARY_DIRS})
 

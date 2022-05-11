@@ -28,9 +28,8 @@ PYBIND11_MODULE(seam_carving, module) {
     .export_values();
 
   /** expose classes */
-  // py::class_<sc::CarvableImage>(module, "SeamCarver")
-  //   .def(py::init<const std::string &>());
   py::class_<sc::CarvableImage>(module, "SeamCarver")
     .def(py::init<const std::string &>())
-    .def("export", &sc::CarvableImage::Export);
+    .def("export", &sc::CarvableImage::Export)
+    .def("carve", &sc::CarvableImage::SeamCarve);
 }

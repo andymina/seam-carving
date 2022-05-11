@@ -31,7 +31,7 @@ namespace SeamCarving {
       inline int num_cols() const { return this->cols_; };
 
       /** Seams */
-      void SeamCarve(const cv::Size &size);
+      void SeamCarve(const int &width, const int &height);
       Seam FindOptimalSeam(const Dir &dir = VERT);
       void RemoveSeam(const Dir &dir);
 

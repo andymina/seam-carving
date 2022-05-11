@@ -23,10 +23,10 @@ namespace SeamCarving {
    * 
    * @param size the size of the desired image. (width, height)
    */
-  void CarvableImage::SeamCarve(const cv::Size &size) {
+  void CarvableImage::SeamCarve(const int &width, const int &height) {
     // remove seams if positive, insert seams if negative
-    int row_diff = size.height - this->num_rows();
-    int col_diff = size.width - this->num_cols();
+    int row_diff = height - this->num_rows();
+    int col_diff = width - this->num_cols();
 
     /** Decision tree. See samples/decision_tree.JPG */
     if (row_diff < 0) {

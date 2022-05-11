@@ -16,5 +16,15 @@ add_subdirectory(deps/pybind11) # path to pybind11
 
 # build
 include_directories(${PROJ_INCLUDE_DIR})
-pybind11_add_module(seam_carving SHARED cpp/src/bind.cpp cpp/src/CarvableImage.cpp cpp/src/energy.cpp) # path to cpp bindings
+pybind11_add_module(
+  seam_carving MODULE
+  cpp/src/bind.cpp cpp/src/CarvableImage.cpp cpp/src/energy.cpp # path to src files
+)
 target_link_libraries(seam_carving PRIVATE ${OpenCV_LIBS})
+set_target_properties(
+  seam_carving
+  PROPERTIES
+    LIBRARY_OUTPUT_NAME seam_carving
+    LIBRARY_OUTPUT_DIRECTORY ../
+    SUFFIX .so
+)

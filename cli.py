@@ -1,8 +1,8 @@
-from multiprocessing.sharedctypes import Value
 from PIL import Image
 from clint.textui import colored, puts, indent
 import cmd, sys, os
 import seam_carving as sc
+
 class SeamCarvingShell(cmd.Cmd):
   intro = colored.magenta("Seam Carving Shell (SCS)\nType 'help' or '?' to list commands.\n")
   noop = colored.yellow("This command hasn't been implemented yet.")
@@ -75,6 +75,29 @@ class SeamCarvingShell(cmd.Cmd):
     """
     sys.exit(1)
 
+  def do_list_enums(self, args):
+    """
+    List all of the enums available.
+    """
+    puts(f"\nUsed with {colored.cyan('carver')} to display the corresponding image\n")
+    descs = [
+      ": the original image supplied to the carver",
+      ": the result image after performing seam operations (highlight, remove, insert, carve)",
+      ": the transposed result image; stored for internal computations",
+      ": the energy of the result image calculated using the 3x3 Sobel edge detector",
+      ": the vertical energy map of the result image",
+      ": the horizontal energymap of the result image"
+    ]
+    enums = [colored.magenta(e) for e in list(self.enums.keys())[:-2]]
+
+    for idx in range(len(enums)):
+      puts(enums[idx] + descs[idx])
+
+    print("\n============================")
+
+    puts(f"\nUsed with seam operations ({colored.cyan('highlight_seams')}, {colored.cyan('remove_seams')}, {colored.cyan('insert_seams')}) to specify the direction of the target seam\n")
+    puts(f"{colored.magenta('vert')}: seam that runs vertically across the image; corresponds to a col")
+    puts(f"{colored.magenta('horz')}: seam that runs horizontally across the image; corresponds to a row\n")
   # endregion
 
   # region - img handling
@@ -142,6 +165,9 @@ class SeamCarvingShell(cmd.Cmd):
   # region - seam carving
 
   def do_size(self, args):
+    """
+    Prints the size of the currently selected image
+    """
     puts(
       colored.green(self.current_img) +  ": " +
       colored.white(self.carver.cols()) + " x " + colored.white(self.carver.rows())
@@ -153,12 +179,7 @@ class SeamCarvingShell(cmd.Cmd):
     """
     if self.carver is None:
       puts(colored.red("Error: no image set prior"))
-    
-    if self.current_img in self.samples:
-      path = f"samples/{self.current_img}{self.samples[self.current_img]}"
-    else:
-      path = self.current_img
-    self.carver = sc.SeamCarver(path)
+    self.carver.reset()
 
   def do_carve(self, args):
     """
@@ -229,22 +250,21 @@ class SeamCarvingShell(cmd.Cmd):
       puts(colored.red("Error: failed to convert {k} to int"))
       return
     
-    if k == 1:
-      seam = self.carver.find_seam(dir_)
-      if r is not None:
-        self.carver.highlight_seam(seam, r, g, b)
-      else:
-        self.carver.highlight_seam(seam)
-
+    seams = self.carver.find_k_seams(k, dir_)
+    if r is not None:
+      self.carver.highlight_k_seams(seams, r, g, b)
+    else:
+      self.carver.highlight_k_seams(seams)
+      
   def do_remove_seams(self, args):
     """
     Removes one seam in the specified direction
 
     Arguments:
         dir {str} -- the direction to remove one seam in
-        k {int} -- optional;
+        k {int} -- optional; the number of seams to remove. defaults to 1
     """
-        # make sure we've set an image
+    # make sure we've set an image
     if self.carver is None:
       puts(colored.red(f"Error: image has not been selected with {colored.cyan('set')} {colored.red('or')} {colored.cyan('load')}"))
       return
@@ -270,6 +290,42 @@ class SeamCarvingShell(cmd.Cmd):
     # logic
     for i in range(k):
       self.carver.remove_seam(dir)
+
+  def do_insert_seams(self, args):
+    """
+    Inserts one seam in the specified direction
+
+    Arguments:
+        dir {str} -- the direction to insert one seam in
+        k {int} -- optional; the number of seams to insert. defaults to 1
+    """
+    # make sure we've set an image
+    if self.carver is None:
+      puts(colored.red(f"Error: image has not been selected with {colored.cyan('set')} {colored.red('or')} {colored.cyan('load')}"))
+      return
+
+    # args checking
+    args = args.split()
+    if len(args) == 0:
+      puts(colored.red("Error: bad syntax. Expected two arguments: {dir} {k}"))
+      return
+    
+    dir_ = self.enums(args[0])
+    if dir_ is None:
+      puts(colored.red("Error: dir must be 'vert' or 'horz'"))
+      return
+
+    k = 1 if len(args) != 1 else args[1]
+    try:
+      k = int(k)
+    except:
+      puts(colored.red("Error: failed to convert {k} to int"))
+      return
+
+    if k == 1:
+      self.carver.insert_seam(dir_)
+    else:
+      self.carver.insert_k_seams(dir_, k)
 
   # endregion
 
@@ -299,9 +355,9 @@ class SeamCarvingShell(cmd.Cmd):
     img = Image.open(path)
     img.show()
 
-  def do_show_carver(self, args):
+  def do_carver(self, args):
     """
-    Displays the specified image of the SeamCarver. img at out/out.jpg will be overwritten.
+    Displays the specified image of the SeamCarver. img at out.jpg will be overwritten.
 
     Arguments:
         type {str} -- must be one of sc.ImageType

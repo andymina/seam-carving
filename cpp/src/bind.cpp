@@ -52,5 +52,6 @@ PYBIND11_MODULE(seam_carving, module) {
     .def("highlight_k_seams", &sc::CarvableImage::HighlightKSeams,
       py::arg("seam"), py::arg("r") = 176, py::arg("g") = 38, py::arg("b") = 255)
 
-    .def("export", &sc::CarvableImage::Export);
+    .def("export", &sc::CarvableImage::Export)
+    .def("reset", &sc::CarvableImage::Reset);
 }

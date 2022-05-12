@@ -90,7 +90,7 @@ namespace SeamCarving {
 
   std::vector<Seam> CarvableImage::FindKOptimalSeams(const int &k, const Dir &dir) {
     Image img = (dir == VERT) ? this->res_img.clone() : this->trans_img.clone();
-    std::vector<Seam> res = this->__FindKOptimalSeams(k, img);
+    std::vector<Seam> res = this->__FindKOptimalSeams(k, dir, img);
     
     if (dir == HORZ)
       for (Seam &seam: res)
@@ -122,6 +122,20 @@ namespace SeamCarving {
     }
   }
 
+  void CarvableImage::InsertSeam(const Dir &dir) {
+    Seam seam = this->FindOptimalSeam(dir);
+    seam += 1;
+
+    Image res;
+    if (dir == VERT) res = cv::Mat(this->rows_, this->cols_ + 1, this->res_img.type());
+    else if (dir == HORZ) res = cv::Mat(this->rows_ + 1, this->cols_, this->res_img.type());
+
+    this->res_img = this->__InsertSeam(seam, this->res_img, res);
+    cv::transpose(this->res_img, this->trans_img);
+    this->rows_ = this->res_img.rows;
+    this->cols_ = this->res_img.cols;
+  }
+  
   /** 
    * Highlights the given seam on this->res_img in the specified color. Color must be BGR format!
    * 
@@ -210,32 +224,49 @@ namespace SeamCarving {
         minVal = energy_map.row(0).at<int>(idx);
       }
 
-
     Seam seam = Seam(dir, {});
     int rows = energy_map.rows, cols = energy_map.cols;
-    for (int row = 0; row < rows; row++) {
-      seam.data.push_back(idx);
 
-      if (row != rows - 1) {
-        // find the direction of min and adjust path
-        const int &center = energy_map.at<int>(row + 1, idx);
-        const int &left = (idx - 1 < 0) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx - 1);
-        const int &right = (idx + 1 >= cols) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx + 1);
-        int min_energy = std::min({center, left, right});
+    if (dir == VERT) {
+      for (int row = 0; row < rows; row++) {
+        seam.data.push_back({row, idx});
 
-        if (min_energy == left) idx--;
-        else if (min_energy == right) idx++;
+        if (row != rows - 1) {
+          // find the direction of min and adjust path
+          const int &center = energy_map.at<int>(row + 1, idx);
+          const int &left = (idx - 1 < 0) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx - 1);
+          const int &right = (idx + 1 >= cols) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx + 1);
+          int min_energy = std::min({center, left, right});
+
+          if (min_energy == left) idx--;
+          else if (min_energy == right) idx++;
+        }
+      }
+    } else if (dir == HORZ) {
+      for (int row = 0; row < rows; row++) {
+        seam.data.push_back({idx, row});
+
+        if (row != rows - 1) {
+          // find the direction of min and adjust path
+          const int &center = energy_map.at<int>(row + 1, idx);
+          const int &left = (idx - 1 < 0) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx - 1);
+          const int &right = (idx + 1 >= cols) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx + 1);
+          int min_energy = std::min({center, left, right});
+
+          if (min_energy == left) idx--;
+          else if (min_energy == right) idx++;
+        }
       }
     }
 
     return seam;
   }
 
-  std::vector<Seam> CarvableImage::__FindKOptimalSeams(const int &k, Image &img) {
+  std::vector<Seam> CarvableImage::__FindKOptimalSeams(const int &k, const Dir &dir, Image &img) {
     std::vector<Seam> res;
     int count = k;
     while (count != 0) {
-      Seam seam = this->__FindOptimalSeam(img, VERT);
+      Seam seam = this->__FindOptimalSeam(img, dir);
       res.push_back(seam);
       img = this->__RemoveSeam(seam, img);
       count--;
@@ -251,12 +282,8 @@ namespace SeamCarving {
    * @param color the color to highlight the seam in. must be BGR format!!
   */
   void CarvableImage::__HighlightSeam(Image &img, const Seam &seam, const cv::Vec3b &color) {
-    if (seam.dir == VERT)
-      for (int idx = 0; idx < seam.data.size(); idx++)
-        img.at<cv::Vec3b>(idx, seam.data[idx]) = color;
-    else if (seam.dir == HORZ)
-      for (int idx = 0; idx < seam.data.size(); idx++)
-        img.at<cv::Vec3b>(seam.data[idx], idx) = color;
+    for (int idx = 0; idx < seam.data.size(); idx++)
+      img.at<cv::Vec3b>(seam.data[idx].row, seam.data[idx].col) = color;
   }
 
   /**
@@ -272,24 +299,47 @@ namespace SeamCarving {
     Image res = Image(img.rows, img.cols - 1, img.type());
 
     for (int idx = 0; idx < seam.data.size(); idx++) {
-      const cv::Mat &current_row = img.row(idx);
+      const cv::Mat &current_row = img.row(seam.data[idx].row);
 
-      if (seam.data[idx] == 0) {
+      if (seam.data[idx].col == 0) {
         // exclude first val
-        current_row.colRange(1, img.cols).copyTo(res.row(idx));
-      } else if (seam.data[idx] == img.cols - 1) {
+        current_row.colRange(1, img.cols).copyTo(res.row(seam.data[idx].row));
+      } else if (seam.data[idx].col == img.cols - 1) {
         // exclude last val
-        current_row.colRange(0, img.cols - 1).copyTo(res.row(idx));
+        current_row.colRange(0, img.cols - 1).copyTo(res.row(seam.data[idx].row));
       } else {
         // merge two halves
         cv::hconcat(
-          current_row.colRange(0, seam.data[idx]),
-          current_row.colRange(seam.data[idx] + 1, img.cols),
-          res.row(idx)
+          current_row.colRange(0, seam.data[idx].col),
+          current_row.colRange(seam.data[idx].col + 1, img.cols),
+          res.row(seam.data[idx].row)
         );
       }
     }
     
     return res;  
+  }
+
+  /**
+   * TODO:
+   * 
+   * get the current color and make a 1x1 matrix
+   * get the rest of the OG matrix
+   * concat all of the mats
+   * average down the seam
+  */
+  Image CarvableImage::__InsertSeam(const Seam &seam, const Image &img, Image &res) {
+    for (int idx = 0; idx < seam.data.size(); idx++) {
+      const cv::Mat &current_row = img.row(seam.data[idx].row);
+      std::vector<cv::Mat> mats;
+
+      cv::Mat col_insert = cv::Mat(1, 1, img.type());
+      col_insert.at<cv::Vec3b>(0, 0) = img.at<cv::Vec3b>(seam.data[idx].row - 1, seam.data[idx].col - 1);
+
+      if (seam.data[idx].col == 0) {
+        mats.push_back(col_insert);
+        mats.push_back(this->res)
+      }
+    }
   }
 }

@@ -15,12 +15,12 @@ namespace SeamCarving {
   /** A Enum to help better describe what direction to use in functions and seams. */
   enum Dir { VERT, HORZ };
 
-  // struct Coord {
-  //   int row, col;
+  struct Coord {
+    int row, col;
 
-  //   Coord(const int &row_ = 0, const int &col_ = 0):
-  //     row{row_}, col{col_} {}
-  // };
+    Coord(const int &row_ = 0, const int &col_ = 0):
+      row{row_}, col{col_} {}
+  };
   
   /**
    * Helper class to describe a seam.
@@ -39,10 +39,17 @@ namespace SeamCarving {
   */
   struct Seam {
     Dir dir;
-    std::vector<int> data;
+    std::vector<Coord> data;
 
-    Seam(const Dir &dir_, const std::vector<int> &data_): 
+    Seam(const Dir &dir_, const std::vector<Coord> &data_): 
       dir{dir_}, data{data_} {}
+
+    Seam& operator+=(const int &val) {
+      if (dir == VERT)
+        for (Coord &c: data) c.col++;
+      else if (dir == HORZ)
+        for (Coord &c: data) c.row++;
+    }
   };
 
   /** Helper enum to define the 5 types of images within a CarvableImage. */

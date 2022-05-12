@@ -12,8 +12,8 @@ namespace nrg = sc::Energy;
 
 int main() {
   sc::CarvableImage img = sc::CarvableImage("../samples/dali.jpeg");
-  std::vector<sc::Seam> seams = img.FindKOptimalSeams(100);
-  img.HighlightKSeams(seams, 176, 38, 255);
+  sc::Seam seam = img.FindOptimalSeam(sc::Dir::VERT);
+  img.HighlightSeam(seam, 176, 38, 255);
   cv::imshow("cpp", img.GetResult());
   int k = cv::waitKey(0);
   return 0;

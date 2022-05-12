@@ -20,7 +20,7 @@ namespace SeamCarving {
       std::vector<Seam> __FindKOptimalSeams(const int &k, const Dir &dir, Image &img);
       void __HighlightSeam(Image &img, const Seam &seam, const cv::Vec3b &color);
       Image __RemoveSeam(const Seam &seam, const Image &img);
-      Image __InsertSeam(const Seam &seam, const Image &img, Image &res);
+      Image __InsertSeam(const Seam &seam, const Image &img);
 
     public:
       /** Constructors */
@@ -39,6 +39,7 @@ namespace SeamCarving {
       std::vector<Seam> FindKOptimalSeams(const int &k, const Dir &dir = VERT);
       void RemoveSeam(const Dir &dir);
       void InsertSeam(const Dir &dir);
+      void InsertKSeams(const int &k, const Dir &dir);
 
       /** Highlighting */
       void HighlightSeam(const Seam &seam, const int &r = 176, const int &g = 38, const int &b = 176);
@@ -46,5 +47,6 @@ namespace SeamCarving {
 
       /** Display */
       void Export(const ImageType &type, const std::string &path);
+      void Reset();
   };
 }

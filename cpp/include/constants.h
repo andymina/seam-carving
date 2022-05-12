@@ -43,13 +43,6 @@ namespace SeamCarving {
 
     Seam(const Dir &dir_, const std::vector<Coord> &data_): 
       dir{dir_}, data{data_} {}
-
-    Seam& operator+=(const int &val) {
-      if (dir == VERT)
-        for (Coord &c: data) c.col++;
-      else if (dir == HORZ)
-        for (Coord &c: data) c.row++;
-    }
   };
 
   /** Helper enum to define the 5 types of images within a CarvableImage. */

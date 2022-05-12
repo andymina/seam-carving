@@ -12,8 +12,17 @@ namespace nrg = sc::Energy;
 
 int main() {
   sc::CarvableImage img = sc::CarvableImage("../samples/dali.jpeg");
-  sc::Seam seam = img.FindOptimalSeam(sc::Dir::VERT);
-  img.HighlightSeam(seam, 176, 38, 255);
+  std::cout << "OG size: " << img.num_rows() << ", " << img.num_cols() << "\n";
+
+  std::vector<sc::Seam> seams = img.FindKOptimalSeams(100, sc::Dir::HORZ);
+  
+  img.HighlightKSeams(seams);
+  img.Export(sc::ImageType::RESULT, "out.jpg");
+
+  img.Reset();
+  img.InsertKSeams(100, sc::Dir::HORZ);
+  std::cout << "new size: " << img.num_rows() << ", " << img.num_cols() << "\n";
+
   cv::imshow("cpp", img.GetResult());
   int k = cv::waitKey(0);
   return 0;

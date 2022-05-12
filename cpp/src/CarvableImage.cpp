@@ -90,7 +90,7 @@ namespace SeamCarving {
 
   std::vector<Seam> CarvableImage::FindKOptimalSeams(const int &k, const Dir &dir) {
     Image img = (dir == VERT) ? this->res_img.clone() : this->trans_img.clone();
-    std::vector<Seam> res = this->__FindKOptimalSeams(k, dir, img);
+    std::vector<Seam> res = this->__FindKOptimalSeams(k, VERT, img);
     
     if (dir == HORZ)
       for (Seam &seam: res)
@@ -124,16 +124,35 @@ namespace SeamCarving {
 
   void CarvableImage::InsertSeam(const Dir &dir) {
     Seam seam = this->FindOptimalSeam(dir);
-    seam += 1;
+    Image res = this->__InsertSeam(seam, (dir == VERT) ? this->res_img : this->trans_img);
+    
+    if (dir == VERT) {
+      this->res_img = res;
+      cv::transpose(this->res_img, this->trans_img);
+      this->cols_++;
+    } else if (dir == HORZ) {
+      this->trans_img = res;
+      cv::transpose(this->trans_img, this->res_img);
+      this->rows_++;
+    }
+  }
 
-    Image res;
-    if (dir == VERT) res = cv::Mat(this->rows_, this->cols_ + 1, this->res_img.type());
-    else if (dir == HORZ) res = cv::Mat(this->rows_ + 1, this->cols_, this->res_img.type());
+  void CarvableImage::InsertKSeams(const int &k, const Dir &dir) {
+    std::vector<Seam> seams = this->FindKOptimalSeams(k, dir);
+    Image res = (dir == VERT) ? this->res_img.clone() : this->trans_img.clone();
 
-    this->res_img = this->__InsertSeam(seam, this->res_img, res);
-    cv::transpose(this->res_img, this->trans_img);
-    this->rows_ = this->res_img.rows;
-    this->cols_ = this->res_img.cols;
+    for (const Seam &s: seams)
+      res = this->__InsertSeam(s, res);
+
+    if (dir == VERT) {
+      this->res_img = res;
+      cv::transpose(this->res_img, this->trans_img);
+      this->cols_ += k;
+    } else if (dir == HORZ) {
+      this->trans_img = res;
+      cv::transpose(this->trans_img, this->res_img);
+      this->rows_ += k;
+    }
   }
   
   /** 
@@ -157,8 +176,12 @@ namespace SeamCarving {
    * @returns a new Image with the k seams highlighted 
   */
   void CarvableImage::HighlightKSeams(const std::vector<Seam> &seams, const int &r, const int &g, const int &b) {
+    Image &res = (seams[0].dir == VERT) ? this->res_img : this->trans_img;
     for (const Seam &seam: seams)
-      this->__HighlightSeam(this->res_img, seam, cv::Vec3b(r, g, b));
+      this->__HighlightSeam(res, seam, cv::Vec3b(r, g, b));
+
+    if (seams[0].dir == HORZ)
+      cv::transpose(this->trans_img, this->res_img);
   }
 
   /**
@@ -328,18 +351,49 @@ namespace SeamCarving {
    * concat all of the mats
    * average down the seam
   */
-  Image CarvableImage::__InsertSeam(const Seam &seam, const Image &img, Image &res) {
+  Image CarvableImage::__InsertSeam(const Seam &seam, const Image &img) {
+    Image res = cv::Mat(img.rows, img.cols + 1, img.type());
+
     for (int idx = 0; idx < seam.data.size(); idx++) {
       const cv::Mat &current_row = img.row(seam.data[idx].row);
       std::vector<cv::Mat> mats;
 
       cv::Mat col_insert = cv::Mat(1, 1, img.type());
-      col_insert.at<cv::Vec3b>(0, 0) = img.at<cv::Vec3b>(seam.data[idx].row - 1, seam.data[idx].col - 1);
+      col_insert.at<cv::Vec3b>(0, 0) = img.at<cv::Vec3b>(seam.data[idx].row, seam.data[idx].col);
 
       if (seam.data[idx].col == 0) {
         mats.push_back(col_insert);
-        mats.push_back(this->res)
+        mats.push_back(current_row);
+      } else if (seam.data[idx].col == img.cols - 1) {
+        mats.push_back(current_row);
+        mats.push_back(col_insert);
+      } else {
+        mats.push_back(current_row.colRange(0, seam.data[idx].col));
+        mats.push_back(col_insert);
+        mats.push_back(current_row.colRange(seam.data[idx].col, img.cols));
+      }
+      cv::hconcat(mats, res.row(seam.data[idx].row));
+
+      for (const Coord &c: seam.data) {
+        // average only if i have left/right neighbors
+
+        if (c.col - 1 >= 0 && c.col + 1 < res.cols) {
+          const cv::Vec3b &left = res.at<cv::Vec3b>(c.row, c.col - 1);
+          const cv::Vec3b &right = res.at<cv::Vec3b>(c.row, c.col + 1);
+          cv::Vec3b color = cv::Vec3b(
+            (left[0] + right[0]) / 2,
+            (left[1] + right[1]) / 2,
+            (left[2] + right[2]) / 2
+          );
+        }
       }
     }
+
+    return res;
+  }
+
+  void CarvableImage::Reset() {
+    this->res_img = this->original.clone();
+    cv::transpose(this->res_img, this->trans_img);
   }
 }

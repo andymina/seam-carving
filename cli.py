@@ -75,6 +75,15 @@ class SeamCarvingShell(cmd.Cmd):
     """
     sys.exit(1)
 
+  def do_clear(self, args):
+    """
+    Clears the screen.
+    """
+    if os.name == "nt":
+      os.system("cls")
+    elif os.name == "posix":
+      os.system("clear")
+
   def do_list_enums(self, args):
     """
     List all of the enums available.
@@ -129,7 +138,7 @@ class SeamCarvingShell(cmd.Cmd):
 
     self.current_img = path
     self.carver = sc.SeamCarver(path)
-    puts(colored.white(f"Set {colored.green(path)} to be carved"))
+    puts(f"Set {colored.green(path)} to be carved")
 
   def do_set(self, sample_name):
     """
@@ -149,16 +158,16 @@ class SeamCarvingShell(cmd.Cmd):
     self.current_img = sample_name
     path = f"samples/{sample_name}{self.samples[sample_name]}"
     self.carver = sc.SeamCarver(path)
-    puts(colored.white(f"Set {colored.green(sample_name)} to be carved"))
+    puts(f"Set {colored.green(sample_name)} to be carved")
 
   def do_which(self, arg):
     """
     Returns the image that is currently set to be carved.
     """
     if self.current_img is None:
-      puts(colored.white("No image set to be carved"))
+      puts("No image set to be carved")
     else:
-      puts(colored.green(self.current_img) + colored.white(" set to be carved"))
+      puts(f"{colored.green(self.current_img)} set to be carved")
 
   # endregion
 
@@ -168,10 +177,7 @@ class SeamCarvingShell(cmd.Cmd):
     """
     Prints the size of the currently selected image
     """
-    puts(
-      colored.green(self.current_img) +  ": " +
-      colored.white(self.carver.cols()) + " x " + colored.white(self.carver.rows())
-    )
+    puts(f"{colored.green(self.current_img)}: {self.carver.rows()} x {self.carver.cols()}")
 
   def do_reset(self, args):
     """
@@ -186,8 +192,8 @@ class SeamCarvingShell(cmd.Cmd):
     Carves the set image to the specified size. Can be used to remove or insert seams.
 
     Arguments:
-        args {str} -- a string in the format '{width} {height}' where width and height are the
-        new dimensions of the image and path represents the path to save the image to.
+        target_rows {int} -- the new number of rows in the image; can't be 0
+        target_cols {int} -- the new number of cols in the image; can't be 0
     """
     # make sure we've set an image
     if self.carver is None:
@@ -200,20 +206,21 @@ class SeamCarvingShell(cmd.Cmd):
       puts(colored.red("Error: bad syntax. Expected two arguments: {width} {height}"))
       return
 
-    width, height = None, None
+    target_rows, target_cols = None, None
     try:
-      width, height = int(args[0]), int(args[1])
+      target_rows, target_cols = int(args[0]), int(args[1])
     except ValueError:
-      puts(colored.red("Error: can't convert width and height values to ints"))
+      puts(colored.red("Error: can't convert target_rows and target_cols values to ints"))
       return
     
-    if width == 0 or height == 0:
+    if target_rows == 0 or target_cols == 0:
       puts(colored.red("Error: can't have size 0 in any axis"))
       return
 
     # logic
-    puts(colored.white("Carving ") + colored.green(self.current_img) + colored.white("..."))
-    self.carver.carve(width, height)
+    puts(f"Carving {colored.green(self.current_img)}...")
+    self.carver.carve(target_rows, target_cols)
+    puts(f"Carved!")
 
   def do_highlight_seams(self, args):
     """
@@ -340,7 +347,7 @@ class SeamCarvingShell(cmd.Cmd):
         otherwise displays the image specified by path or by name.
     """
     if len(arg) == 0:
-      self.do_show_carver("result")
+      self.do_carver("result")
       return
     
     path = None

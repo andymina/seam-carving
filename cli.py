@@ -242,7 +242,7 @@ class SeamCarvingShell(cmd.Cmd):
       puts(colored.red("Error: bad syntax. Expected at least one arguments: {dir} {k} {r} {g} {b}"))
       return
     
-    dir_ = self.enums[args[0]]
+    dir_ = self.enums.get(args[0])
     if dir_ is None:
       puts(colored.red("Error: dir must be 'vert' or 'horz'"))
       return
@@ -282,7 +282,7 @@ class SeamCarvingShell(cmd.Cmd):
       puts(colored.red("Error: bad syntax. Expected two arguments: {dir} {k}"))
       return
     
-    dir_ = self.enums(args[0])
+    dir_ = self.enums.get(args[0])
     if dir_ is None:
       puts(colored.red("Error: dir must be 'vert' or 'horz'"))
       return
@@ -296,7 +296,7 @@ class SeamCarvingShell(cmd.Cmd):
 
     # logic
     for i in range(k):
-      self.carver.remove_seam(dir)
+      self.carver.remove_seam(dir_)
 
   def do_insert_seams(self, args):
     """
@@ -317,7 +317,7 @@ class SeamCarvingShell(cmd.Cmd):
       puts(colored.red("Error: bad syntax. Expected two arguments: {dir} {k}"))
       return
     
-    dir_ = self.enums(args[0])
+    dir_ = self.enums.get(args[0])
     if dir_ is None:
       puts(colored.red("Error: dir must be 'vert' or 'horz'"))
       return

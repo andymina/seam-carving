@@ -25,10 +25,10 @@ namespace SeamCarving {
    * 
    * @param size the size of the desired image. (width, height)
    */
-  void CarvableImage::SeamCarve(const int &width, const int &height) {
+  void CarvableImage::SeamCarve(const int &target_rows, const int &target_cols) {
     // remove seams if positive, insert seams if negative
-    int row_diff = height - this->num_rows();
-    int col_diff = width - this->num_cols();
+    int row_diff = target_rows - this->num_rows();
+    int col_diff = target_cols - this->num_cols();
 
     /** Decision tree. See samples/decision_tree.JPG */
     if (row_diff < 0) {
@@ -52,8 +52,13 @@ namespace SeamCarving {
           this->RemoveSeam(HORZ);
           row_diff++;
         }
-      } else if (col_diff > 0) {  // (-, +)
+      } else if (col_diff > 0) {  // (-, +) done
+        this->InsertKSeams(col_diff, VERT);
 
+        while(row_diff != 0) {
+          this->RemoveSeam(HORZ);
+          row_diff++;
+        }
       }
     } else if (row_diff == 0) {
       if (col_diff < 0) {         // (0, -) done
@@ -63,16 +68,35 @@ namespace SeamCarving {
         }
       } else if (col_diff == 0) { // (0, 0) done
         // no-op
-      } else if (col_diff > 0) {  // (0, +)
-
+      } else if (col_diff > 0) {  // (0, +) done
+        this->InsertKSeams(col_diff, VERT);
       }
     } else if (row_diff > 0) {
-      if (col_diff < 0) {         // (+, -)
+      if (col_diff < 0) {         // (+, -) done
+        this->InsertKSeams(row_diff, HORZ);
 
+        while (col_diff != 0) {
+          this->RemoveSeam(VERT);
+          col_diff++;
+        }
       } else if (col_diff == 0) { // (+, 0)
+        this->InsertKSeams(row_diff, HORZ);
+      } else if (col_diff > 0) {  // (+, +) done
+        int total = row_diff + col_diff;
 
-      } else if (col_diff > 0) {  // (+, +)
+        while (total != 0) {
+          if (col_diff != 0) {
+            this->InsertSeam(VERT);
+            col_diff--;
+            total--;
+          }
 
+          if (row_diff != 0) {
+            this->InsertSeam(HORZ);
+            row_diff--;
+            total--;
+          }
+        }
       }
     }
   }
@@ -140,6 +164,10 @@ namespace SeamCarving {
   void CarvableImage::InsertKSeams(const int &k, const Dir &dir) {
     std::vector<Seam> seams = this->FindKOptimalSeams(k, dir);
     Image res = (dir == VERT) ? this->res_img.clone() : this->trans_img.clone();
+
+    if (dir == HORZ)
+      for (Seam &s: seams)
+        s.dir = VERT;
 
     for (const Seam &s: seams)
       res = this->__InsertSeam(s, res);
@@ -317,28 +345,51 @@ namespace SeamCarving {
    * 
    * @returns a new Image with the seam removed
   */
-  Image CarvableImage::__RemoveSeam(const Seam &seam, const Image &img) {
+   Image CarvableImage::__RemoveSeam(const Seam &seam, const Image &img) {
     /** TODO: complete this and test existing functionality in standalone build */
     Image res = Image(img.rows, img.cols - 1, img.type());
 
-    for (int idx = 0; idx < seam.data.size(); idx++) {
-      const cv::Mat &current_row = img.row(seam.data[idx].row);
+    if (seam.dir == VERT) {
+      for (int idx = 0; idx < seam.data.size(); idx++) {
+        const cv::Mat &current_row = img.row(idx);
 
-      if (seam.data[idx].col == 0) {
-        // exclude first val
-        current_row.colRange(1, img.cols).copyTo(res.row(seam.data[idx].row));
-      } else if (seam.data[idx].col == img.cols - 1) {
-        // exclude last val
-        current_row.colRange(0, img.cols - 1).copyTo(res.row(seam.data[idx].row));
-      } else {
-        // merge two halves
-        cv::hconcat(
-          current_row.colRange(0, seam.data[idx].col),
-          current_row.colRange(seam.data[idx].col + 1, img.cols),
-          res.row(seam.data[idx].row)
-        );
+        if (seam.data[idx].col == 0) {
+          // exclude first val
+          current_row.colRange(1, img.cols).copyTo(res.row(idx));
+        } else if (seam.data[idx].col == img.cols - 1) {
+          // exclude last val
+          current_row.colRange(0, img.cols - 1).copyTo(res.row(idx));
+        } else {
+          // merge two halves
+          cv::hconcat(
+            current_row.colRange(0, seam.data[idx].col),
+            current_row.colRange(seam.data[idx].col + 1, img.cols),
+            res.row(idx)
+          );
+        }
+      }
+    } else if (seam.dir == HORZ) {
+      for (int idx = 0; idx < seam.data.size(); idx++) {
+        const cv::Mat &current_row = img.row(seam.data[idx].col);
+
+        if (seam.data[idx].row == 0) {
+          // exclude first val
+          current_row.colRange(1, img.cols).copyTo(res.row(seam.data[idx].col));
+        } else if (seam.data[idx].row == img.cols - 1) {
+          // exclude last val
+          current_row.colRange(0, img.cols - 1).copyTo(res.row(seam.data[idx].col));
+        } else {
+          // merge two halves
+          cv::hconcat(
+            current_row.colRange(0, seam.data[idx].row),
+            current_row.colRange(seam.data[idx].row + 1, img.cols),
+            res.row(seam.data[idx].col)
+          );
+        }
       }
     }
+
+
     
     return res;  
   }
@@ -354,40 +405,79 @@ namespace SeamCarving {
   Image CarvableImage::__InsertSeam(const Seam &seam, const Image &img) {
     Image res = cv::Mat(img.rows, img.cols + 1, img.type());
 
-    for (int idx = 0; idx < seam.data.size(); idx++) {
-      const cv::Mat &current_row = img.row(seam.data[idx].row);
-      std::vector<cv::Mat> mats;
+    if (seam.dir == VERT) {
+      for (int idx = 0; idx < seam.data.size(); idx++) {
+        const cv::Mat &current_row = img.row(seam.data[idx].row);
+        std::vector<cv::Mat> mats;
 
-      cv::Mat col_insert = cv::Mat(1, 1, img.type());
-      col_insert.at<cv::Vec3b>(0, 0) = img.at<cv::Vec3b>(seam.data[idx].row, seam.data[idx].col);
+        cv::Mat col_insert = cv::Mat(1, 1, img.type());
+        col_insert.at<cv::Vec3b>(0, 0) = img.at<cv::Vec3b>(seam.data[idx].row, seam.data[idx].col);
 
-      if (seam.data[idx].col == 0) {
-        mats.push_back(col_insert);
-        mats.push_back(current_row);
-      } else if (seam.data[idx].col == img.cols - 1) {
-        mats.push_back(current_row);
-        mats.push_back(col_insert);
-      } else {
-        mats.push_back(current_row.colRange(0, seam.data[idx].col));
-        mats.push_back(col_insert);
-        mats.push_back(current_row.colRange(seam.data[idx].col, img.cols));
+        if (seam.data[idx].col == 0) {
+          mats.push_back(col_insert);
+          mats.push_back(current_row);
+        } else if (seam.data[idx].col == img.cols - 1) {
+          mats.push_back(current_row);
+          mats.push_back(col_insert);
+        } else {
+          mats.push_back(current_row.colRange(0, seam.data[idx].col));
+          mats.push_back(col_insert);
+          mats.push_back(current_row.colRange(seam.data[idx].col, img.cols));
+        }
+        cv::hconcat(mats, res.row(seam.data[idx].row));
+
+        for (const Coord &c: seam.data) {
+          // average only if i have left/right neighbors
+
+          if (c.col - 1 >= 0 && c.col + 1 < res.cols) {
+            const cv::Vec3b &left = res.at<cv::Vec3b>(c.row, c.col - 1);
+            const cv::Vec3b &right = res.at<cv::Vec3b>(c.row, c.col + 1);
+            cv::Vec3b color = cv::Vec3b(
+              (left[0] + right[0]) / 2,
+              (left[1] + right[1]) / 2,
+              (left[2] + right[2]) / 2
+            );
+          }
+        }
       }
-      cv::hconcat(mats, res.row(seam.data[idx].row));
+    } else if (seam.dir == HORZ) {
+      for (int idx = 0; idx < seam.data.size(); idx++) {
+        const cv::Mat &current_row = img.row(seam.data[idx].col);
+        std::vector<cv::Mat> mats;
 
-      for (const Coord &c: seam.data) {
-        // average only if i have left/right neighbors
+        cv::Mat col_insert = cv::Mat(1, 1, img.type());
+        col_insert.at<cv::Vec3b>(0, 0) = img.at<cv::Vec3b>(seam.data[idx].col, seam.data[idx].row);
 
-        if (c.col - 1 >= 0 && c.col + 1 < res.cols) {
-          const cv::Vec3b &left = res.at<cv::Vec3b>(c.row, c.col - 1);
-          const cv::Vec3b &right = res.at<cv::Vec3b>(c.row, c.col + 1);
-          cv::Vec3b color = cv::Vec3b(
-            (left[0] + right[0]) / 2,
-            (left[1] + right[1]) / 2,
-            (left[2] + right[2]) / 2
-          );
+        if (seam.data[idx].row == 0) {
+          mats.push_back(col_insert);
+          mats.push_back(current_row);
+        } else if (seam.data[idx].row == img.cols - 1) {
+          mats.push_back(current_row);
+          mats.push_back(col_insert);
+        } else {
+          mats.push_back(current_row.colRange(0, seam.data[idx].row));
+          mats.push_back(col_insert);
+          mats.push_back(current_row.colRange(seam.data[idx].row, img.cols));
+        }
+        cv::hconcat(mats, res.row(seam.data[idx].col));
+
+        for (const Coord &c: seam.data) {
+          // average only if i have left/right neighbors
+
+          if (c.col - 1 >= 0 && c.col + 1 < res.cols) {
+            const cv::Vec3b &left = res.at<cv::Vec3b>(c.row, c.col - 1);
+            const cv::Vec3b &right = res.at<cv::Vec3b>(c.row, c.col + 1);
+            cv::Vec3b color = cv::Vec3b(
+              (left[0] + right[0]) / 2,
+              (left[1] + right[1]) / 2,
+              (left[2] + right[2]) / 2
+            );
+          }
         }
       }
     }
+
+
 
     return res;
   }
@@ -395,5 +485,7 @@ namespace SeamCarving {
   void CarvableImage::Reset() {
     this->res_img = this->original.clone();
     cv::transpose(this->res_img, this->trans_img);
+    this->rows_ = this->res_img.rows;
+    this->cols_ = this->res_img.cols;
   }
 }

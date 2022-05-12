@@ -14,15 +14,10 @@ int main() {
   sc::CarvableImage img = sc::CarvableImage("../samples/dali.jpeg");
   std::cout << "OG size: " << img.num_rows() << ", " << img.num_cols() << "\n";
 
-  std::vector<sc::Seam> seams = img.FindKOptimalSeams(100, sc::Dir::HORZ);
-  
-  img.HighlightKSeams(seams);
-  img.Export(sc::ImageType::RESULT, "out.jpg");
-
-  img.Reset();
-  img.InsertKSeams(100, sc::Dir::HORZ);
+  img.SeamCarve(590, 770); // 570 x 750
   std::cout << "new size: " << img.num_rows() << ", " << img.num_cols() << "\n";
-
+  
+  cv::imshow("og", img.GetOriginal());
   cv::imshow("cpp", img.GetResult());
   int k = cv::waitKey(0);
   return 0;

@@ -147,6 +147,19 @@ class SeamCarvingShell(cmd.Cmd):
       colored.white(self.carver.cols()) + " x " + colored.white(self.carver.rows())
     )
 
+  def do_reset(self, args):
+    """
+    Resets the seam carver back to its original set image.
+    """
+    if self.carver is None:
+      puts(colored.red("Error: no image set prior"))
+    
+    if self.current_img in self.samples:
+      path = f"samples/{self.current_img}{self.samples[self.current_img]}"
+    else:
+      path = self.current_img
+    self.carver = sc.SeamCarver(path)
+
   def do_carve(self, args):
     """
     Carves the set image to the specified size. Can be used to remove or insert seams.
@@ -163,7 +176,7 @@ class SeamCarvingShell(cmd.Cmd):
     # args checking
     args = args.split()
     if len(args) != 2:
-      puts(colored.red("Error: bad syntax. Expected two arguments: width height"))
+      puts(colored.red("Error: bad syntax. Expected two arguments: {width} {height}"))
       return
 
     width, height = None, None
@@ -181,23 +194,82 @@ class SeamCarvingShell(cmd.Cmd):
     puts(colored.white("Carving ") + colored.green(self.current_img) + colored.white("..."))
     self.carver.carve(width, height)
 
-  def do_highlight_seam(self, dir):
+  def do_highlight_seams(self, args):
     """
     Highlight the optimal seam in the selected image
 
     Arguments:
-        dir {str} -- the direction to find the optimal seam in. Must be one of ["vert", "horz"].
+        dir {str} -- the direction to find the optimal seam in. Must be one of ["vert", "horz"]
+        k {int} -- optional; the number of seams to highlight, defaults to one
+        rgb {int} -- optional; the rgb to highlight in space separated. defaults to (176, 38, 255)
     """
-    puts(self.noop)
+    # make sure we've set an image
+    if self.carver is None:
+      puts(colored.red(f"Error: image has not been selected with {colored.cyan('set')} {colored.red('or')} {colored.cyan('load')}"))
+      return
 
-  def do_remove_seam(self, dir):
+    # args checking
+    args = args.split()
+    if len(args) < 1:
+      puts(colored.red("Error: bad syntax. Expected at least one arguments: {dir} {k} {r} {g} {b}"))
+      return
+    
+    dir_ = self.enums[args[0]]
+    if dir_ is None:
+      puts(colored.red("Error: dir must be 'vert' or 'horz'"))
+      return
+
+    k = 1 if len(args) < 2 else args[1]
+    r, g, b = [None] * 3 if len(args) < 5 else args[2:]
+    try:
+      k = int(k)
+      if r is not None:
+        r, g, b = int(r), int(g), int(b)
+    except:
+      puts(colored.red("Error: failed to convert {k} to int"))
+      return
+    
+    if k == 1:
+      seam = self.carver.find_seam(dir_)
+      if r is not None:
+        self.carver.highlight_seam(seam, r, g, b)
+      else:
+        self.carver.highlight_seam(seam)
+
+  def do_remove_seams(self, args):
     """
     Removes one seam in the specified direction
 
     Arguments:
         dir {str} -- the direction to remove one seam in
+        k {int} -- optional;
     """
-    puts(self.noop)
+        # make sure we've set an image
+    if self.carver is None:
+      puts(colored.red(f"Error: image has not been selected with {colored.cyan('set')} {colored.red('or')} {colored.cyan('load')}"))
+      return
+
+    # args checking
+    args = args.split()
+    if len(args) == 0:
+      puts(colored.red("Error: bad syntax. Expected two arguments: {dir} {k}"))
+      return
+    
+    dir_ = self.enums(args[0])
+    if dir_ is None:
+      puts(colored.red("Error: dir must be 'vert' or 'horz'"))
+      return
+
+    k = 1 if len(args) != 1 else args[1]
+    try:
+      k = int(k)
+    except:
+      puts(colored.red("Error: failed to convert {k} to int"))
+      return
+
+    # logic
+    for i in range(k):
+      self.carver.remove_seam(dir)
 
   # endregion
 
@@ -221,7 +293,7 @@ class SeamCarvingShell(cmd.Cmd):
     elif os.path.isfile(arg):
       path = arg
     else:
-      puts(colored.red("Error: arugment passed is not sample name or path to image"))
+      puts(colored.red("Error: argument passed is not sample name or path to image"))
       return
     
     img = Image.open(path)
@@ -242,7 +314,7 @@ class SeamCarvingShell(cmd.Cmd):
     # arg checking
     args = args.split()
     if len(args) != 1:
-      puts(colored.red("Error: bad syntax. Expected one arguments: type"))
+      puts(colored.red("Error: bad syntax. Expected one arguments: {type}"))
       return
 
     sc_enum = self.enums.get(args[0].lower())
@@ -270,7 +342,7 @@ class SeamCarvingShell(cmd.Cmd):
     # arg checking
     args = args.split()
     if len(args) != 2:
-      puts(colored.red("Error: bad syntax. Expected two arguments: type path"))
+      puts(colored.red("Error: bad syntax. Expected two arguments: {type} {path}"))
       return
 
     sc_enum = self.str_to_enum(args[0])

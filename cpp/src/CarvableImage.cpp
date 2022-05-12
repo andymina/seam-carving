@@ -106,10 +106,8 @@ namespace SeamCarving {
    * 
    * @returns a new Image with the seam highlighted
    */
-  Image CarvableImage::HighlightSeam(const Seam &seam, const cv::Vec3b &color) {
-    Image res = this->res_img.clone();
-    this->__HighlightSeam(res, seam, color);
-    return res;
+  void CarvableImage::HighlightSeam(const Seam &seam, const int &r, const int &g, const int &b) {
+    this->__HighlightSeam(this->res_img, seam, cv::Vec3b(r, g, b));
   }
 
   /**
@@ -120,11 +118,9 @@ namespace SeamCarving {
    * 
    * @returns a new Image with the k seams highlighted 
   */
-  Image CarvableImage::HighlightKSeams(const std::vector<Seam> &seams, const cv::Vec3b &color) {
-    Image res = this->res_img.clone();
+  void CarvableImage::HighlightKSeams(const std::vector<Seam> &seams, const int &r, const int &g, const int &b) {
     for (const Seam &seam: seams)
-      this->__HighlightSeam(res, seam, color);
-    return res;
+      this->__HighlightSeam(this->res_img, seam, cv::Vec3b(r, g, b));
   }
 
   /**

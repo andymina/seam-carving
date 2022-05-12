@@ -28,13 +28,20 @@ PYBIND11_MODULE(seam_carving, module) {
     .export_values();
 
   /** expose classes */
+  py::class_<sc::Seam>(module, "Seam")
+    .def(py::init<const sc::Dir &, const std::vector<int>  &>());
+
   /** TODO: expose Get images methods by converting cv::Mat to np.ndarray */
   py::class_<sc::CarvableImage>(module, "SeamCarver")
     .def(py::init<const std::string &>())
     .def("rows", &sc::CarvableImage::num_rows)
     .def("cols", &sc::CarvableImage::num_cols)
     .def("export", &sc::CarvableImage::Export)
-    .def("carve", &sc::CarvableImage::SeamCarve);
-    // .def("find_seam", &sc::CarvableImage::FindOptimalSeam)
-    // .def("remove_seam", &sc::CarvableImage::RemoveSeam);
+    .def("carve", &sc::CarvableImage::SeamCarve)
+    .def("find_seam", &sc::CarvableImage::FindOptimalSeam)
+    .def("remove_seam", &sc::CarvableImage::RemoveSeam)
+    .def("highlight_seam", &sc::CarvableImage::HighlightSeam,
+      py::arg("seam"), py::arg("r") = 176, py::arg("g") = 38, py::arg("b") = 255)
+    .def("highlight_k_seams", &sc::CarvableImage::HighlightKSeams,
+      py::arg("seam"), py::arg("r") = 176, py::arg("g") = 38, py::arg("b") = 255);
 }

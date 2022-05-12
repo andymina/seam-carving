@@ -36,8 +36,8 @@ namespace SeamCarving {
       void RemoveSeam(const Dir &dir);
 
       /** Highlighting */
-      Image HighlightSeam(const Seam &seam, const cv::Vec3b &color);
-      Image HighlightKSeams(const std::vector<Seam> &seams, const cv::Vec3b &color);
+      void HighlightSeam(const Seam &seam, const int &r = 176, const int &g = 38, const int &b = 176);
+      void HighlightKSeams(const std::vector<Seam> &seams, const int &r = 176, const int &g = 38, const int &b = 176);
 
       /** Display */
       void Export(const ImageType &type, const std::string &path);

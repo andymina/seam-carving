@@ -11,4 +11,4 @@ setup:
 	@cmake -B build/ -S ./
 
 clean:
-	rm -rf build/ out/
+	rm -rf build/ out/ out.jpg

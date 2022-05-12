@@ -31,7 +31,6 @@ namespace SeamCarving {
    * and the value represents the row.
   */
   struct Seam {
-    public:
     Dir dir;
     std::vector<int> data;
 

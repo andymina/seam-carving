@@ -32,9 +32,22 @@ namespace SeamCarving {
 
     /** Decision tree. See samples/decision_tree.JPG */
     if (row_diff < 0) {
-      if (col_diff < 0) {         // (-, -)
+      if (col_diff < 0) {         // (-, -) done
+        int total = row_diff + col_diff;
+        while (total != 0) {
+          if (col_diff != 0) {
+            this->RemoveSeam(VERT);
+            col_diff++;
+            total++;
+          }
 
-      } else if (col_diff == 0) { // (-, 0)
+          if (row_diff != 0) {
+            this->RemoveSeam(HORZ);
+            row_diff++;
+            total++;
+          }
+        }
+      } else if (col_diff == 0) { // (-, 0) done
         while (row_diff != 0) {
           this->RemoveSeam(HORZ);
           row_diff++;
@@ -43,12 +56,12 @@ namespace SeamCarving {
 
       }
     } else if (row_diff == 0) {
-      if (col_diff < 0) {         // (0, -)
+      if (col_diff < 0) {         // (0, -) done
         while (col_diff != 0) {
           this->RemoveSeam(VERT);
           col_diff++;
         }
-      } else if (col_diff == 0) { // (0, 0)
+      } else if (col_diff == 0) { // (0, 0) done
         // no-op
       } else if (col_diff > 0) {  // (0, +)
 
@@ -73,6 +86,17 @@ namespace SeamCarving {
   */
   Seam CarvableImage::FindOptimalSeam(const Dir &dir) {
     return this->__FindOptimalSeam((dir == VERT) ? this->res_img : this->trans_img, dir);
+  }
+
+  std::vector<Seam> CarvableImage::FindKOptimalSeams(const int &k, const Dir &dir) {
+    Image img = (dir == VERT) ? this->res_img.clone() : this->trans_img.clone();
+    std::vector<Seam> res = this->__FindKOptimalSeams(k, img);
+    
+    if (dir == HORZ)
+      for (Seam &seam: res)
+        seam.dir = HORZ;
+    
+    return res;
   }
 
   /**
@@ -196,17 +220,27 @@ namespace SeamCarving {
         // find the direction of min and adjust path
         const int &center = energy_map.at<int>(row + 1, idx);
         const int &left = (idx - 1 < 0) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx - 1);
-        const int &right = (idx + 1 < cols) ? energy_map.at<int>(row + 1, idx + 1) : INT_MAX;
+        const int &right = (idx + 1 >= cols) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx + 1);
         int min_energy = std::min({center, left, right});
 
-        if (min_energy == left)
-          idx--;
-        else if (min_energy == right)
-          idx++;
+        if (min_energy == left) idx--;
+        else if (min_energy == right) idx++;
       }
     }
 
     return seam;
+  }
+
+  std::vector<Seam> CarvableImage::__FindKOptimalSeams(const int &k, Image &img) {
+    std::vector<Seam> res;
+    int count = k;
+    while (count != 0) {
+      Seam seam = this->__FindOptimalSeam(img, VERT);
+      res.push_back(seam);
+      img = this->__RemoveSeam(seam, img);
+      count--;
+    }
+    return res;
   }
 
   /**
@@ -226,7 +260,7 @@ namespace SeamCarving {
   }
 
   /**
-   * Removes the specified seam from the image.
+   * Removes the specified seam from the image vertically.
    * 
    * @param seam the seam to be removed
    * @param img the image to remove the seam from
@@ -239,7 +273,6 @@ namespace SeamCarving {
 
     for (int idx = 0; idx < seam.data.size(); idx++) {
       const cv::Mat &current_row = img.row(idx);
-      // std::cout << current_row << "\n\n";
 
       if (seam.data[idx] == 0) {
         // exclude first val

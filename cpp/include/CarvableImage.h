@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <vector>
 #include <iostream>
+#include <cmath>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
@@ -16,6 +17,7 @@ namespace SeamCarving {
 
       /** Helper Funcs*/
       Seam __FindOptimalSeam(const Image &img, const Dir &dir);
+      std::vector<Seam> __FindKOptimalSeams(const int &k, Image &img);
       void __HighlightSeam(Image &img, const Seam &seam, const cv::Vec3b &color);
       Image __RemoveSeam(const Seam &seam, const Image &img);
 
@@ -33,11 +35,12 @@ namespace SeamCarving {
       /** Seams */
       void SeamCarve(const int &width, const int &height);
       Seam FindOptimalSeam(const Dir &dir = VERT);
+      std::vector<Seam> FindKOptimalSeams(const int &k, const Dir &dir = VERT);
       void RemoveSeam(const Dir &dir);
 
       /** Highlighting */
       void HighlightSeam(const Seam &seam, const int &r = 176, const int &g = 38, const int &b = 176);
-      void HighlightKSeams(const std::vector<Seam> &seams, const int &r = 176, const int &g = 38, const int &b = 176);
+      void HighlightKSeams(const std::vector<Seam> &seam, const int &r = 176, const int &g = 38, const int &b = 176);
 
       /** Display */
       void Export(const ImageType &type, const std::string &path);

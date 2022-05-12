@@ -1,8 +1,8 @@
-from random import sample
+from multiprocessing.sharedctypes import Value
 from PIL import Image
 from clint.textui import colored, puts, indent
 import cmd, sys, os
-import build.seam_carving as sc
+import seam_carving as sc
 class SeamCarvingShell(cmd.Cmd):
   intro = colored.magenta("Seam Carving Shell (SCS)\nType 'help' or '?' to list commands.\n")
   noop = colored.yellow("This command hasn't been implemented yet.")
@@ -124,7 +124,8 @@ class SeamCarvingShell(cmd.Cmd):
       return
 
     self.current_img = sample_name
-    self.carver = sc.SeamCarver(f"samples/{sample_name}{self.samples[sample_name]}")
+    path = f"samples/{sample_name}{self.samples[sample_name]}"
+    self.carver = sc.SeamCarver(path)
     puts(colored.white(f"Set {colored.green(sample_name)} to be carved"))
 
   def do_which(self, arg):
@@ -140,6 +141,12 @@ class SeamCarvingShell(cmd.Cmd):
 
   # region - seam carving
 
+  def do_size(self, args):
+    puts(
+      colored.green(self.current_img) +  ": " +
+      colored.white(self.carver.cols()) + " x " + colored.white(self.carver.rows())
+    )
+
   def do_carve(self, args):
     """
     Carves the set image to the specified size. Can be used to remove or insert seams.
@@ -148,7 +155,31 @@ class SeamCarvingShell(cmd.Cmd):
         args {str} -- a string in the format '{width} {height}' where width and height are the
         new dimensions of the image and path represents the path to save the image to.
     """
-    puts(self.noop)
+    # make sure we've set an image
+    if self.carver is None:
+      puts(colored.red(f"Error: image has not been selected with {colored.cyan('set')} {colored.red('or')} {colored.cyan('load')}"))
+      return
+
+    # args checking
+    args = args.split()
+    if len(args) != 2:
+      puts(colored.red("Error: bad syntax. Expected two arguments: width height"))
+      return
+
+    width, height = None, None
+    try:
+      width, height = int(args[0]), int(args[1])
+    except ValueError:
+      puts(colored.red("Error: can't convert width and height values to ints"))
+      return
+    
+    if width == 0 or height == 0:
+      puts(colored.red("Error: can't have size 0 in any axis"))
+      return
+
+    # logic
+    puts(colored.white("Carving ") + colored.green(self.current_img) + colored.white("..."))
+    self.carver.carve(width, height)
 
   def do_highlight_seam(self, dir):
     """
@@ -177,11 +208,11 @@ class SeamCarvingShell(cmd.Cmd):
     Opens a window to display the selected image. Downloads a temporary image in out/ to show.
 
     Arguments:
-        arg {str} -- if not set, displays the current set image.
+        arg {str} -- if not set, displays the result of the current image set for carving.
         otherwise displays the image specified by path or by name.
     """
     if len(arg) == 0:
-      self.do_show_carver("original")
+      self.do_show_carver("result")
       return
     
     path = None
@@ -218,7 +249,7 @@ class SeamCarvingShell(cmd.Cmd):
     if sc_enum is None:
       puts(colored.red("Error: type must be one of sc.ImageType"))
 
-    path = "out/out.jpg"
+    path = "out.jpg"
     self.carver.export(sc_enum, path)
     img = Image.open(path)
     img.show()
@@ -233,7 +264,7 @@ class SeamCarvingShell(cmd.Cmd):
     """
     # make sure we've set an image
     if self.carver is None:
-      puts(colored.red("Error: image has not been selected with 'set'"))
+      puts(colored.red("Error: image has not been selected with ") + colored.cyan("set"))
       return
     
     # arg checking

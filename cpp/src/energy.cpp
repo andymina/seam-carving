@@ -18,14 +18,15 @@ namespace SeamCarving {
     Image ComputeEnergy(const Image &img, const std::string &kernel) {
       // apply gaussian and convert grayscale
       Image src;
-      cv::GaussianBlur(img, src, cv::Size(3, 3), 0, 0);
-      cv::cvtColor(src, src, cv::COLOR_BGR2GRAY);
+      cv::cvtColor(img, src, cv::COLOR_BGR2GRAY);
+      cv::GaussianBlur(src, src, cv::Size(3, 3), 0, 0);
+      
 
       // apply kernel
       Image x_edges, y_edges;
       int ksize = (kernel == "scharr") ? -1 : 3;
-      cv::Sobel(src, x_edges, CV_8U, 1, 0, ksize);
-      cv::Sobel(src, y_edges, CV_8U, 0, 1, ksize);
+      cv::Sobel(src, x_edges, CV_16S, 1, 0, ksize);
+      cv::Sobel(src, y_edges, CV_16S, 0, 1, ksize);
 
       // convert and merge
       Image abs_x, abs_y;
@@ -57,8 +58,8 @@ namespace SeamCarving {
         for (int col = 0; col < cols; col++) {
           // compute vals
           const int &center = energy_map.at<int>(row + 1, col);
-          const int &left = (col - 1 >= 0) ? energy_map.at<int>(row + 1, col - 1) : INT_MAX;
-          const int &right = (col + 1 < cols) ? energy_map.at<int>(row + 1, col + 1) : INT_MAX;
+          const int &left = (col - 1 < 0) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, col - 1);
+          const int &right = (col + 1 >= cols) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, col + 1);
 
           // take the min energy plus self
           energy_map.at<int>(row, col) = energy_img.at<uchar>(row, col) + std::min({center, left, right});

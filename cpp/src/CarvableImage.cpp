@@ -14,7 +14,9 @@ namespace SeamCarving {
     }
 
     this->res_img = this->original.clone();
-    this->trans_img = this->res_img.clone().t();
+    cv::transpose(this->res_img, this->trans_img);
+    this->rows_ = this->res_img.rows;
+    this->cols_ = this->res_img.cols;
   }
 
   /**
@@ -181,20 +183,23 @@ namespace SeamCarving {
   Seam CarvableImage::__FindOptimalSeam(const Image &img, const Dir &dir) {
     // find starting point
     Image energy_map = Energy::ComputeEnergyMap(Energy::ComputeEnergy(img, "sobel"));
-    int idx;
-    cv::minMaxIdx(energy_map.row(0), nullptr, nullptr, &idx, nullptr);
+    int idx = 0, minVal = energy_map.row(0).at<int>(idx);
+    for (int i = 0; i < energy_map.row(0).cols; i++)
+      if (energy_map.row(0).at<int>(i) < minVal) {
+        idx = i;
+        minVal = energy_map.row(0).at<int>(idx);
+      }
+
 
     Seam seam = Seam(dir, {});
-    int rows = energy_map.rows;
-    int cols = energy_map.cols;
-
+    int rows = energy_map.rows, cols = energy_map.cols;
     for (int row = 0; row < rows; row++) {
       seam.data.push_back(idx);
 
       if (row != rows - 1) {
         // find the direction of min and adjust path
         const int &center = energy_map.at<int>(row + 1, idx);
-        const int &left = (idx - 1 >= 0) ? energy_map.at<int>(row + 1, idx + 1) : INT_MAX;
+        const int &left = (idx - 1 < 0) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx - 1);
         const int &right = (idx + 1 < cols) ? energy_map.at<int>(row + 1, idx + 1) : INT_MAX;
         int min_energy = std::min({center, left, right});
 
@@ -234,10 +239,11 @@ namespace SeamCarving {
   */
   Image CarvableImage::__RemoveSeam(const Seam &seam, const Image &img) {
     /** TODO: complete this and test existing functionality in standalone build */
-    Image res = Image(img.rows, img.cols - 1, CV_8U);
+    Image res = Image(img.rows, img.cols - 1, img.type());
 
     for (int idx = 0; idx < seam.data.size(); idx++) {
       const cv::Mat &current_row = img.row(idx);
+      // std::cout << current_row << "\n\n";
 
       if (seam.data[idx] == 0) {
         // exclude first val
@@ -252,8 +258,9 @@ namespace SeamCarving {
           current_row.colRange(seam.data[idx] + 1, img.cols),
           res.row(idx)
         );
-      }      
+      }
     }
+    
     return res;  
   }
 }

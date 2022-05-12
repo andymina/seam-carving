@@ -28,8 +28,13 @@ PYBIND11_MODULE(seam_carving, module) {
     .export_values();
 
   /** expose classes */
+  /** TODO: expose Get images methods by converting cv::Mat to np.ndarray */
   py::class_<sc::CarvableImage>(module, "SeamCarver")
     .def(py::init<const std::string &>())
+    .def("rows", &sc::CarvableImage::num_rows)
+    .def("cols", &sc::CarvableImage::num_cols)
     .def("export", &sc::CarvableImage::Export)
     .def("carve", &sc::CarvableImage::SeamCarve);
+    // .def("find_seam", &sc::CarvableImage::FindOptimalSeam)
+    // .def("remove_seam", &sc::CarvableImage::RemoveSeam);
 }

@@ -1,4 +1,6 @@
-.PHONY build:
+.PHONY: build setup clean
+
+build:
 	@make -C build/
 	@echo "Project built!"
 

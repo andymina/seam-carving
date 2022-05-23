@@ -1,8 +1,18 @@
+/**
+ * Andy Mina
+ * 
+ * Definition of all "energy" functions used in seam carving.
+*/
+#ifndef energy_h
+#define energy_h
+
 #include <algorithm>
 #include <iostream>
 #include <limits>
+
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
+
 #include "constants.h"
 
 namespace SeamCarving {
@@ -36,3 +46,5 @@ namespace SeamCarving {
     Image ComputeEnergyMap(const Image &energy_img);
   }
 }
+
+#endif /** energy_h */

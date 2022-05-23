@@ -1,3 +1,8 @@
+"""
+Andy Mina
+
+The Seam Carving Shell cli.
+"""
 from PIL import Image
 from clint.textui import colored, puts, indent
 import cmd, sys, os

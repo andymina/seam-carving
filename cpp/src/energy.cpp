@@ -1,3 +1,8 @@
+/**
+ * Andy Mina
+ * 
+ * Implementation of the functions defined in energy.h
+*/
 #include "energy.h"
 
 namespace SeamCarving {
@@ -44,7 +49,6 @@ namespace SeamCarving {
      * energy.
      * 
      * @param energy_img an Image representing the gradient of the image
-     * 
      * @returns the energy map of the Image
     */
     Image ComputeEnergyMap(const Image &energy_img) {

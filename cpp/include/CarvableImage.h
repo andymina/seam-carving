@@ -1,14 +1,28 @@
+/**
+ * Andy Mina
+ * 
+ * Defines the class to carry out seam carving operations: CarvableImage. Simplifies the
+ * user-facing logic to carve seams out of an image or insert them.
+*/
+#ifndef CarvableImage_h
+#define CarvableImage_h
+
 #include <algorithm>
 #include <vector>
 #include <iostream>
 #include <cmath>
+
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
+
 #include "constants.h"
 #include "energy.h"
 
 namespace SeamCarving {
+  /**
+   * Class that carries out seam carving operations.
+  */
   class CarvableImage {
     private:
       /** Data members */
@@ -50,3 +64,5 @@ namespace SeamCarving {
       void Reset();
   };
 }
+
+#endif /** CarvableImage_h */

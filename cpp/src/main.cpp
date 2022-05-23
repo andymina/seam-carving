@@ -1,24 +1,41 @@
+/**
+ * Andy Mina
+ * 
+ * File to test SeamCarver in C++ implementation. Given a path to an image, the target number of
+ * rows, and the target number of cols, carves the image and displays the result.
+ * 
+ * Args:
+ *    {path to img}
+ *    {target rows}
+ *    {target cols}
+*/
 #include <iostream>
-#include <vector>
-#include <fstream>
+
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
+
 #include "CarvableImage.h"
 
-using std::cout;
-using std::ofstream;
 namespace sc = SeamCarving;
-namespace nrg = sc::Energy;
 
-int main() {
-  sc::CarvableImage img = sc::CarvableImage("../samples/dali.jpeg");
-  std::cout << "OG size: " << img.num_rows() << ", " << img.num_cols() << "\n";
+int main(int argc, char **argv) {
+  if (argc != 4) {
+    std::cout << "Usage: " << argv[0] << " {path to img} {target rows} {target cols}\n";
+    return -1;
+  }
 
-  img.SeamCarve(590, 770); // 570 x 750
-  std::cout << "new size: " << img.num_rows() << ", " << img.num_cols() << "\n";
+  const string input_path(argv[1]);
+  const int target_rows(stoi(argv[2]));
+  const int target_cols(stoi(argv[3]));
+
+  sc::CarvableImage img = sc::CarvableImage(input_path);
+  std::cout << "Original size: " << img.num_rows() << ", " << img.num_cols() << "\n";
+
+  img.SeamCarve(target_rows, target_cols);
+  std::cout << "Carved size: " << img.num_rows() << ", " << img.num_cols() << "\n";
   
-  cv::imshow("og", img.GetOriginal());
-  cv::imshow("cpp", img.GetResult());
+  cv::imshow("Original", img.GetOriginal());
+  cv::imshow("Carved", img.GetResult());
   int k = cv::waitKey(0);
   return 0;
 }

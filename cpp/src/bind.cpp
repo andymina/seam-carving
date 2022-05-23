@@ -1,16 +1,30 @@
+/**
+ * Andy Mina
+ * 
+ * Defines the bindings for the Python seam carving module.
+*/
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
+
 #include "constants.h"
 #include "CarvableImage.h"
 
 namespace py = pybind11;
 namespace sc = SeamCarving;
 
+/** 
+ * Macro function that defines a Python Module in runtime
+ * 
+ * @param seam_carving the name of the module to be outputted
+ * @param module the internal C++ reference to the module for bindings
+ * 
+ * TODO: add documentation for all functions
+*/
 PYBIND11_MODULE(seam_carving, module) {
-  module.doc() = "Seam Carving module made by Andy Mina.";
+  module.doc() = "Seam Carving module made by Andy Mina for CSCI 49369.";
 
   /** expose enums */
   py::enum_<sc::Dir>(module, "Dir")

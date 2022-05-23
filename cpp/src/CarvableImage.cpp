@@ -1,8 +1,17 @@
+/**
+ * Andy Mina
+ * 
+ * Implementation of the functions defined in CarvableImage.h
+*/
 #include "CarvableImage.h"
 
 namespace SeamCarving {
   /**
    * Constructor for the CarvableImage.
+   * 
+   * this->original - stores the original image for comparison and if needed to reset
+   * this->res_img - the resulting image after any seam operations
+   * this->trans_img - the transposed image of this->res_img used for internal calculations
    * 
    * @param path file path to the Image to be carved
   */
@@ -112,6 +121,13 @@ namespace SeamCarving {
     return this->__FindOptimalSeam((dir == VERT) ? this->res_img : this->trans_img, dir);
   }
 
+  /** 
+   * Finds the first K optimal seams in the specified direction in image.
+   * 
+   * @param k the number of seams to find
+   * @param dir the direction of the seam to be found.
+   * @returns a vector of the seams.
+  */
   std::vector<Seam> CarvableImage::FindKOptimalSeams(const int &k, const Dir &dir) {
     Image img = (dir == VERT) ? this->res_img.clone() : this->trans_img.clone();
     std::vector<Seam> res = this->__FindKOptimalSeams(k, VERT, img);
@@ -146,6 +162,12 @@ namespace SeamCarving {
     }
   }
 
+  /**
+   * Inserts the optimal seam into the image in the specified direction. The result is stored within
+   * this->res_img.
+   * 
+   * @param dir the direction of the seam to inserted.
+  */
   void CarvableImage::InsertSeam(const Dir &dir) {
     Seam seam = this->FindOptimalSeam(dir);
     Image res = this->__InsertSeam(seam, (dir == VERT) ? this->res_img : this->trans_img);
@@ -161,6 +183,13 @@ namespace SeamCarving {
     }
   }
 
+  /**
+   * Inserts the first k seams into the image in the specified direction. Starts by finding the
+   * first k seams for removal and then inserts them in order of arrival.
+   * 
+   * @param k the number of seams to be inserted
+   * @param dir the direction of seams to be inserted
+  */
   void CarvableImage::InsertKSeams(const int &k, const Dir &dir) {
     std::vector<Seam> seams = this->FindKOptimalSeams(k, dir);
     Image res = (dir == VERT) ? this->res_img.clone() : this->trans_img.clone();
@@ -213,9 +242,11 @@ namespace SeamCarving {
   }
 
   /**
-   * Displays the target image which is specified 
+   * Saves the target image which is specified by the enums listed in sc::ImageType to the
+   * specified path.
    * 
-   * @param target 
+   * @param type the type of image to be saved as defined by sc::ImageType enums
+   * @param path the path to save the image to
   */
   void CarvableImage::Export(const ImageType &type, const std::string &path) {    
     switch (type) {
@@ -256,6 +287,16 @@ namespace SeamCarving {
     }
   }
   
+  /**
+   * Resets the Carver so that this->res_img is the original image read.
+  */
+  void CarvableImage::Reset() {
+    this->res_img = this->original.clone();
+    cv::transpose(this->res_img, this->trans_img);
+    this->rows_ = this->res_img.rows;
+    this->cols_ = this->res_img.cols;
+  }
+
   /**
    * 
    * Returns the optimal vertical seam in the given image.
@@ -313,6 +354,13 @@ namespace SeamCarving {
     return seam;
   }
 
+  /**
+   * Internal method to find the first k seams for removal.
+   * 
+   * @param k the number of seams to find
+   * @param dir the direction of the seams to be found
+   * @param img the image to find the seams in; modified to find k seams
+  */
   std::vector<Seam> CarvableImage::__FindKOptimalSeams(const int &k, const Dir &dir, Image &img) {
     std::vector<Seam> res;
     int count = k;
@@ -342,11 +390,9 @@ namespace SeamCarving {
    * 
    * @param seam the seam to be removed
    * @param img the image to remove the seam from
-   * 
    * @returns a new Image with the seam removed
   */
    Image CarvableImage::__RemoveSeam(const Seam &seam, const Image &img) {
-    /** TODO: complete this and test existing functionality in standalone build */
     Image res = Image(img.rows, img.cols - 1, img.type());
 
     if (seam.dir == VERT) {
@@ -395,12 +441,11 @@ namespace SeamCarving {
   }
 
   /**
-   * TODO:
+   * Internal helper function to insert a seam into an Image. Returns a copy of the new image.
    * 
-   * get the current color and make a 1x1 matrix
-   * get the rest of the OG matrix
-   * concat all of the mats
-   * average down the seam
+   * @param seam the seam to be inserted in the image
+   * @param img the original img 
+   * @returns a new Image with the seam inserted
   */
   Image CarvableImage::__InsertSeam(const Seam &seam, const Image &img) {
     Image res = cv::Mat(img.rows, img.cols + 1, img.type());
@@ -480,12 +525,5 @@ namespace SeamCarving {
 
 
     return res;
-  }
-
-  void CarvableImage::Reset() {
-    this->res_img = this->original.clone();
-    cv::transpose(this->res_img, this->trans_img);
-    this->rows_ = this->res_img.rows;
-    this->cols_ = this->res_img.cols;
   }
 }

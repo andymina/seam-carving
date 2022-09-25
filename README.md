@@ -4,6 +4,7 @@ A native C++ implemenation of seam carving as described by Avidan et al. in [Sea
 content-aware image resizing](https://doi.org/10.1145/1275808.1276390). Learn more about seam carving from [this YouTube video](https://www.youtube.com/embed/6NcIJXTlugc).
 
 ![Seam Carving Demo GIF](docs/assets/seam-carving-demo.gif)
+
 *Credit to [George Wang](https://inst.eecs.berkeley.edu/~cs194-26/sp20/upload/files/projFinalAssigned/cs194-26-aea/) for the GIF*
 
 ## Getting Started

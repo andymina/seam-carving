@@ -1,6 +1,6 @@
 # Seam Carving
 
-A native C++ implemenation of seam carving as described by Avidan et al. in [Seam carving for
+A native C++ implementation of seam carving as described by Avidan et al. in [Seam carving for
 content-aware image resizing](https://doi.org/10.1145/1275808.1276390). Learn more about seam carving from [this YouTube video](https://www.youtube.com/embed/6NcIJXTlugc).
 
 ![Seam Carving Demo GIF](docs/assets/seam-carving-demo.gif)

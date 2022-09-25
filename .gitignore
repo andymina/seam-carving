@@ -3,3 +3,5 @@ build/
 out/
 *.cfg
 __pycache__
+bin/
+lib/

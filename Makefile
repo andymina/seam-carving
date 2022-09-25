@@ -1,6 +1,7 @@
 .PHONY: setup build clean
 
 setup:
+	@pip install -r requirements.txt
 	@git submodule update --init
 	@./vcpkg/bootstrap-vcpkg.sh
 	@./vcpkg/vcpkg install opencv pybind11

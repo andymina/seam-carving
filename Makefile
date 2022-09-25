@@ -1,4 +1,5 @@
-.PHONY: setup build clean demo cpp py js
+.PHONY: setup build clean demo cpp py js default
+default: demo
 
 setup:
 	@pip install -r requirements.txt
@@ -21,10 +22,6 @@ py:
 
 js:
 	@cmake -B build/ -S ./ -DSC_EXPORT=js
-
-build:
-	@make -C build/
-	@echo "Project built!"
 
 clean:
 	rm -rf build/ out/

@@ -3,7 +3,7 @@
 A native C++ implemenation of seam carving as described by Avidan et al. in [Seam carving for
 content-aware image resizing](https://doi.org/10.1145/1275808.1276390). Learn more about seam carving below.
 
-VIDEO HERE
+<iframe width="560" height="315" src="https://www.youtube.com/embed/6NcIJXTlugc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Getting Started
 

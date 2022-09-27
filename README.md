@@ -27,11 +27,3 @@ The following `make` commands are currently available:
 
 The Seam Carving Shell can be run from the `cli.py` file at the root: `python cli.py`. The cli
 requires at least Python 3.10.
-
-## TODO
-
-- [ ] add Python documentation for C++ bindings in `bind.cpp`
-- [ ] clean up branching code in `CarvableImage.cpp`
-- [ ] add support for multisize images and real-time seam carving
-- [ ] implement transport maps
-- [ ] add support to export to JavaScript module

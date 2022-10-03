@@ -33,7 +33,7 @@ namespace SeamCarving {
     Image ComputeEnergy(const Image &img, const std::string &kernel = "sobel");
     
     /**
-     * Computes the vertical energy map and the path map for a given energy image.
+     * Computes the energy map and the path map for a given energy image.
      * 
      * The energy map is visual representation of the paths of least energy where the brightness is
      * proportional to the energy of the pixel. Seams can be created by following the path of least
@@ -43,7 +43,8 @@ namespace SeamCarving {
      * 
      * @returns the energy map of the Image
     */
-    Image ComputeEnergyMap(const Image &energy_img);
+    Image ComputeVerticalEnergyMap(const Image &energy_img);
+    Image ComputeHorizontalEnergyMap(const Image &energy_img);
   }
 }
 

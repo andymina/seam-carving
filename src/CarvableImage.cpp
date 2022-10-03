@@ -306,9 +306,9 @@ namespace SeamCarving {
    * 
    * @returns the optimal seam in the given direction
    */
-  Seam CarvableImage::__FindOptimalSeam(const Image &img, const Dir &dir) {
+  Seam CarvableImage::__FindOptimalVerticalSeam(const Image &img) {
     // find starting point
-    Image energy_map = Energy::ComputeEnergyMap(Energy::ComputeEnergy(img, "sobel"));
+    Image energy_map = Energy::ComputeVerticalEnergyMap(Energy::ComputeEnergy(img, "sobel"));
     int idx = 0, minVal = energy_map.row(0).at<int>(idx);
     for (int i = 0; i < energy_map.row(0).cols; i++)
       if (energy_map.row(0).at<int>(i) < minVal) {
@@ -316,42 +316,57 @@ namespace SeamCarving {
         minVal = energy_map.row(0).at<int>(idx);
       }
 
-    Seam seam = Seam(dir, {});
+    Seam seam = Seam(VERT, {});
     int rows = energy_map.rows, cols = energy_map.cols;
 
-    if (dir == VERT) {
-      for (int row = 0; row < rows; row++) {
-        seam.data.push_back({row, idx});
+    for (int row = 0; row < rows; row++) {
+      seam.data.push_back({row, idx});
 
-        if (row != rows - 1) {
-          // find the direction of min and adjust path
-          const int &center = energy_map.at<int>(row + 1, idx);
-          const int &left = (idx - 1 < 0) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx - 1);
-          const int &right = (idx + 1 >= cols) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx + 1);
-          int min_energy = std::min({center, left, right});
+      if (row != rows - 1) {
+        // find the direction of min and adjust path
+        const int &center = energy_map.at<int>(row + 1, idx);
+        const int &left = (idx - 1 < 0) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx - 1);
+        const int &right = (idx + 1 >= cols) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx + 1);
 
-          if (min_energy == left) idx--;
-          else if (min_energy == right) idx++;
-        }
-      }
-    } else if (dir == HORZ) {
-      for (int row = 0; row < rows; row++) {
-        seam.data.push_back({idx, row});
-
-        if (row != rows - 1) {
-          // find the direction of min and adjust path
-          const int &center = energy_map.at<int>(row + 1, idx);
-          const int &left = (idx - 1 < 0) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx - 1);
-          const int &right = (idx + 1 >= cols) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx + 1);
-          int min_energy = std::min({center, left, right});
-
-          if (min_energy == left) idx--;
-          else if (min_energy == right) idx++;
-        }
+        // find the min pixel and adjust weight
+        int min_energy = std::min({center, left, right});
+        if (min_energy == left) idx--;
+        else if (min_energy == right) idx++;
       }
     }
+   
 
     return seam;
+  }
+
+  Seam CarvableImage::__FindOptimalHorizontalSeam(const Image &img) {
+    // find starting point
+    Image energy_map = Energy::ComputeHorizontalEnergyMap(Energy::ComputeEnergy(img, "sobel"));
+    int idx = 0, minVal = energy_map.col(0).at<int>(idx);
+    for (int i = 0; i < energy_map.col(0).rows; i++)
+      if (energy_map.col(0).at<int>(i) < minVal) {
+        idx = i;
+        minVal = energy_map.col(0).at<int>(idx);
+      }
+
+    Seam seam = Seam(HORZ, {});
+    int rows = energy_map.rows, cols = energy_map.cols;
+
+    for (int col = 0; col < cols; col++) {
+      seam.data.push_back({idx, col});
+
+      if (col != cols - 1) {
+        // find the direction of min and adjust path
+        const int &center = energy_map.at<int>(idx, col + 1);
+        const int &left = (idx - 1 < 0) ? std::numeric_limits<int>::max() : energy_map.at<int>(idx - 1, col + 1);
+        const int &right = (idx + 1 >= rows) ? std::numeric_limits<int>::max() : energy_map.at<int>(idx + 1, col + 1);
+
+        // find the min and adjust weight
+        int min_energy = std::min({center, left, right});
+        if (min_energy == left) idx--;
+        else if (min_energy == right) idx++;
+      }
+    }
   }
 
   /**

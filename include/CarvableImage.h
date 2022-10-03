@@ -30,7 +30,14 @@ namespace SeamCarving {
       int rows_, cols_;
 
       /** Helper Funcs*/
-      Seam __FindOptimalSeam(const Image &img, const Dir &dir);
+
+      /**
+       * @param img the Image to find the optimal seam in
+       * @returns the optimal seam to be removed
+       */
+      Seam __FindOptimalVerticalSeam(const Image &img);
+      Seam __FindOptimalHorizontalSeam(const Image &img);
+
       std::vector<Seam> __FindKOptimalSeams(const int &k, const Dir &dir, Image &img);
       void __HighlightSeam(Image &img, const Seam &seam, const cv::Vec3b &color);
       Image __RemoveSeam(const Seam &seam, const Image &img);

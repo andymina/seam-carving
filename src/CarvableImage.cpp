@@ -148,15 +148,13 @@ namespace SeamCarving {
    * of cols. Conversely, removing a HORZ seam will reduce the number of rows.
   */
   void CarvableImage::RemoveSeam(const Dir &dir) {
-    Image res;
-
     if (dir == VERT) {
       const Seam &seam = this->__FindOptimalVerticalSeam(this->res_img);
       this->res_img = this->__RemoveVerticalSeam(seam, this->res_img);
       this->cols_--;
     } else if (dir == HORZ) {
       const Seam &seam = this->__FindOptimalHorizontalSeam(this->res_img);
-      res = this->__RemoveHorizontalSeam(seam, this->res_img);
+      this->res_img = this->__RemoveHorizontalSeam(seam, this->res_img);
       this->rows_--;
     }
 

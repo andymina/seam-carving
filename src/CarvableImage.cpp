@@ -118,7 +118,9 @@ namespace SeamCarving {
    * @returns the seam
   */
   Seam CarvableImage::FindOptimalSeam(const Dir &dir) {
-    return this->__FindOptimalSeam((dir == VERT) ? this->res_img : this->trans_img, dir);
+    return (dir == VERT) ?
+      this->__FindOptimalVerticalSeam(this->res_img) :
+      this->__FindOptimalHorizontalSeam(this->res_img);
   }
 
   /** 
@@ -146,20 +148,19 @@ namespace SeamCarving {
    * of cols. Conversely, removing a HORZ seam will reduce the number of rows.
   */
   void CarvableImage::RemoveSeam(const Dir &dir) {
-    Image res = this->__RemoveSeam(
-      this->FindOptimalSeam(dir),
-      (dir == VERT) ? this->res_img : this->trans_img
-    );
+    Image res;
 
     if (dir == VERT) {
-      this->res_img = res;
-      cv::transpose(this->res_img, this->trans_img);
+      const Seam &seam = this->__FindOptimalVerticalSeam(this->res_img);
+      this->res_img = this->__RemoveVerticalSeam(seam, this->res_img);
       this->cols_--;
     } else if (dir == HORZ) {
-      this->trans_img = res;
-      cv::transpose(this->trans_img, this->res_img);
+      const Seam &seam = this->__FindOptimalHorizontalSeam(this->res_img);
+      res = this->__RemoveHorizontalSeam(seam, this->res_img);
       this->rows_--;
     }
+
+    cv::transpose(this->res_img, this->trans_img);
   }
 
   /**
@@ -170,17 +171,14 @@ namespace SeamCarving {
   */
   void CarvableImage::InsertSeam(const Dir &dir) {
     Seam seam = this->FindOptimalSeam(dir);
-    Image res = this->__InsertSeam(seam, (dir == VERT) ? this->res_img : this->trans_img);
-    
-    if (dir == VERT) {
-      this->res_img = res;
-      cv::transpose(this->res_img, this->trans_img);
-      this->cols_++;
-    } else if (dir == HORZ) {
-      this->trans_img = res;
-      cv::transpose(this->trans_img, this->res_img);
-      this->rows_++;
-    }
+    this->res_img = (dir == VERT) ?
+      this->__InsertVerticalSeam(seam, this->res_img) :
+      this->__InsertHorizontalSeam(seam, this->res_img);
+
+    if (dir == VERT) this->cols_++;
+    else this->rows_++;
+
+    cv::transpose(this->res_img, this->trans_img);
   }
 
   /**
@@ -199,7 +197,7 @@ namespace SeamCarving {
         s.dir = VERT;
 
     for (const Seam &s: seams)
-      res = this->__InsertSeam(s, res);
+      res = this->__InsertVerticalSeam(s, res);
 
     if (dir == VERT) {
       this->res_img = res;
@@ -271,14 +269,14 @@ namespace SeamCarving {
       }
 
       case VERT_MAP: {
-        Image map = Energy::ComputeEnergyMap(Energy::ComputeEnergy(this->res_img, "sobel"));
+        Image map = Energy::ComputeVerticalEnergyMap(Energy::ComputeEnergy(this->res_img, "sobel"));
         cv::normalize(map, map, 0, 255, cv::NORM_MINMAX); // normalize to correct range
         cv::imwrite(path, map);
         break;
       }
 
       case HORZ_MAP: {
-        Image map = Energy::ComputeEnergyMap(Energy::ComputeEnergy(this->trans_img, "sobel"));
+        Image map = Energy::ComputeHorizontalEnergyMap(Energy::ComputeEnergy(this->trans_img, "sobel"));
         cv::normalize(map, map, 0, 255, cv::NORM_MINMAX); // normalize to correct range
         cv::transpose(map, map);
         cv::imwrite(path, map);
@@ -369,12 +367,21 @@ namespace SeamCarving {
   std::vector<Seam> CarvableImage::__FindKOptimalSeams(const int &k, const Dir &dir, Image &img) {
     std::vector<Seam> res;
     int count = k;
-    while (count != 0) {
-      Seam seam = this->__FindOptimalSeam(img, dir);
-      res.push_back(seam);
-      img = this->__RemoveSeam(seam, img);
-      count--;
-    }
+
+    if (dir == VERT)
+      while (count != 0) {
+        Seam seam = this->__FindOptimalVerticalSeam(img);
+        res.push_back(seam);
+        img = this->__RemoveVerticalSeam(seam, img);
+        count--;
+      }
+    else 
+      while (count != 0) {
+        Seam seam = this->__FindOptimalHorizontalSeam(img);
+        res.push_back(seam);
+        img = this->__RemoveHorizontalSeam(seam, img);
+        count--;
+      }
     return res;
   }
 

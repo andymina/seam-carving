@@ -39,16 +39,23 @@ namespace SeamCarving {
       Seam __FindOptimalHorizontalSeam(const Image &img);
 
       /**
-       * @param seam the Seam to be removed
+       * @param seam the seam to be removed
        * @param img the target image
        * @returns the image with the specified seam removed
        */
       Image __RemoveVerticalSeam(const Seam &seam, const Image &img);
       Image __RemoveHorizontalSeam(const Seam &seam, const Image &img);
 
+      /**
+       * @param seam the seam to be inserted
+       * @param img the target image
+       * @returns the image with the seam inserted
+       */
+      Image __InsertVerticalSeam(const Seam &seam, const Image &img);
+      Image __InsertHorizontalSeam(const Seam &seam, const Image &img);
+
       std::vector<Seam> __FindKOptimalSeams(const int &k, const Dir &dir, Image &img);
       void __HighlightSeam(Image &img, const Seam &seam, const cv::Vec3b &color);
-      Image __InsertSeam(const Seam &seam, const Image &img);
 
     public:
       /** Constructors */

@@ -296,16 +296,7 @@ namespace SeamCarving {
     this->rows_ = this->res_img.rows;
     this->cols_ = this->res_img.cols;
   }
-
-  /**
-   * 
-   * Returns the optimal vertical seam in the given image.
-   * 
-   * @param img the Image to find the optimal seam in
-   * @param dir the direction to find the optimal seam in 
-   * 
-   * @returns the optimal seam in the given direction
-   */
+  
   Seam CarvableImage::__FindOptimalVerticalSeam(const Image &img) {
     // find starting point
     Image energy_map = Energy::ComputeVerticalEnergyMap(Energy::ComputeEnergy(img, "sobel"));
@@ -335,7 +326,6 @@ namespace SeamCarving {
       }
     }
    
-
     return seam;
   }
 
@@ -352,16 +342,16 @@ namespace SeamCarving {
     Seam seam = Seam(HORZ, {});
     int rows = energy_map.rows, cols = energy_map.cols;
 
-    for (int col = 0; col < cols; col++) {
-      seam.data.push_back({idx, col});
+    for (int row = 0; row < rows; row++) {
+      seam.data.push_back({idx, row});
 
-      if (col != cols - 1) {
+      if (row != rows - 1) {
         // find the direction of min and adjust path
-        const int &center = energy_map.at<int>(idx, col + 1);
-        const int &left = (idx - 1 < 0) ? std::numeric_limits<int>::max() : energy_map.at<int>(idx - 1, col + 1);
-        const int &right = (idx + 1 >= rows) ? std::numeric_limits<int>::max() : energy_map.at<int>(idx + 1, col + 1);
+        const int &center = energy_map.at<int>(row + 1, idx);
+        const int &left = (idx - 1 < 0) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx - 1);
+        const int &right = (idx + 1 >= cols) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx + 1);
 
-        // find the min and adjust weight
+        // find the min pixel and adjust weight
         int min_energy = std::min({center, left, right});
         if (min_energy == left) idx--;
         else if (min_energy == right) idx++;
@@ -400,61 +390,55 @@ namespace SeamCarving {
       img.at<cv::Vec3b>(seam.data[idx].row, seam.data[idx].col) = color;
   }
 
-  /**
-   * Removes the specified seam from the image vertically.
-   * 
-   * @param seam the seam to be removed
-   * @param img the image to remove the seam from
-   * @returns a new Image with the seam removed
-  */
-   Image CarvableImage::__RemoveSeam(const Seam &seam, const Image &img) {
+  Image CarvableImage::__RemoveVerticalSeam(const Seam &seam, const Image &img) {
     Image res = Image(img.rows, img.cols - 1, img.type());
 
-    if (seam.dir == VERT) {
-      for (int idx = 0; idx < seam.data.size(); idx++) {
-        const cv::Mat &current_row = img.row(idx);
+    for (int idx = 0; idx < seam.data.size(); idx++) {
+      const cv::Mat &current_row = img.row(idx);
 
-        if (seam.data[idx].col == 0) {
-          // exclude first val
-          current_row.colRange(1, img.cols).copyTo(res.row(idx));
-        } else if (seam.data[idx].col == img.cols - 1) {
-          // exclude last val
-          current_row.colRange(0, img.cols - 1).copyTo(res.row(idx));
-        } else {
-          // merge two halves
-          cv::hconcat(
-            current_row.colRange(0, seam.data[idx].col),
-            current_row.colRange(seam.data[idx].col + 1, img.cols),
-            res.row(idx)
-          );
-        }
-      }
-    } else if (seam.dir == HORZ) {
-      for (int idx = 0; idx < seam.data.size(); idx++) {
-        const cv::Mat &current_row = img.row(seam.data[idx].col);
-
-        if (seam.data[idx].row == 0) {
-          // exclude first val
-          current_row.colRange(1, img.cols).copyTo(res.row(seam.data[idx].col));
-        } else if (seam.data[idx].row == img.cols - 1) {
-          // exclude last val
-          current_row.colRange(0, img.cols - 1).copyTo(res.row(seam.data[idx].col));
-        } else {
-          // merge two halves
-          cv::hconcat(
-            current_row.colRange(0, seam.data[idx].row),
-            current_row.colRange(seam.data[idx].row + 1, img.cols),
-            res.row(seam.data[idx].col)
-          );
-        }
+      if (seam.data[idx].col == 0) {
+        // exclude first val
+        current_row.colRange(1, img.cols).copyTo(res.row(idx));
+      } else if (seam.data[idx].col == img.cols - 1) {
+        // exclude last val
+        current_row.colRange(0, img.cols - 1).copyTo(res.row(idx));
+      } else {
+        // merge two halves
+        cv::hconcat(
+          current_row.colRange(0, seam.data[idx].col),
+          current_row.colRange(seam.data[idx].col + 1, img.cols),
+          res.row(idx)
+        );
       }
     }
-
-
     
     return res;  
   }
 
+  Image CarvableImage::__RemoveHorizontalSeam(const Seam &seam, const Image &img) {
+    Image res = Image(img.rows - 1, img.cols, img.type());
+
+    for (int idx = 0; idx < seam.data.size(); idx++) {
+      const cv::Mat &current_row = img.row(seam.data[idx].col);
+
+      if (seam.data[idx].row == 0) {
+        // exclude first val
+        current_row.colRange(1, img.cols).copyTo(res.row(seam.data[idx].col));
+      } else if (seam.data[idx].row == img.cols - 1) {
+        // exclude last val
+        current_row.colRange(0, img.cols - 1).copyTo(res.row(seam.data[idx].col));
+      } else {
+        // merge two halves
+        cv::hconcat(
+          current_row.colRange(0, seam.data[idx].row),
+          current_row.colRange(seam.data[idx].row + 1, img.cols),
+          res.row(seam.data[idx].col)
+        );
+      }
+    }
+
+    return res;
+  }
   /**
    * Internal helper function to insert a seam into an Image. Returns a copy of the new image.
    * 

@@ -1,5 +1,5 @@
-# project setup
-cmake_minimum_required(VERSION 3.4)
+# # project setup
+cmake_minimum_required(VERSION 3.2)
 set(
     CMAKE_TOOLCHAIN_FILE
     "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
@@ -9,8 +9,8 @@ project(seam-carving)
 
 # var setup
 set(INCLUDE_DIRS include/)
-set(SRC_FILES src/energy.cpp src/CarvableImage.cpp)
-set(OPENCV_LIBS opencv_core opencv_imgcodecs opencv_highgui)
+set(SRC_FILES "src/energy.cpp" "src/CarvableImage.cpp")
+set(OPENCV_LIBS opencv_core opencv_imgcodecs opencv_highgui opencv_imgproc) 
 set(PYBIND11_LIBS pybind11::lto pybind11::module)
 
 # find packages
@@ -24,7 +24,9 @@ endif(NOT DEFINED SC_EXPORT)
 # cpp demo export
 if (${SC_EXPORT} MATCHES "demo")
     message("Building C++17 demo executable...")
-    add_executable(${PROJECT_NAME} src/main.cpp ${SRC_FILES})
+    add_executable(${PROJECT_NAME} src/main.cpp src/energy.cpp src/CarvableImage.cpp)
+    message(STATUS ${SRC_FILES})
+message(${INCLUDE_DIRS})
     set(PROJECT_LIBS ${OPENCV_LIBS})
 endif(${SC_EXPORT} MATCHES "demo")
 

@@ -274,7 +274,7 @@ namespace SeamCarving {
       }
 
       case HORZ_MAP: {
-        Image map = Energy::ComputeHorizontalEnergyMap(Energy::ComputeEnergy(this->trans_img, "sobel"));
+        Image map = Energy::ComputeHorizontalEnergyMap(Energy::ComputeEnergy(this->res_img, "sobel"));
         cv::normalize(map, map, 0, 255, cv::NORM_MINMAX); // normalize to correct range
         cv::transpose(map, map);
         cv::imwrite(path, map);
@@ -293,68 +293,6 @@ namespace SeamCarving {
     this->cols_ = this->res_img.cols;
   }
   
-  Seam CarvableImage::__FindOptimalVerticalSeam(const Image &img) {
-    // find starting point
-    Image energy_map = Energy::ComputeVerticalEnergyMap(Energy::ComputeEnergy(img, "sobel"));
-    int idx = 0, minVal = energy_map.row(0).at<int>(idx);
-    for (int i = 0; i < energy_map.row(0).cols; i++)
-      if (energy_map.row(0).at<int>(i) < minVal) {
-        idx = i;
-        minVal = energy_map.row(0).at<int>(idx);
-      }
-
-    Seam seam = Seam(VERT, {});
-    int rows = energy_map.rows, cols = energy_map.cols;
-
-    for (int row = 0; row < rows; row++) {
-      seam.data.push_back({row, idx});
-
-      if (row != rows - 1) {
-        // find the direction of min and adjust path
-        const int &center = energy_map.at<int>(row + 1, idx);
-        const int &left = (idx - 1 < 0) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx - 1);
-        const int &right = (idx + 1 >= cols) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx + 1);
-
-        // find the min pixel and adjust weight
-        int min_energy = std::min({center, left, right});
-        if (min_energy == left) idx--;
-        else if (min_energy == right) idx++;
-      }
-    }
-   
-    return seam;
-  }
-
-  Seam CarvableImage::__FindOptimalHorizontalSeam(const Image &img) {
-    // find starting point
-    Image energy_map = Energy::ComputeHorizontalEnergyMap(Energy::ComputeEnergy(img, "sobel"));
-    int idx = 0, minVal = energy_map.col(0).at<int>(idx);
-    for (int i = 0; i < energy_map.col(0).rows; i++)
-      if (energy_map.col(0).at<int>(i) < minVal) {
-        idx = i;
-        minVal = energy_map.col(0).at<int>(idx);
-      }
-
-    Seam seam = Seam(HORZ, {});
-    int rows = energy_map.rows, cols = energy_map.cols;
-
-    for (int row = 0; row < rows; row++) {
-      seam.data.push_back({idx, row});
-
-      if (row != rows - 1) {
-        // find the direction of min and adjust path
-        const int &center = energy_map.at<int>(row + 1, idx);
-        const int &left = (idx - 1 < 0) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx - 1);
-        const int &right = (idx + 1 >= cols) ? std::numeric_limits<int>::max() : energy_map.at<int>(row + 1, idx + 1);
-
-        // find the min pixel and adjust weight
-        int min_energy = std::min({center, left, right});
-        if (min_energy == left) idx--;
-        else if (min_energy == right) idx++;
-      }
-    }
-  }
-
   /**
    * Internal method to find the first k seams for removal.
    * 
@@ -455,6 +393,8 @@ namespace SeamCarving {
         else if (min_energy == right) idx++;
       }
     }
+
+    return seam;
   }
 
   Image CarvableImage::__RemoveVerticalSeam(const Seam &seam, const Image &img) {
@@ -585,5 +525,7 @@ namespace SeamCarving {
         }
       }
     }
+
+    return res;
   }
 }

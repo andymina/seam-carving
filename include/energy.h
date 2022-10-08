@@ -7,7 +7,6 @@
 #define energy_h
 
 #include <algorithm>
-#include <iostream>
 #include <limits>
 
 #include <opencv2/core.hpp>

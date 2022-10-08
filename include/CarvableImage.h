@@ -25,11 +25,16 @@ namespace SeamCarving {
   */
   class CarvableImage {
     private:
-      /** Data members */
+      /** --- DATA MEMBERS --- */
+      /** 
+       * this->original - stores the original image for comparison and if needed to reset
+       * this->res_img - the resulting image after any seam operations
+       * this->trans_img - the transposed image of this->res_img used for internal calculations 
+       */
       Image original, res_img, trans_img;
       int rows_, cols_;
 
-      /** Helper Funcs*/
+      /** --- HELPERS --- */
 
       /**
        * @param img the image to find the optimal seam in

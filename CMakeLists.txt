@@ -10,7 +10,7 @@ project(seam-carving)
 # var setup
 set(INCLUDE_DIRS include/)
 set(SRC_FILES src/energy.cpp src/CarvableImage.cpp)
-set(OPENCV_LIBS opencv_core opencv_imgcodecs opencv_highgui)
+set(OPENCV_LIBS opencv_core opencv_imgcodecs opencv_highgui opencv_imgproc)
 set(PYBIND11_LIBS pybind11::lto pybind11::module)
 
 # find packages

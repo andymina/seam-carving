@@ -66,7 +66,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_LIBS})
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES
-    LIBRARY_OUTPUT_NAME "seam_carving_${SC_EXPORT}"
+    LIBRARY_OUTPUT_NAME "seam_carving"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/out"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/out"
 )

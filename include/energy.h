@@ -6,35 +6,37 @@
 #ifndef energy_h
 #define energy_h
 
-#include <algorithm>
-#include <limits>
+#include "constants.h"
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "constants.h"
+#include <algorithm>
+#include <iostream> /** TODO(#15): remove this when done */
+#include <limits>
 
 namespace SeamCarving {
 namespace Energy {
 /**
+ * @brief Computes the energy of an image using the Scharr kernel.
+ *
  * Computes the energy of an image using the gradient and returns a grayscale
  * images where the brightness of a pixel is propotional to its energy. Uses the
  * energy function defined as described in Avidan et al., E(p) = | dx(p) | + |
  * dy(p) |, where p represents a pixel and dx/dy represent the first
- * derivatives.
+ * derivatives. In the paper the first derivatives are found using the Sobel
+ * kernel, but this function uses the Scharr kernel for better accuracy.
  *
  * @param img an image read by OpenCV
- * @param kernel the kernel to use to compute the gradient. Must be one of
- * ["sobel", "scharr"]. Defaults to "sobel"
- * @param dir the direction to compute the energy in. Must be one of [VERT,
- * HORZ]. Defaults to VERT.
- *
  * @returns an image representing the energy of the original image
+ * 
+ * TODO(#22): generate a proper doxygen comment
  */
-cv::Mat ComputeEnergy(const cv::Mat &img, const std::string &kernel = "sobel");
+void ComputeEnergy(cv::InputOutputArray img);
 
 /**
- * Computes the energy map and the path map for a given energy image.
+ * @brief Computes the energy map, used to find the path of least energy, of an
+ * image.
  *
  * The energy map is visual representation of the paths of least energy where
  * the brightness is proportional to the energy of the pixel. Seams can be

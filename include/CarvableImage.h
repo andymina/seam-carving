@@ -30,7 +30,7 @@ class CarvableImage {
      * this->res_img - the resulting image after any seam operations
      * this->trans_img - the transposed image of this->res_img used for internal calculations
      */
-    cv::Mat original, res_img, trans_img;
+    Image original, res_img, trans_img;
     int rows_, cols_;
 
     /** --- HELPERS --- */
@@ -39,36 +39,36 @@ class CarvableImage {
      * @param img the image to find the optimal seam in
      * @returns the optimal seam to be removed
      */
-    Seam __FindOptimalVerticalSeam(const cv::Mat &img);
-    Seam __FindOptimalHorizontalSeam(const cv::Mat &img);
+    Seam __FindOptimalVerticalSeam(const Image &img);
+    Seam __FindOptimalHorizontalSeam(const Image &img);
 
     /**
      * @param seam the seam to be removed
      * @param img the target image
      * @returns the image with the specified seam removed
      */
-    cv::Mat __RemoveVerticalSeam(const Seam &seam, const cv::Mat &img);
-    cv::Mat __RemoveHorizontalSeam(const Seam &seam, const cv::Mat &img);
+    Image __RemoveVerticalSeam(const Seam &seam, const Image &img);
+    Image __RemoveHorizontalSeam(const Seam &seam, const Image &img);
 
     /**
      * @param seam the seam to be inserted
      * @param img the target image
      * @returns the image with the seam inserted
      */
-    cv::Mat __InsertVerticalSeam(const Seam &seam, const cv::Mat &img);
-    cv::Mat __InsertHorizontalSeam(const Seam &seam, const cv::Mat &img);
+    Image __InsertVerticalSeam(const Seam &seam, const Image &img);
+    Image __InsertHorizontalSeam(const Seam &seam, const Image &img);
 
-    std::vector<Seam> __FindKOptimalSeams(const int &k, const Dir &dir, cv::Mat &img);
-    void __HighlightSeam(cv::Mat &img, const Seam &seam, const cv::Vec3b &color);
+    std::vector<Seam> __FindKOptimalSeams(const int &k, const Dir &dir, Image &img);
+    void __HighlightSeam(Image &img, const Seam &seam, const cv::Vec3b &color);
 
    public:
     /** Constructors */
     CarvableImage(const std::string &path);
 
     /** Getters */
-    inline const cv::Mat &GetOriginal() const { return this->original; };
-    inline const cv::Mat &GetResult() const { return this->res_img; };
-    inline const cv::Mat &GetTranspose() const { return this->trans_img; };
+    inline const Image &GetOriginal() const { return this->original; };
+    inline const Image &GetResult() const { return this->res_img; };
+    inline const Image &GetTranspose() const { return this->trans_img; };
     inline int num_rows() const { return this->rows_; };
     inline int num_cols() const { return this->cols_; };
 

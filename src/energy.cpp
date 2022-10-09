@@ -7,32 +7,32 @@
 
 namespace SeamCarving {
   namespace Energy {
-    cv::Mat ComputeEnergy(const cv::Mat &img, const std::string &kernel) {
+    Image ComputeEnergy(const Image &img, const std::string &kernel) {
       // apply gaussian and convert grayscale
-      cv::Mat src;
+      Image src;
       cv::cvtColor(img, src, cv::COLOR_BGR2GRAY);
       cv::GaussianBlur(src, src, cv::Size(3, 3), 0, 0);
       
 
       // apply kernel
-      cv::Mat x_edges, y_edges;
+      Image x_edges, y_edges;
       int ksize = (kernel == "scharr") ? -1 : 3;
       cv::Sobel(src, x_edges, CV_16S, 1, 0, ksize);
       cv::Sobel(src, y_edges, CV_16S, 0, 1, ksize);
 
       // convert and merge
-      cv::Mat abs_x, abs_y;
+      Image abs_x, abs_y;
       cv::convertScaleAbs(x_edges, abs_x);
       cv::convertScaleAbs(y_edges, abs_y);
       cv::addWeighted(abs_x, 0.5, abs_y, 0.5, 0, src);
       return src;
     }
 
-    cv::Mat ComputeVerticalEnergyMap(const cv::Mat &energy_img) {
+    Image ComputeVerticalEnergyMap(const Image &energy_img) {
       // setup
       int rows = energy_img.rows;
       int cols = energy_img.cols;
-      cv::Mat energy_map = cv::Mat(rows, cols, CV_32S);
+      Image energy_map = Image(rows, cols, CV_32S);
 
       // step 1: initialize the bottom row
       energy_img.row(rows - 1).copyTo(energy_map.row(rows - 1));
@@ -54,11 +54,11 @@ namespace SeamCarving {
       return energy_map;
     }
 
-    cv::Mat ComputeHorizontalEnergyMap(const cv::Mat &energy_img) {
+    Image ComputeHorizontalEnergyMap(const Image &energy_img) {
       // setup
       int rows = energy_img.rows;
       int cols = energy_img.cols;
-      cv::Mat energy_map = cv::Mat(rows, cols, CV_32S);
+      Image energy_map = Image(rows, cols, CV_32S);
 
       // step 1: initial the right col
       energy_img.col(cols - 1).copyTo(energy_map.col(cols - 1));

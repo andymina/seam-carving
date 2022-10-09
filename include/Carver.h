@@ -25,22 +25,22 @@ class Carver {
      * @param img the image to find the optimal seam in
      * @returns the optimal seam to be removed
      */
-    Seam FindOptimalVerticalSeam(const Image &img);
-    Seam FindOptimalHorizontalSeam(const Image &img);
+    Seam FindOptimalVerticalSeam(const cv::Mat &img);
+    Seam FindOptimalHorizontalSeam(const cv::Mat &img);
 
     /**
      * @param seam the seam to be removed
      * @param img the target image
      */
-    void RemoveVerticalSeam(const Seam &seam, Image &img);
-    void RemoveHorizontalSeam(const Seam &seam, Image &img);
+    void RemoveVerticalSeam(const Seam &seam, cv::Mat &img);
+    void RemoveHorizontalSeam(const Seam &seam, cv::Mat &img);
 
     /**
      * @param seam the seam to be inserted
      * @param img the target image
      */
-    void InsertVerticalSeam(const Seam &seam, Image &img);
-    void InsertHorizontalSeam(const Seam &seam, Image &img);
+    void InsertVerticalSeam(const Seam &seam, cv::Mat &img);
+    void InsertHorizontalSeam(const Seam &seam, cv::Mat &img);
 
    public:
     /**
@@ -55,7 +55,7 @@ class Carver {
      * @param target_rows the desired number of rows in the target image
      * @param target_cols the desired number of cols in the target image
      */
-    virtual void Carve(Image &img, const int &target_rows, const int &target_cols) = 0;
+    virtual void Carve(cv::Mat &img, const int &target_rows, const int &target_cols) = 0;
 };
 }  // namespace SeamCarving
 

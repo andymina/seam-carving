@@ -7,8 +7,6 @@
 
 namespace SeamCarving {
 namespace Energy {
-/** TODO(#22): generate a proper doxygen comment */
-/** TODO: change to input/output arrays. not force in place*/
 void ComputeEnergy(cv::InputOutputArray img) {
 	// apply gaussian and convert grayscale
 	cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
@@ -22,7 +20,7 @@ void ComputeEnergy(cv::InputOutputArray img) {
 	cv::Scharr(img, x_nrg, CV_16S, 1, 0);
 	cv::Scharr(img, y_nrg, CV_16S, 0, 1);
 
-	// convert and merge
+	// convert back to CV_16S depth and merge
 	cv::convertScaleAbs(x_nrg, x_nrg);
 	cv::convertScaleAbs(y_nrg, y_nrg);
 	cv::addWeighted(x_nrg, 0.5, y_nrg, 0.5, 0, img);

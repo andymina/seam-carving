@@ -13,7 +13,7 @@ namespace SeamCarving {
  * this->res_img - the resulting image after any seam operations
  * this->trans_img - the transposed image of this->res_img used for internal calculations
  *
- * @param path file path to the cv::Mat to be carved
+ * @param path file path to the Image to be carved
  */
 CarvableImage::CarvableImage(const std::string &path) {
     this->original = cv::imread(path);
@@ -129,7 +129,7 @@ Seam CarvableImage::FindOptimalSeam(const Dir &dir) {
  * @returns a vector of the seams.
  */
 std::vector<Seam> CarvableImage::FindKOptimalSeams(const int &k, const Dir &dir) {
-    cv::Mat img = (dir == VERT) ? this->res_img.clone() : this->trans_img.clone();
+    Image img = (dir == VERT) ? this->res_img.clone() : this->trans_img.clone();
     std::vector<Seam> res = this->__FindKOptimalSeams(k, VERT, img);
 
     if (dir == HORZ)
@@ -186,7 +186,7 @@ void CarvableImage::InsertSeam(const Dir &dir) {
  */
 void CarvableImage::InsertKSeams(const int &k, const Dir &dir) {
     std::vector<Seam> seams = this->FindKOptimalSeams(k, dir);
-    cv::Mat res = (dir == VERT) ? this->res_img.clone() : this->trans_img.clone();
+    Image res = (dir == VERT) ? this->res_img.clone() : this->trans_img.clone();
 
     if (dir == HORZ)
         for (Seam &s : seams)
@@ -212,7 +212,7 @@ void CarvableImage::InsertKSeams(const int &k, const Dir &dir) {
  * @param seam the seam to be highlighted
  * @param color the color to be used when highlighting. must be BGR!!
  *
- * @returns a new cv::Mat with the seam highlighted
+ * @returns a new Image with the seam highlighted
  */
 void CarvableImage::HighlightSeam(const Seam &seam, const int &r, const int &g, const int &b) {
     this->__HighlightSeam(this->res_img, seam, cv::Vec3b(r, g, b));
@@ -224,10 +224,10 @@ void CarvableImage::HighlightSeam(const Seam &seam, const int &r, const int &g, 
  * @param seams a vector of Seams to be highlighted
  * @param color the color to be used when highlighting. must be BGR!!
  *
- * @returns a new cv::Mat with the k seams highlighted
+ * @returns a new Image with the k seams highlighted
  */
 void CarvableImage::HighlightKSeams(const std::vector<Seam> &seams, const int &r, const int &g, const int &b) {
-    cv::Mat &res = (seams[0].dir == VERT) ? this->res_img : this->trans_img;
+    Image &res = (seams[0].dir == VERT) ? this->res_img : this->trans_img;
     for (const Seam &seam : seams)
         this->__HighlightSeam(res, seam, cv::Vec3b(r, g, b));
 
@@ -265,14 +265,14 @@ void CarvableImage::Export(const ImageType &type, const std::string &path) {
         }
 
         case VERT_MAP: {
-            cv::Mat map = Energy::ComputeVerticalEnergyMap(Energy::ComputeEnergy(this->res_img, "sobel"));
+            Image map = Energy::ComputeVerticalEnergyMap(Energy::ComputeEnergy(this->res_img, "sobel"));
             cv::normalize(map, map, 0, 255, cv::NORM_MINMAX);  // normalize to correct range
             cv::imwrite(path, map);
             break;
         }
 
         case HORZ_MAP: {
-            cv::Mat map = Energy::ComputeHorizontalEnergyMap(Energy::ComputeEnergy(this->res_img, "sobel"));
+            Image map = Energy::ComputeHorizontalEnergyMap(Energy::ComputeEnergy(this->res_img, "sobel"));
             cv::normalize(map, map, 0, 255, cv::NORM_MINMAX);  // normalize to correct range
             cv::transpose(map, map);
             cv::imwrite(path, map);
@@ -298,7 +298,7 @@ void CarvableImage::Reset() {
  * @param dir the direction of the seams to be found
  * @param img the image to find the seams in; modified to find k seams
  */
-std::vector<Seam> CarvableImage::__FindKOptimalSeams(const int &k, const Dir &dir, cv::Mat &img) {
+std::vector<Seam> CarvableImage::__FindKOptimalSeams(const int &k, const Dir &dir, Image &img) {
     std::vector<Seam> res;
     int count = k;
 
@@ -322,18 +322,18 @@ std::vector<Seam> CarvableImage::__FindKOptimalSeams(const int &k, const Dir &di
 /**
  * Highlights the seam in the given color on the given image. Modifies the supplied image directly.
  *
- * @param img the cv::Mat to highlight the seam on
+ * @param img the Image to highlight the seam on
  * @param seam the seam to be highlighted
  * @param color the color to highlight the seam in. must be BGR format!!
  */
-void CarvableImage::__HighlightSeam(cv::Mat &img, const Seam &seam, const cv::Vec3b &color) {
+void CarvableImage::__HighlightSeam(Image &img, const Seam &seam, const cv::Vec3b &color) {
     for (int idx = 0; idx < seam.data.size(); idx++)
         img.at<cv::Vec3b>(seam.data[idx].row, seam.data[idx].col) = color;
 }
 
-Seam CarvableImage::__FindOptimalVerticalSeam(const cv::Mat &img) {
+Seam CarvableImage::__FindOptimalVerticalSeam(const Image &img) {
     // find starting point
-    cv::Mat energy_map = Energy::ComputeVerticalEnergyMap(Energy::ComputeEnergy(img, "sobel"));
+    Image energy_map = Energy::ComputeVerticalEnergyMap(Energy::ComputeEnergy(img, "sobel"));
     int idx = 0, minVal = energy_map.row(0).at<int>(idx);
     for (int i = 0; i < energy_map.row(0).cols; i++)
         if (energy_map.row(0).at<int>(i) < minVal) {
@@ -365,9 +365,9 @@ Seam CarvableImage::__FindOptimalVerticalSeam(const cv::Mat &img) {
     return seam;
 }
 
-Seam CarvableImage::__FindOptimalHorizontalSeam(const cv::Mat &img) {
+Seam CarvableImage::__FindOptimalHorizontalSeam(const Image &img) {
     // find starting point
-    cv::Mat energy_map = Energy::ComputeHorizontalEnergyMap(Energy::ComputeEnergy(img, "sobel"));
+    Image energy_map = Energy::ComputeHorizontalEnergyMap(Energy::ComputeEnergy(img, "sobel"));
     int idx = 0, minVal = energy_map.col(0).at<int>(idx);
     for (int i = 0; i < energy_map.col(0).rows; i++)
         if (energy_map.col(0).at<int>(i) < minVal) {
@@ -399,8 +399,8 @@ Seam CarvableImage::__FindOptimalHorizontalSeam(const cv::Mat &img) {
     return seam;
 }
 
-cv::Mat CarvableImage::__RemoveVerticalSeam(const Seam &seam, const cv::Mat &img) {
-    cv::Mat res = cv::Mat(img.rows, img.cols - 1, img.type());
+Image CarvableImage::__RemoveVerticalSeam(const Seam &seam, const Image &img) {
+    Image res = Image(img.rows, img.cols - 1, img.type());
 
     for (int idx = 0; idx < seam.data.size(); idx++) {
         const cv::Mat &current_row = img.row(idx);
@@ -423,8 +423,8 @@ cv::Mat CarvableImage::__RemoveVerticalSeam(const Seam &seam, const cv::Mat &img
     return res;
 }
 
-cv::Mat CarvableImage::__RemoveHorizontalSeam(const Seam &seam, const cv::Mat &img) {
-    cv::Mat res = cv::Mat(img.rows - 1, img.cols, img.type());
+Image CarvableImage::__RemoveHorizontalSeam(const Seam &seam, const Image &img) {
+    Image res = Image(img.rows - 1, img.cols, img.type());
 
     for (int idx = 0; idx < seam.data.size(); idx++) {
         const cv::Mat &current_row = img.row(seam.data[idx].col);
@@ -447,8 +447,8 @@ cv::Mat CarvableImage::__RemoveHorizontalSeam(const Seam &seam, const cv::Mat &i
     return res;
 }
 
-cv::Mat CarvableImage::__InsertVerticalSeam(const Seam &seam, const cv::Mat &img) {
-    cv::Mat res = cv::Mat(img.rows, img.cols + 1, img.type());
+Image CarvableImage::__InsertVerticalSeam(const Seam &seam, const Image &img) {
+    Image res = cv::Mat(img.rows, img.cols + 1, img.type());
 
     for (int idx = 0; idx < seam.data.size(); idx++) {
         const cv::Mat &current_row = img.row(seam.data[idx].row);
@@ -487,8 +487,8 @@ cv::Mat CarvableImage::__InsertVerticalSeam(const Seam &seam, const cv::Mat &img
     return res;
 }
 
-cv::Mat CarvableImage::__InsertHorizontalSeam(const Seam &seam, const cv::Mat &img) {
-    cv::Mat res = cv::Mat(img.rows, img.cols + 1, img.type());
+Image CarvableImage::__InsertHorizontalSeam(const Seam &seam, const Image &img) {
+    Image res = cv::Mat(img.rows, img.cols + 1, img.type());
 
     for (int idx = 0; idx < seam.data.size(); idx++) {
         const cv::Mat &current_row = img.row(seam.data[idx].col);

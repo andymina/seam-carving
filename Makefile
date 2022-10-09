@@ -6,8 +6,12 @@ setup:
 	@git submodule update --init
 	@./vcpkg/bootstrap-vcpkg.sh
 	@./vcpkg/vcpkg integrate install
-	@./vcpkg/vcpkg install opencv pybind11
+	@./vcpkg/vcpkg install opencv pybind11 doctest
 	@mkdir build out
+
+tests:
+	@cmake -B build/ -S ./ -DSC_EXPORT=tests
+	@make -C build/
 
 demo:
 	@cmake -B build/ -S ./ -DSC_EXPORT=demo

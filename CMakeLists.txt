@@ -10,8 +10,11 @@ project(seam-carving)
 # var setup
 set(INCLUDE_DIRS include/)
 set(SRC_FILES src/energy.cpp src/CarvableImage.cpp)
+set(TEST_FILES test/unit/energy.test.cpp)
+
 set(OPENCV_LIBS opencv_core opencv_imgcodecs opencv_highgui opencv_imgproc)
 set(PYBIND11_LIBS pybind11::lto pybind11::module)
+set(DOCTEST_LIBS doctest::doctest)
 
 # find packages
 find_package(OpenCV CONFIG REQUIRED)
@@ -20,6 +23,14 @@ find_package(OpenCV CONFIG REQUIRED)
 if (NOT DEFINED SC_EXPORT)
     set(SC_EXPORT "demo")
 endif(NOT DEFINED SC_EXPORT)
+
+# test runner export
+if (${SC_EXPORT} MATCHES "tests")
+    message("Building test runner...")
+    find_package(doctest CONFIG REQUIRED)
+    add_executable(${PROJECT_NAME} test/runner.cpp ${SRC_FILES} ${TEST_FILES})
+    set(PROJECT_LIBS ${OPENCV_LIBS} ${DOCTEST_LIBS})
+endif (${SC_EXPORT} MATCHES "tests")
 
 # cpp demo export
 if (${SC_EXPORT} MATCHES "demo")
@@ -55,7 +66,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_LIBS})
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES
-    LIBRARY_OUTPUT_NAME "seam_carving"
+    LIBRARY_OUTPUT_NAME "seam_carving_${SC_EXPORT}"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/out"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/out"
 )

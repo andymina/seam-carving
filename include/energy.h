@@ -29,7 +29,7 @@ namespace Energy {
  *
  * @param img an image read by OpenCV
  * @returns an image representing the energy of the original image
- * 
+ *
  * TODO(#22): generate a proper doxygen comment
  */
 void ComputeEnergy(cv::InputOutputArray img);
@@ -56,8 +56,8 @@ void ComputeEnergy(cv::InputOutputArray img);
  * @param energy_img a gradient image
  * @returns the energy map of energy_img
  */
-cv::Mat ComputeVerticalEnergyMap(const cv::Mat &energy_img);
-cv::Mat ComputeHorizontalEnergyMap(const cv::Mat &energy_img);
+void ComputeVerticalEnergyMap(cv::InputArray input, cv::OutputArray output);
+void ComputeHorizontalEnergyMap(cv::InputArray input, cv::OutputArray output);
 } // namespace Energy
 } // namespace SeamCarving
 

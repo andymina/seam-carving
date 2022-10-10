@@ -53,10 +53,22 @@ namespace nrg = SeamCarving::Energy;
 
 int main() {
 	cv::Mat img = cv::imread("samples/dali.jpeg");
-	cv::imshow("original", img);
+	cv::Mat original = img.clone();
+	cv::imshow("original", original);
 
-	nrg::ComputeEnergy(img);
-	cv::imshow("after", img);
+	nrg::ComputeEnergy(original);
+
+	nrg::ComputeVerticalEnergyMap(original, img);
+	cv::normalize(img, img, 0, 255, cv::NORM_MINMAX);
+	img.convertTo(img, CV_8U);
+	cv::imshow("vertical", img);
+
+	nrg::ComputeHorizontalEnergyMap(original, img);
+	cv::normalize(img, img, 0, 255, cv::NORM_MINMAX);
+	img.convertTo(img, CV_8U);
+	cv::imshow("horiztonal", img);
+
+	std::cout << "depth: " << img.depth() << "\n";
 
 	int k = cv::waitKey(0);
 }

@@ -12,7 +12,6 @@
 #include <opencv2/imgproc.hpp>
 
 #include <algorithm>
-#include <iostream> /** TODO(#15): remove this when done */
 #include <limits>
 
 namespace SeamCarving {

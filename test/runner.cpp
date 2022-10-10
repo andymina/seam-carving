@@ -4,11 +4,11 @@
 #include <iostream>
 
 int main(int argc, char **argv) {
-	doctest::Context context;
-	int res = context.run();
+    doctest::Context context;
+    int res = context.run();
 
-	if (context.shouldExit())
-		return res;
+    if (context.shouldExit())
+        return res;
 
-	return res;
+    return res;
 }

@@ -56,7 +56,7 @@ void ComputeVerticalEnergyMap(cv::InputArray input, cv::OutputArray output) {
 	}
 
 	output.create(res.size(), res.type());
-	res.copyTo(output); // output depth is CV_16S
+	res.copyTo(output); // output depth is CV_16U
 }
 
 void ComputeHorizontalEnergyMap(cv::InputArray input, cv::OutputArray output) {
@@ -88,7 +88,7 @@ void ComputeHorizontalEnergyMap(cv::InputArray input, cv::OutputArray output) {
 	}
 
 	output.create(res.size(), res.type());
-	res.copyTo(output); // output depth is CV_16S
+	res.copyTo(output); // output depth is CV_16U
 }
 } // namespace Energy
 } // namespace SeamCarving

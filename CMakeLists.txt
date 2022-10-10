@@ -9,7 +9,7 @@ project(seam-carving)
 
 # var setup
 set(INCLUDE_DIRS include/)
-set(SRC_FILES src/energy.cpp )
+set(SRC_FILES src/energy.cpp src/CarvableImage.cpp)
 set(TEST_FILES test/unit/energy.test.cpp)
 
 set(OPENCV_LIBS opencv_core opencv_imgcodecs opencv_highgui opencv_imgproc)

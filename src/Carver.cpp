@@ -4,78 +4,85 @@
 #include "Carver.h"
 
 namespace SeamCarving {
-Seam Carver::FindOptimalVerticalSeam(const cv::Mat &img) {
-	// find starting point
-	cv::Mat energy_map =
-		Energy::ComputeVerticalEnergyMap(Energy::ComputeEnergy(img, "sobel"));
-	int idx = 0, minVal = energy_map.row(0).at<int>(idx);
-	for (int i = 0; i < energy_map.row(0).cols; i++)
-		if (energy_map.row(0).at<int>(i) < minVal) {
-			idx = i;
-			minVal = energy_map.row(0).at<int>(idx);
+Seam Carver::FindOptimalVerticalSeam(cv::InputArray img) {
+	// compute the energy map
+	cv::Mat energy_map;
+	Energy::ComputeEnergy(img, energy_map);
+	Energy::ComputeVerticalEnergyMap(energy_map, energy_map);
+
+	// find the starting val
+	ushort col = 0, min_val = energy_map.at<ushort>(0, col);
+	for (int i = 0; i < energy_map.cols; i++)
+		if (energy_map.at<ushort>(0, i) < min_val) {
+			col = i;
+			min_val = energy_map.at<ushort>(0, col);
 		}
 
 	Seam seam = Seam(VERT, {});
 	int rows = energy_map.rows, cols = energy_map.cols;
 
+	// loop through each row
 	for (int row = 0; row < rows; row++) {
-		seam.data.push_back({row, idx});
+		// add the current Coord to the seam
+		seam.data.push_back({row, col});
 
 		if (row != rows - 1) {
 			// find the direction of min and adjust path
-			const int &center = energy_map.at<int>(row + 1, idx);
-			const int &left = (idx - 1 < 0)
-								  ? std::numeric_limits<int>::max()
-								  : energy_map.at<int>(row + 1, idx - 1);
-			const int &right = (idx + 1 >= cols)
-								   ? std::numeric_limits<int>::max()
-								   : energy_map.at<int>(row + 1, idx + 1);
+			const ushort &center = energy_map.at<ushort>(row + 1, col);
+			const ushort &left = (col - 1 < 0) ?
+				std::numeric_limits<ushort>::max() :
+				energy_map.at<ushort>(row + 1, col - 1);
+			const ushort &right = (col + 1 >= cols) ?
+				std::numeric_limits<ushort>::max() :
+				energy_map.at<ushort>(row + 1, col + 1);
 
 			// find the min pixel and adjust weight
 			int min_energy = std::min({center, left, right});
-			if (min_energy == left)
-				idx--;
-			else if (min_energy == right)
-				idx++;
+			if (min_energy == left) col--;
+			else if (min_energy == right) col++;
 		}
 	}
 
 	return seam;
 }
 
-Seam Carver::FindOptimalHorizontalSeam(const cv::Mat &img) {
-	// find starting point
-	cv::Mat energy_map =
-		Energy::ComputeHorizontalEnergyMap(Energy::ComputeEnergy(img, "sobel"));
-	int idx = 0, minVal = energy_map.col(0).at<int>(idx);
-	for (int i = 0; i < energy_map.col(0).rows; i++)
-		if (energy_map.col(0).at<int>(i) < minVal) {
-			idx = i;
-			minVal = energy_map.col(0).at<int>(idx);
+Seam Carver::FindOptimalHorizontalSeam(cv::InputArray img) {
+	// compute the energy map
+	cv::Mat energy_map;
+	Energy::ComputeEnergy(img, energy_map);
+	Energy::ComputeVerticalEnergyMap(energy_map, energy_map);
+
+	// find the starting val
+	ushort row = 0, min_val = energy_map.at<ushort>(row, 0);
+	for (int i = 0; i < energy_map.rows; i++)
+		if (energy_map.at<ushort>(i, 0) < min_val) {
+			row = i;
+			min_val = energy_map.at<ushort>(i, 0);
 		}
+
 
 	Seam seam = Seam(HORZ, {});
 	int rows = energy_map.rows, cols = energy_map.cols;
 
-	for (int row = 0; row < rows; row++) {
-		seam.data.push_back({idx, row});
+	// loop through each col
+	for (int col = 0; col < cols; col++) {
+		// add the current Coord to the seam
+		seam.data.push_back({row, col});
 
-		if (row != rows - 1) {
+		if (col != cols - 1) {
 			// find the direction of min and adjust path
-			const int &center = energy_map.at<int>(row + 1, idx);
-			const int &left = (idx - 1 < 0)
-								  ? std::numeric_limits<int>::max()
-								  : energy_map.at<int>(row + 1, idx - 1);
-			const int &right = (idx + 1 >= cols)
-								   ? std::numeric_limits<int>::max()
-								   : energy_map.at<int>(row + 1, idx + 1);
+			const ushort &center = energy_map.at<ushort>(row, col + 1);
+			const ushort &above = (row - 1 < 0) ?
+				std::numeric_limits<ushort>::max() :
+				energy_map.at<ushort>(row - 1, col + 1);
+			const ushort &below = (row + 1 >= rows) ?
+				std::numeric_limits<ushort>::max() :
+				energy_map.at<ushort>(row + 1, col + 1);
 
 			// find the min pixel and adjust weight
-			int min_energy = std::min({center, left, right});
-			if (min_energy == left)
-				idx--;
-			else if (min_energy == right)
-				idx++;
+			int min_energy = std::min({center, above, below});
+			if (min_energy == above) row--;
+			else if (min_energy == below) row++;
 		}
 	}
 

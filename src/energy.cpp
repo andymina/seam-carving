@@ -7,10 +7,10 @@
 
 namespace SeamCarving {
 namespace Energy {
-    void ComputeEnergy(cv::InputOutputArray img) {
+    void ComputeEnergy(cv::InputArray in_img, cv::OutputArray out_img) {
         // apply gaussian and convert grayscale
-        cv::GaussianBlur(img, img, cv::Size(3, 3), 0, 0);
-        cv::cvtColor(img, img, cv::COLOR_BGR2GRAY);
+        cv::GaussianBlur(in_img, out_img, cv::Size(3, 3), 0, 0);
+        cv::cvtColor(out_img, out_img, cv::COLOR_BGR2GRAY);
 
         /**
          * apply kernel. set the depth on the kernel results to be 16-bit
@@ -18,13 +18,13 @@ namespace Energy {
          */
         cv::Mat x_nrg, y_nrg;
         /** TODO(#23): investigate if Scharr is better */
-        cv::Sobel(img, x_nrg, CV_16S, 1, 0);
-        cv::Sobel(img, y_nrg, CV_16S, 0, 1);
+        cv::Sobel(out_img, x_nrg, CV_16S, 1, 0);
+        cv::Sobel(out_img, y_nrg, CV_16S, 0, 1);
 
         // convert back to CV_8U depth and merge
         cv::convertScaleAbs(x_nrg, x_nrg);
         cv::convertScaleAbs(y_nrg, y_nrg);
-        cv::addWeighted(x_nrg, 0.5, y_nrg, 0.5, 0, img);
+        cv::addWeighted(x_nrg, 0.5, y_nrg, 0.5, 0, out_img);
     }
 
     void ComputeVerticalEnergyMap(cv::InputArray input, cv::OutputArray output) {

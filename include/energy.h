@@ -32,7 +32,7 @@ namespace Energy {
      *
      * TODO(#22): generate a proper doxygen comment
      */
-    void ComputeEnergy(cv::InputOutputArray img);
+    void ComputeEnergy(cv::InputArray in_img, cv::OutputArray out_img);
 
     /**
      * @brief Computes the energy map, used to find the path of least energy, of an

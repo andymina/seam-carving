@@ -89,52 +89,67 @@ Seam Carver::FindOptimalHorizontalSeam(cv::InputArray img) {
 	return seam;
 }
 
-void Carver::RemoveVerticalSeam(const Seam &seam, cv::Mat &img) {
-	cv::Mat res = cv::Mat(img.rows, img.cols - 1, img.type());
+void Carver::RemoveVerticalSeam(const Seam &seam, cv::InputArray in_img, cv::OutputArray out_img) {
+	// setup
+	cv::Mat in_mat = in_img.getMat();
+	cv::Mat res = cv::Mat(in_mat.rows, in_mat.cols - 1, in_mat.type());
 
-	for (int idx = 0; idx < seam.data.size(); idx++) {
-		const cv::Mat &current_row = img.row(idx);
+	// loop through all rows
+	for (int idx = 0; idx < res.rows; idx++) {
+		// grab the current row and coord
+		const cv::Mat &current_src_row = in_mat.row(idx);
+		const Coord &current_coord = seam.data[idx];
 
-		if (seam.data[idx].col == 0) {
-			// exclude first val
-			current_row.colRange(1, img.cols).copyTo(res.row(idx));
-		} else if (seam.data[idx].col == img.cols - 1) {
-			// exclude last val
-			current_row.colRange(0, img.cols - 1).copyTo(res.row(idx));
-		} else {
-			// merge two halves
-			cv::hconcat(current_row.colRange(0, seam.data[idx].col),
-						current_row.colRange(seam.data[idx].col + 1, img.cols),
-						res.row(idx));
+		// check where to split the image since you cant have jagged matrix. colRange is exclusive
+		if (current_coord.col == 0) { // seam includes (row, 0)
+			// copy (row, 1) to (row, in_mat.cols)
+			current_src_row.colRange(1, in_mat.cols).copyTo(res.row(idx));
+		} else if (current_coord.col == in_mat.cols - 1) { // seam includes (row, in_mat.cols - 1)
+			// copy (row, 0) to (row, in_mat.cols - 1)
+			current_src_row.colRange(0, in_mat.cols - 1).copyTo(res.row(idx));
+		} else { // seam includes (row, current_coord.col)
+			// copy (row, 0) to (row, current_coord.col)
+			const cv::Mat &left_partition = current_src_row.colRange(0, current_coord.col);
+			// copy (row, current_coord.col + 1) to (row, in_mat.cols)
+			const cv::Mat &right_partition = current_src_row.colRange(current_coord.col + 1, in_mat.cols);
+			// merge the two halves and store into row
+			cv::hconcat(left_partition, right_partition, res.row(idx));
 		}
 	}
 
-	img = std::move(res);
+	res.copyTo(out_img);
 }
 
-void Carver::RemoveHorizontalSeam(const Seam &seam, cv::Mat &img) {
-	cv::Mat res = cv::Mat(img.rows - 1, img.cols, img.type());
+void Carver::RemoveHorizontalSeam(const Seam &seam, cv::InputArray in_img, cv::OutputArray out_img) {
+	// setup
+	cv::Mat in_mat = in_img.getMat();
+	cv::Mat res = cv::Mat(in_mat.rows, in_mat.cols - 1, in_mat.type());
 
-	for (int idx = 0; idx < seam.data.size(); idx++) {
-		const cv::Mat &current_row = img.row(seam.data[idx].col);
+	// loop through all cols
+	for (int idx = 0; idx < res.cols; idx++) {
+		// grab the current col and coord
+		const cv::Mat &current_src_col = in_mat.col(idx);
+		const Coord &current_coord = seam.data[idx];
 
-		if (seam.data[idx].row == 0) {
-			// exclude first val
-			current_row.colRange(1, img.cols)
-				.copyTo(res.row(seam.data[idx].col));
-		} else if (seam.data[idx].row == img.cols - 1) {
-			// exclude last val
-			current_row.colRange(0, img.cols - 1)
-				.copyTo(res.row(seam.data[idx].col));
-		} else {
-			// merge two halves
-			cv::hconcat(current_row.colRange(0, seam.data[idx].row),
-						current_row.colRange(seam.data[idx].row + 1, img.cols),
-						res.row(seam.data[idx].col));
+
+		// check where to split the image since you cant have jagged matrix. rowRange is exclusive
+		if (current_coord.row == 0) { // seam includes (0, col)
+			// copy (1, col) to (in_mat.rows, col)
+			current_src_col.rowRange(1, in_mat.rows).copyTo(res.col(idx));
+		} else if (current_coord.row == in_mat.rows - 1) { // seam includes (row, in_mat.cols - 1)
+			// copy (0, col) to (in_mat.rows - 1, col)
+			current_src_col.rowRange(0, in_mat.rows - 1).copyTo(res.col(idx));
+		} else { // seam includes (current_coord.row, col)
+			// copy (0, col) to (current_coord.row, col)
+			const cv::Mat &top_partition = current_src_col.rowRange(0, current_coord.row);
+			// copy (current_coord.row + 1, col) to (in_mat.rows, col)
+			const cv::Mat &bottom_partition = current_src_col.rowRange(current_coord.row + 1, in_mat.rows);
+			// merge the two halves and store into row
+			cv::vconcat(top_partition, bottom_partition, res.col(idx));
 		}
 	}
 
-	img = std::move(res);
+	res.copyTo(out_img);
 }
 
 void Carver::InsertVerticalSeam(const Seam &seam, cv::Mat &img) {

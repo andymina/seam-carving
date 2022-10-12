@@ -32,8 +32,8 @@ class Carver {
      * @param seam the seam to be removed
      * @param img the target image
      */
-    void RemoveVerticalSeam(const Seam &seam, cv::Mat &img);
-    void RemoveHorizontalSeam(const Seam &seam, cv::Mat &img);
+    void RemoveVerticalSeam(const Seam &seam, cv::InputArray in_img, cv::OutputArray out_img);
+    void RemoveHorizontalSeam(const Seam &seam, cv::InputArray in_img, cv::OutputArray out_img);
 
     /**
      * @param seam the seam to be inserted

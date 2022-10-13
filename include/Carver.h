@@ -39,8 +39,8 @@ class Carver {
      * @param seam the seam to be inserted
      * @param img the target image
      */
-    void InsertVerticalSeam(const Seam &seam, cv::Mat &img);
-    void InsertHorizontalSeam(const Seam &seam, cv::Mat &img);
+    void InsertVerticalSeam(const Seam &seam, cv::InputArray in_img, cv::OutputArray out_img);
+    void InsertHorizontalSeam(const Seam &seam, cv::InputArray in_img, cv::OutputArray out_img);
 
    public:
     /**

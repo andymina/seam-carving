@@ -135,7 +135,7 @@ void Carver::RemoveHorizontalSeam(const Seam &seam, cv::InputArray in_img, cv::O
 		if (current_coord.row == 0) { // seam removes (0, col)
 			// copy (1, col) to (in_mat.rows, col)
 			current_src_col.rowRange(1, in_mat.rows).copyTo(res.col(idx));
-		} else if (current_coord.row == in_mat.rows - 1) { // seam removes (row, in_mat.cols - 1)
+		} else if (current_coord.row == in_mat.rows - 1) { // seam removes (in_mat.rows - 1, col)
 			// copy (0, col) to (in_mat.rows - 1, col)
 			current_src_col.rowRange(0, in_mat.rows - 1).copyTo(res.col(idx));
 		} else { // seam removes (current_coord.row, col)

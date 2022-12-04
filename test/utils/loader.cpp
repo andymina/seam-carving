@@ -141,6 +141,7 @@ int main() {
     std::string file_prefix = test_data_dir + "Seam Carving Tests - TestId_";
     std::string file_suffix = ".tsv";
 
+    // parse test files
     for (int test_id = 0; test_id < test_count; test_id++) {
         std::string file_name = file_prefix + std::to_string(test_id) + file_suffix;
         Parser p(file_name, test_id);

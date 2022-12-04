@@ -16,6 +16,23 @@ class Parser {
         std::string line_;
         std::string file_path_;
 
+        /**
+         * Given a TSV file where the cursor points to the first value of a one-dimensional array of
+         * size `rows * cols` matrix, adds the parsed matrix under the corresponding parent_label
+         * and label in `this->parsed_`.
+         * 
+         * @remarks
+         * The file should be a TSV exported from Google Sheets. The function splits the lines on
+         * CRLF (\r\n), because Google Sheets exports like that, and then splits on tabs (\t) to get
+         * each value.
+         * 
+         * @param file - the TSV file to read from
+         * @param parent_label - the parent label to attach the data to in the JSON; if "", attaches
+         * the matrix onto the root object
+         * @param label - the label of the matrix in the JSON
+         * @param rows - the number of rows in the matrix
+         * @param cols - the number of cols in the matrix
+        */
         void parseMatrix(
             std::ifstream& file,
             const std::string& parent_label,
@@ -38,6 +55,30 @@ class Parser {
             else this->parsed_[parent_label][label] = res;
         }
 
+        /**
+         * Given a TSV file where the cursor points to the first value of a one-dimensional array
+         * of size `size`, adds the parsed seam under the corresponding parent_label and label
+         * in `this->parsed_`.
+         * 
+         * @remarks
+         * The file should be a TSV exported from Google Sheets. The function splits the lines on
+         * CRLF (\r\n), because Google Sheets exports like that, and then splits on tabs (\t) to get
+         * each value.
+         * Seam coordinates are stored as floats in the Google Sheet for simplicity. The integer
+         * part of the float is the row. The fractional part of the float is the col. Once the value
+         * is parsed as float, it can be split into its respective parts using `std::modf()`. This
+         * approach is limited by the range of possible row and col values. To convert the fractional
+         * part back to an integer it must be multiplied by a factor of 10, namely `coord_range`.
+         * Currently coord_range is 100 so this approach supports values from 0-99. Should the tests
+         * ever expand past 10x10 size, then coord_range will need to be 1000 to cover the next values.
+         * 
+         * @param file - the TSV file to read from
+         * @param parent_label - the parent label to attach the data to in the JSON; if "", attaches
+         * the matrix onto the root object
+         * @param label - the label of the matrix in the JSON
+         * @param size - the length of the seam
+         * @param coord_range - the coordinate range as described in the @remarks
+        */
         void parseSeam(
             std::ifstream& file,
             const std::string& parent_label,
@@ -69,10 +110,25 @@ class Parser {
         }
 
     public:
+        /**
+         * Given a file path and a test_id, constructs a Parser to read the test TSV files as
+         * exported from Google Sheets.
+         * 
+         * @param path - the file path
+         * @param test_id - the test_id of the current file 
+        */
         Parser(const std::string& path, const int& test_id): file_path_{ path } {
             this->parsed_["test_id"] = test_id;
         }
 
+        /**
+         * Parses a TSV file filled with seam carving test data as exported by Google Sheet.
+         * 
+         * @param rows - the number of rows in each matrix of this file
+         * @param cols - the number of cols of each matrix of this file
+         * @param coord_range - the coordinate range for Seam as described in the @remarks of
+         * `this->parseSeam()`
+        */
         void parseFile(const int& rows, const int& cols, const int& coord_range) {
             std::ifstream file(this->file_path_);
             while (std::getline(file, this->line_, '\r')) {

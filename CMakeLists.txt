@@ -9,7 +9,7 @@ project(seam-carving)
 
 # var setup
 set(INCLUDE_DIRS include/)
-set(SRC_FILES src/energy.cpp src/CarvableImage.cpp)
+set(SRC_FILES src/energy.cpp)
 set(TEST_FILES test/unit/energy.test.cpp)
 set(TARGET_NAME ${PROJECT_NAME})
 
@@ -48,7 +48,7 @@ endif (SC_EXPORT STREQUAL "load-tests")
 # cpp demo export
 if (SC_EXPORT STREQUAL "demo")
     message("Building C++17 demo executable...")
-    add_executable(${PROJECT_NAME} test/generator.cpp ${SRC_FILES})
+    add_executable(${PROJECT_NAME} src/main.cpp) # add back ${SRC_FILES}
     set(PROJECT_LIBS ${OPENCV_LIBS})
 endif(SC_EXPORT STREQUAL "demo")
 

@@ -48,7 +48,7 @@ endif (SC_EXPORT STREQUAL "load-tests")
 # cpp demo export
 if (SC_EXPORT STREQUAL "demo")
     message("Building C++17 demo executable...")
-    add_executable(${PROJECT_NAME} src/main.cpp) # add back ${SRC_FILES}
+    add_executable(${PROJECT_NAME} ${SRC_FILES} src/main.cpp)
     set(PROJECT_LIBS ${OPENCV_LIBS})
 endif(SC_EXPORT STREQUAL "demo")
 

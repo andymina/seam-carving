@@ -13,8 +13,8 @@ using json = nlohmann::ordered_json;
 class Parser {
     private:
         json parsed_;
-        std::string line_;
-        std::string file_path_;
+        std::string line_, file_path_;
+        int rows, cols, coord_range;
 
         /**
          * Given a TSV file where the cursor points to the first value of a one-dimensional array of
@@ -50,9 +50,15 @@ class Parser {
                     }
                 }
             }
+            
+            json output = {
+                {"rows", rows},
+                {"cols", cols},
+                {"data", res}
+            };
 
-            if (parent_label == "") this->parsed_[label] = res;
-            else this->parsed_[parent_label][label] = res;
+            if (parent_label == "") this->parsed_[label] = output;
+            else this->parsed_[parent_label][label] = output;
         }
 
         /**
@@ -83,12 +89,13 @@ class Parser {
             std::ifstream& file,
             const std::string& parent_label,
             const std::string& label,
-            const int& size,
-            const int& coord_range
+            const std::string& direction
         ) {
+            int size = (direction == "VERT") ? rows : cols;
+
             std::getline(file, this->line_, '\r');
             std::stringstream ss(this->line_);
-            std::vector<json> res;
+            std::vector<json> data;
             int count = 0;
 
             while (count < size && std::getline(ss, this->line_, '\t')) {
@@ -97,16 +104,46 @@ class Parser {
                     double row;
                     double col = std::modf(coord, &row) * coord_range;
                  
-                    res.push_back({
+                    data.push_back({
                         { "row", int(round(row)) },
                         { "col", int(round(col)) }
                     });
                     count++;
                 }
             }
+
+            json seam = {
+                { "dir", direction },
+                { "data", data }
+            };
             
-            if (parent_label == "") this->parsed_[label] = res;
-            else this->parsed_[parent_label][label] = res;
+            if (parent_label == "") this->parsed_[label] = seam;
+            else this->parsed_[parent_label][label] = seam;
+        }
+
+        void parseHeaders(std::ifstream &file) {
+            // throw the first line away
+            std::getline(file, this->line_, '\r');
+
+            // header set up
+            int count = 0, header_size = 3;
+
+            // read headers
+            std::vector<int> header_vals;
+            while (count < header_size && std::getline(file, this->line_, '\r')) {
+                std::stringstream ss(this->line_);
+                while (std::getline(ss, this->line_, '\t')) {
+                    if (this->line_.size() != 0 && isnumber(this->line_[0])) {
+                        header_vals.push_back(std::stoi(this->line_));
+                        count++;
+                    }
+                }
+            }
+
+            // set headers
+            this->rows = header_vals[0];
+            this->cols = header_vals[1];
+            this->coord_range = header_vals[2];
         }
 
     public:
@@ -129,12 +166,16 @@ class Parser {
          * @param coord_range - the coordinate range for Seam as described in the @remarks of
          * `this->parseSeam()`
         */
-        void parseFile(const int& rows, const int& cols, const int& coord_range) {
+        void parseFile() {
+            // open the file
             std::ifstream file(this->file_path_);
+
+            this->parseHeaders(file);
+
             while (std::getline(file, this->line_, '\r')) {
                 // input
                 if (this->line_.find("MATRIX") != std::string::npos) {
-                    this->parseMatrix(file, "", "input", rows, cols);  
+                    this->parseMatrix(file, "", "input", rows, cols);
                 }
 
                 // energy
@@ -148,9 +189,9 @@ class Parser {
 
                 // seams
                 else if (this->line_.find("VERT SEAM") != std::string::npos) {
-                    this->parseSeam(file, "carver", "find - vertical", cols, coord_range);
+                    this->parseSeam(file, "carver", "find - vertical", "VERT");
                 } else if (this->line_.find("HORZ SEAM") != std::string::npos) {
-                    this->parseSeam(file, "carver", "find - horizontal", rows, coord_range);
+                    this->parseSeam(file, "carver", "find - horizontal", "HORZ");
                 }
 
                 // removes
@@ -188,9 +229,6 @@ int main() {
     }
     
     // test parsing setup
-    const int MATRIX_ROWS = 6;
-    const int MATRIX_COLS = 6;
-    const int COORD_RANGE = 100;
     json data;
 
     // file iteration setup
@@ -201,7 +239,7 @@ int main() {
     for (int test_id = 0; test_id < test_count; test_id++) {
         std::string file_name = file_prefix + std::to_string(test_id) + file_suffix;
         Parser p(file_name, test_id);
-        p.parseFile(MATRIX_ROWS, MATRIX_COLS, COORD_RANGE);
+        p.parseFile();
         data.push_back(p.getJSON());
     }
 

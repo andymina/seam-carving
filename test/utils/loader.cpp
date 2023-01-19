@@ -88,20 +88,10 @@ class Parser {
         void parseSeam(
             std::ifstream& file,
             const std::string& parent_label,
-            const std::string& label
+            const std::string& label,
+            const std::string& direction
         ) {
-            std::string direction = "";
-            int size;
-            std::getline(file, this->line_, '\r');
-            if (this->line_.find("VERT") != std::string::npos) {
-                direction = "VERT";
-                size = rows;
-            } else if (this->line_.find("HORZ") != std::string::npos) {
-                direction = "HORZ";
-                size = cols;
-            } else {
-                throw;
-            }
+            int size = (direction == "VERT") ? rows : cols;
 
             std::getline(file, this->line_, '\r');
             std::stringstream ss(this->line_);
@@ -199,9 +189,9 @@ class Parser {
 
                 // seams
                 else if (this->line_.find("VERT SEAM") != std::string::npos) {
-                    this->parseSeam(file, "carver", "find - vertical");
+                    this->parseSeam(file, "carver", "find - vertical", "VERT");
                 } else if (this->line_.find("HORZ SEAM") != std::string::npos) {
-                    this->parseSeam(file, "carver", "find - horizontal");
+                    this->parseSeam(file, "carver", "find - horizontal", "HORZ");
                 }
 
                 // removes

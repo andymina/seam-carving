@@ -1,5 +1,7 @@
 export_targets = demo cpp py
-test_targets = tests load-tests gen-tests
+test_targets = test load-tests gen-tests
+targets = $(export_targets) $(test_targets)
+vcpkg_dependencies = opencv pybind11 gtest nlohmann-json
 .PHONY: setup build clean $(targets)
 
 default: demo
@@ -9,11 +11,11 @@ setup:
 	@git submodule update --init
 	@./vcpkg/bootstrap-vcpkg.sh
 	@./vcpkg/vcpkg integrate install
-	@./vcpkg/vcpkg install opencv pybind11 doctest nlohmann-json
+	@./vcpkg/vcpkg install $(vcpkg_dependencies)
 	@mkdir build out
 
 $(export_targets) $(test_targets):
-	@cmake -B build/ -S ./ -DSC_EXPORT=$@
+	@cmake -B build/ -S ./ -DSC_EXPORT=$@ -DSC_TEST_TARGET=$(TEST_TARGET)
 	@make -C build/
 
 clean:

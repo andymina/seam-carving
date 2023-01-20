@@ -24,8 +24,6 @@ set(GTEST_LIBS GTest::gtest_main)
 # find packages
 find_package(OpenCV CONFIG REQUIRED)
 
-message(${SC_EXPORT})
-
 # check export type
 if (NOT DEFINED SC_EXPORT)
     set(SC_EXPORT "demo")

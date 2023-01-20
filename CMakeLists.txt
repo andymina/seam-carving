@@ -5,12 +5,13 @@ set(
     "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
     CACHE STRING "Vcpkg toolchain file"
 )
+set(CMAKE_CXX_STANDARD 17)
 project(seam-carving)
 
 # var setup
 set(INCLUDE_DIRS include/)
 set(SRC_FILES src/energy.cpp)
-set(TEST_FILES test/unit/energy.test.cpp)
+set(TEST_DIR test/unit)
 set(TARGET_NAME ${PROJECT_NAME})
 
 # 3rd party set up
@@ -18,6 +19,7 @@ set(OPENCV_LIBS opencv_core opencv_imgcodecs opencv_highgui opencv_imgproc)
 set(PYBIND11_LIBS pybind11::lto pybind11::module)
 set(DOCTEST_LIBS doctest::doctest)
 set(JSON_LIBS nlohmann_json::nlohmann_json)
+set(GTEST_LIBS GTest::gtest_main)
 
 # find packages
 find_package(OpenCV CONFIG REQUIRED)
@@ -25,15 +27,22 @@ find_package(OpenCV CONFIG REQUIRED)
 # check export type
 if (NOT DEFINED SC_EXPORT)
     set(SC_EXPORT "demo")
-endif(NOT DEFINED SC_EXPORT)
+endif()
 
 # test runner export
-if (SC_EXPORT STREQUAL "tests")
-    message("Building test runner...")
-    find_package(doctest CONFIG REQUIRED)
-    add_executable(${PROJECT_NAME} test/runner.cpp ${SRC_FILES} ${TEST_FILES})
-    set(PROJECT_LIBS ${OPENCV_LIBS} ${DOCTEST_LIBS})
-endif (SC_EXPORT STREQUAL "tests")
+if (SC_EXPORT STREQUAL "test")
+    if (SC_TEST_TARGET STREQUAL "")
+        message(FATAL_ERROR "TEST_TARGET was not specified")
+    endif ()
+
+    message("Building ${SC_TEST_TARGET}.test.cpp")
+
+    set(TARGET_NAME ${SC_TEST_TARGET})
+    set(PROJECT_LIBS ${OPENCV_LIBS} ${GTEST_LIBS})
+
+    find_package(GTest CONFIG REQUIRED)
+    add_executable(${TARGET_NAME} ${SRC_FILES} "${TEST_DIR}/${SC_TEST_TARGET}.test.cpp")
+endif ()
 
 # test loader export
 if (SC_EXPORT STREQUAL "load-tests")
@@ -43,19 +52,19 @@ if (SC_EXPORT STREQUAL "load-tests")
     find_package(nlohmann_json CONFIG REQUIRED)
     add_executable(${TARGET_NAME} test/utils/loader.cpp)
     set(PROJECT_LIBS ${JSON_LIBS})
-endif (SC_EXPORT STREQUAL "load-tests")
+endif ()
 
 # cpp demo export
 if (SC_EXPORT STREQUAL "demo")
     message("Building C++17 demo executable...")
     add_executable(${PROJECT_NAME} ${SRC_FILES} src/main.cpp)
     set(PROJECT_LIBS ${OPENCV_LIBS})
-endif(SC_EXPORT STREQUAL "demo")
+endif ()
 
 # cpp library export
 if (SC_EXPORT STREQUAL "cpp")
     message("Building C++17 static library...")
-endif(SC_EXPORT STREQUAL "cpp")
+endif ()
 
 # python package export
 if (SC_EXPORT STREQUAL "py")
@@ -67,12 +76,12 @@ if (SC_EXPORT STREQUAL "py")
     )
     set(PROJECT_LIBS ${OPENCV_LIBS} ${PYBIND11_LIBS})
     set_property(TARGET ${PROJECT_NAME} PROPERTY SUFFIX ".so")
-endif(SC_EXPORT STREQUAL "py")
+endif ()
 
 # js module export
 if (SC_EXPORT STREQUAL "js")
     message("Creating JavaScript module...")
-endif(SC_EXPORT STREQUAL "js")
+endif()
 
 # target
 target_include_directories(${TARGET_NAME} PRIVATE ${INCLUDE_DIRS})

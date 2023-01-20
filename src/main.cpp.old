@@ -1,0 +1,57 @@
+// #include "constants.h"
+#include <opencv2/core.hpp>
+#include <nlohmann/json.hpp>
+
+#include <vector>
+#include <iostream>
+
+/** Matrix Serializers */
+// NLOHMANN_JSON_NAMESPACE_BEGIN
+// template<>
+// struct adl_serializer<cv::Mat> {
+// 	// not needed
+// 	// void to_json(nlohmann::json& j, const cv::Mat& matrix) {
+// 	// 	json j = json{
+// 	// 		{"rows", matrix.rows},
+// 	// 		{"cols", matrix.cols},
+// 	// 		{"data", SeamCarving::dumpMatrix(matrix)}	
+// 	// 	};
+// 	// }
+
+//     void to_json(nlohmann::json& j, const cv::Mat& matrix) { }
+
+// 	/**
+// 	 * Reads in a matrix from JSON. Mainly used for reading in test matrices.
+// 	 * 
+// 	 * @remarks the matrix read in will be <int>
+// 	*/
+// 	void from_json(const nlohmann::json& j, cv::Mat& matrix) {
+// 		int rows = j.at("rows"), cols = j.at("cols");
+// 		std::vector<int> data = j.at("data");
+// 		matrix = cv::Mat(rows, cols, CV_32S, data.data());
+// 	}
+// };
+// NLOHMANN_JSON_NAMESPACE_END
+
+NLOHMANN_JSON_NAMESPACE_BEGIN
+template<>
+struct adl_serializer<cv::Mat> {
+    static void from_json(const json& j, cv::Mat& matrix) {
+        int rows = j.at("rows"), cols = j.at("cols");
+        std::vector<int> data = j.at("data");
+        matrix = cv::Mat(rows, cols, CV_32S, data.data());
+    }
+};
+NLOHMANN_JSON_NAMESPACE_END
+
+int main() {
+    nlohmann::json j = nlohmann::json{
+        {"rows", 2},
+        {"cols", 2},
+        {"data", nlohmann::json::array({1,2,3,4})}
+    };
+
+    cv::Mat matrix = j;
+
+    std::cout << matrix << "\n";
+}

@@ -14,9 +14,10 @@ setup:
 	@./vcpkg/vcpkg install $(vcpkg_dependencies)
 	@mkdir build out
 
-$(export_targets) $(test_targets):
+$(targets):
 	@cmake -B build/ -S ./ -DSC_EXPORT=$@ -DSC_TEST_TARGET=$(TEST_TARGET)
 	@make -C build/
 
 clean:
 	@rm -rf build/ out/
+

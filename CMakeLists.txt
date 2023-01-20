@@ -24,13 +24,19 @@ set(GTEST_LIBS GTest::gtest_main)
 # find packages
 find_package(OpenCV CONFIG REQUIRED)
 
+message(${SC_EXPORT})
+
 # check export type
 if (NOT DEFINED SC_EXPORT)
     set(SC_EXPORT "demo")
 endif()
 
 # test runner export
-if (SC_EXPORT STREQUAL "test" AND NOT SC_TEST_TARGET STREQUAL "")
+if (SC_EXPORT STREQUAL "test")
+    if (SC_TEST_TARGET STREQUAL "")
+        message(FATAL_ERROR "TEST_TARGET was not specified")
+    endif ()
+
     message("Building ${SC_TEST_TARGET}.test.cpp")
 
     set(TARGET_NAME ${SC_TEST_TARGET})
@@ -38,8 +44,6 @@ if (SC_EXPORT STREQUAL "test" AND NOT SC_TEST_TARGET STREQUAL "")
 
     find_package(GTest CONFIG REQUIRED)
     add_executable(${TARGET_NAME} ${SRC_FILES} "${TEST_DIR}/${SC_TEST_TARGET}.test.cpp")
-else()
-    message(FATAL_ERROR "TEST_TARGET was not specified")
 endif ()
 
 # test loader export

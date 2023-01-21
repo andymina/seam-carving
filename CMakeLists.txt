@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 project(seam-carving)
 
 # var setup
-set(INCLUDE_DIRS include/ test/util/include/)
+set(INCLUDE_DIRS include/ test/include/)
 set(SRC_FILES src/energy.cpp) 
 set(TEST_DIR test/unit)
 set(TARGET_NAME ${PROJECT_NAME})
@@ -50,7 +50,7 @@ if (SC_EXPORT STREQUAL "load-tests")
     set(TARGET_NAME "load-tests")
 
     find_package(nlohmann_json CONFIG REQUIRED)
-    add_executable(${TARGET_NAME} test/utils/loader.cpp)
+    add_executable(${TARGET_NAME} test/src/loader.cpp)
     set(PROJECT_LIBS ${JSON_LIBS})
 endif ()
 

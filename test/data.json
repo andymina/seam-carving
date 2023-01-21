@@ -174,7 +174,7 @@
         "carver": {
             "find - vertical": {
                 "dir": "VERT",
-                "data": [
+                "coords": [
                     {
                         "row": 0,
                         "col": 1
@@ -203,7 +203,7 @@
             },
             "find - horizontal": {
                 "dir": "HORZ",
-                "data": [
+                "coords": [
                     {
                         "row": 0,
                         "col": 0
@@ -575,7 +575,7 @@
         "carver": {
             "find - vertical": {
                 "dir": "VERT",
-                "data": [
+                "coords": [
                     {
                         "row": 0,
                         "col": 5
@@ -604,7 +604,7 @@
             },
             "find - horizontal": {
                 "dir": "HORZ",
-                "data": [
+                "coords": [
                     {
                         "row": 0,
                         "col": 0
@@ -976,7 +976,7 @@
         "carver": {
             "find - vertical": {
                 "dir": "VERT",
-                "data": [
+                "coords": [
                     {
                         "row": 0,
                         "col": 0
@@ -1005,7 +1005,7 @@
             },
             "find - horizontal": {
                 "dir": "HORZ",
-                "data": [
+                "coords": [
                     {
                         "row": 0,
                         "col": 0
@@ -1377,7 +1377,7 @@
         "carver": {
             "find - vertical": {
                 "dir": "VERT",
-                "data": [
+                "coords": [
                     {
                         "row": 0,
                         "col": 0
@@ -1406,7 +1406,7 @@
             },
             "find - horizontal": {
                 "dir": "HORZ",
-                "data": [
+                "coords": [
                     {
                         "row": 0,
                         "col": 0
@@ -1778,7 +1778,7 @@
         "carver": {
             "find - vertical": {
                 "dir": "VERT",
-                "data": [
+                "coords": [
                     {
                         "row": 0,
                         "col": 5
@@ -1807,7 +1807,7 @@
             },
             "find - horizontal": {
                 "dir": "HORZ",
-                "data": [
+                "coords": [
                     {
                         "row": 0,
                         "col": 0

@@ -5,6 +5,7 @@
 #include <nlohmann/json.hpp>
 
 namespace SeamCarving {
+    /** TODO(andymina): document this */
     class Coord {
         private:
             int row_, col_;

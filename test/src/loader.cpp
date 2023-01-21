@@ -114,7 +114,7 @@ class Parser {
 
             json seam = {
                 { "dir", direction },
-                { "data", data }
+                { "coords", data }
             };
             
             if (parent_label == "") this->parsed_[label] = seam;

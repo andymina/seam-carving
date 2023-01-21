@@ -36,7 +36,7 @@ namespace SeamCarving {
              * @param dir - the direction of the seam
              * @param data - a vector of the pixels in the seam specified by Coord
             */
-            Seam(const Dir& dir, const std::vector<Coord>& coords = {});
+            Seam(const Dir& dir = VERT, const std::vector<Coord>& coords = {});
 
             inline const Dir& dir() const { return dir_; };
             inline const std::vector<Coord>& coords() const { return coords_; };

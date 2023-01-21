@@ -4,6 +4,7 @@
             "name": "Mac",
             "includePath": [
                 "include/**",
+                "test/include/**",
                 "vcpkg/installed/arm64-osx/include/**"
             ],
             "defines": [],

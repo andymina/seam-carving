@@ -6,11 +6,11 @@
 #ifndef energy_h
 #define energy_h
 
-#include "constants.h"
-
+// 3rd party
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 
+// std
 #include <algorithm>
 #include <iostream>
 #include <limits>

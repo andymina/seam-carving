@@ -26,5 +26,4 @@ set(
 )
 
 add_subdirectory(libseam_carving)
-add_subdirectory(seam_carving)
-
+include(Demo.cmake)

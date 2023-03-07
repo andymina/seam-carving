@@ -5,7 +5,7 @@ find_package(OpenCV CONFIG REQUIRED)
 target_sources(
     demo
         PRIVATE
-            main.cpp
+        demo.cpp
 )
 
 target_link_libraries(

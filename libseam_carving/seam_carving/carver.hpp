@@ -1,12 +1,13 @@
-/**
- * Andy Mina
- */
-#ifndef Carver_h
-#define Carver_h
+//
+// Created by Andy Mina on 3/7/23.
+//
+
+#ifndef SEAM_CARVING_CARVER_HPP
+#define SEAM_CARVING_CARVER_HPP
 
 // project
-#include "Seam.h"
-#include "energy.h"
+#include <seam_carving/energy.hpp>
+#include <seam_carving/seam.hpp>
 
 // 3rd party
 #include <opencv2/core.hpp>
@@ -15,12 +16,12 @@
 #include <algorithm>
 #include <limits>
 
-namespace SeamCarving {
-/**
- * Base class for all carvers
- */
-class Carver {
-   protected:
+namespace seam_carving {
+    /**
+     * Base class for all carvers
+     */
+    class Carver {
+    protected:
         /**
          * @param img the image to find the optimal seam in
          * @returns the optimal seam to be removed
@@ -56,7 +57,7 @@ class Carver {
          * @param target_cols the desired number of cols in the target image
          */
         virtual void Carve(cv::Mat &img, const int &target_rows, const int &target_cols) = 0;
-};
-}  // namespace SeamCarving
+    };
+}
 
-#endif
+#endif //SEAM_CARVING_CARVER_HPP

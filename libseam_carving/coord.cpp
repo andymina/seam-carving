@@ -1,18 +1,22 @@
-#include "Coord.h"
+//
+// Created by Andy Mina on 3/7/23.
+//
 
-namespace SeamCarving {
+#include "seam_carving/coord.hpp"
+
+namespace seam_carving {
     Coord::Coord(const int& row, const int& col):
-        row_{row}, col_{col}
-        { }
-    
+            row_{row}, col_{col}
+    { }
+
     bool operator==(const Coord& lhs, const Coord& rhs) {
         return (lhs.row() == rhs.row()) && (lhs.col() == rhs.col());
     }
 
     void to_json(nlohmann::json& j, const Coord& coord) {
         j = nlohmann::json{
-            {"row", coord.row()},
-            {"col", coord.col()}
+                {"row", coord.row()},
+                {"col", coord.col()}
         };
     }
 

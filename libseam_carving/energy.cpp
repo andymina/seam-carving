@@ -1,12 +1,9 @@
-/**
- * Andy Mina
- *
- * Implementation of the functions defined in energy.h
- */
-#include "energy.h"
+//
+// Created by Andy Mina on 3/7/23.
+//
+#include "seam_carving/energy.hpp"
 
-namespace SeamCarving {
-namespace Energy {
+namespace seam_carving::energy {
     void ComputeEnergy(cv::InputArray in_img, cv::OutputArray out_img) {
         // apply gaussian and convert grayscale
         cv::GaussianBlur(in_img, out_img, cv::Size(3, 3), 0, 0);
@@ -79,5 +76,4 @@ namespace Energy {
 
         res.copyTo(output); // output depth is CV_16U
     }
-} // namespace Energy
-} // namespace SeamCarving
+}

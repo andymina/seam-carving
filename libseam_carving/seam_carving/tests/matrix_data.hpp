@@ -1,6 +1,15 @@
-#include <opencv2/core.hpp>
-#include <nlohmann/json.hpp>
+//
+// Created by Andy Mina on 3/7/23.
+//
 
+#ifndef SEAM_CARVING_MATRIX_DATA_HPP
+#define SEAM_CARVING_MATRIX_DATA_HPP
+
+// 3rd party
+#include <nlohmann/json.hpp>
+#include <opencv2/core.hpp>
+
+// std
 #include <vector>
 
 NLOHMANN_JSON_NAMESPACE_BEGIN
@@ -13,3 +22,5 @@ struct adl_serializer<cv::Mat> {
     }
 };
 NLOHMANN_JSON_NAMESPACE_END
+
+#endif //SEAM_CARVING_MATRIX_DATA_HPP

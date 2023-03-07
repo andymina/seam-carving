@@ -5,3 +5,5 @@ out/
 __pycache__
 bin/
 lib/
+cmake-build-*/
+.idea/

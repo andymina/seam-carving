@@ -25,7 +25,7 @@ namespace seam_carving {
             // loop through each row
             for (int row = 0; row < rows; row++) {
                 // add the current Coord to the seam
-                seam.pushCoord({row, col});
+                seam.pushCoord(Coord(row, col));
 
                 if (row != rows - 1) {
                     // find the direction of min and adjust path
@@ -68,7 +68,7 @@ namespace seam_carving {
             // loop through each col
             for (int col = 0; col < cols; col++) {
                 // add the current Coord to the seam
-                seam.pushCoord({row, col});
+                seam.pushCoord(Coord(row, col));
 
                 if (col != cols - 1) {
                     // find the direction of min and adjust path

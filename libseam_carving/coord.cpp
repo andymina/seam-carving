@@ -2,7 +2,7 @@
 // Created by Andy Mina on 3/7/23.
 //
 
-#include "seam_carving/coord.hpp"
+#include <seam_carving/coord.hpp>
 
 namespace seam_carving {
     Coord::Coord(const int& row, const int& col):

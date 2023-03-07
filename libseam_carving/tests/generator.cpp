@@ -1,3 +1,7 @@
+//
+// Created by Andy Mina on 3/7/23.
+//
+
 // 3rd party
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
@@ -12,7 +16,7 @@ using namespace std;
 
 /**
  * Generates a 1D matrix of the specified size with random numbers between [0, 256).
- * 
+ *
  * @param size - the specified size
  * @returns a 1D vector representing a Matrix
 */
@@ -29,7 +33,7 @@ vector<uchar> generateMatrix(size_t size) {
 void applySobel(cv::InputArray input, cv::OutputArray output) {
     cv::Mat input_mat = input.getMat();
     cv::Mat x_nrg, y_nrg;
-    
+
     cv::Sobel(input_mat, x_nrg, CV_16S, 1, 0);
     cv::Sobel(input_mat, y_nrg, CV_16S, 0, 1);
 
@@ -45,7 +49,7 @@ int main() {
     const int MATRIX_COLS = 6;
     // seed rng
     srand(time(0));
-    
+
     // create the matrix and it's sobel
     vector<uchar> matrix_data = generateMatrix(MATRIX_ROWS * MATRIX_COLS);
     cv::Mat input(MATRIX_ROWS, MATRIX_COLS, CV_8U, matrix_data.data());

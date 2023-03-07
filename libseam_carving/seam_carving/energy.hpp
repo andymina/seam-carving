@@ -1,10 +1,8 @@
-/**
- * Andy Mina
- *
- * Definition of all "energy" functions used in seam carving.
- */
-#ifndef energy_h
-#define energy_h
+//
+// Created by Andy Mina on 3/7/23.
+//
+#ifndef SEAM_CARVING_ENERGY_HPP
+#define SEAM_CARVING_ENERGY_HPP
 
 // 3rd party
 #include <opencv2/core.hpp>
@@ -12,11 +10,9 @@
 
 // std
 #include <algorithm>
-#include <iostream>
 #include <limits>
 
-namespace SeamCarving {
-namespace Energy {
+namespace seam_carving::energy {
     /**
      * @brief Computes the energy of an image using the Scharr kernel.
      *
@@ -31,7 +27,7 @@ namespace Energy {
      * @returns an image representing the energy of the original image
      *
      * TODO(#22): generate a proper doxygen comment
-     */
+    */
     void ComputeEnergy(cv::InputArray in_img, cv::OutputArray out_img);
 
     /**
@@ -55,10 +51,9 @@ namespace Energy {
      *
      * @param energy_img a gradient image
      * @returns the energy map of energy_img
-     */
+    */
     void ComputeVerticalEnergyMap(cv::InputArray input, cv::OutputArray output);
     void ComputeHorizontalEnergyMap(cv::InputArray input, cv::OutputArray output);
-} // namespace Energy
-} // namespace SeamCarving
+}
 
-#endif /** energy_h */
+#endif //SEAM_CARVING_ENERGY_HPP

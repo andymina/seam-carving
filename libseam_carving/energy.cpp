@@ -1,6 +1,7 @@
 //
 // Created by Andy Mina on 3/7/23.
 //
+
 #include <seam_carving/energy.hpp>
 
 namespace seam_carving::energy {

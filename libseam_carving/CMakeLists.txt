@@ -6,7 +6,6 @@ add_library(seam_carving SHARED ${LIB_SRCS})
 
 find_package(OpenCV CONFIG REQUIRED)
 
-message(STATUS ${CMAKE_CURRENT_LIST_DIR})
 target_include_directories(
     seam_carving
         PUBLIC ${CMAKE_CURRENT_LIST_DIR}

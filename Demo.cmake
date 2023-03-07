@@ -10,6 +10,5 @@ target_sources(
 
 target_link_libraries(
     demo
-        PRIVATE seam_carving
-        PRIVATE ${OPENCV_LIBS}
+        PRIVATE seam_carving ${OPENCV_LIBS}
 )

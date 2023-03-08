@@ -23,4 +23,10 @@ struct adl_serializer<cv::Mat> {
 };
 NLOHMANN_JSON_NAMESPACE_END
 
+namespace seam_carving::tests {
+    inline bool equalMatrices(const cv::Mat& lhs, const cv::Mat& rhs) {
+        return cv::countNonZero(lhs != rhs) == 0;
+    }
+}
+
 #endif //SEAM_CARVING_MATRIX_DATA_HPP

@@ -22,13 +22,21 @@ namespace seam_carving::tests {
         cv::Mat original_matrix;
     };
 
-    void from_json(const nlohmann::json& j, TestData& test_data);
+    inline void from_json(const nlohmann::json& j, TestData& test_data) {
+        test_data.test_id = j.at("test_id");
+        test_data.original_matrix = j.at("input");
+    }
 
     template<typename T>
-    std::vector<T> GetData(const std::string& path);
+    inline std::vector<T> GetData(const std::string& path) {
+        std::ifstream file(path);
+        nlohmann::json j = nlohmann::json::parse(file);
+        file >> j;
+        return j;
+    }
 
-    /** Path to JSON data file for tests from libseam_carving/ */
-    const std::string json_data_file = "tests/data.json";
+    /** Path to JSON data file for tests from root */
+    const std::string kJSONDataFile = "../data.json";
 }
 
 #endif //SEAM_CARVING_TEST_DATA_HPP

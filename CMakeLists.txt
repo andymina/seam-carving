@@ -20,7 +20,7 @@ set(JSON_LIBS
     "JSON libraries needed to test libseam_carving"
 )
 set(GTEST_LIBS
-    GTest::gtest_main
+    GTest::gtest_main GTest::gtest
     CACHE INTERNAL
     "GoogleTest libraries needed to test libseam_carving"
 )

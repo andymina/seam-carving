@@ -44,8 +44,6 @@ set(LIBRARY_TEST_DIR
 
 # find all packages ahead of time
 find_package(OpenCV CONFIG REQUIRED)
-find_package(nlohmann_json CONFIG REQUIRED)
-find_package(GTest CONFIG REQUIRED)
 
 add_subdirectory(libseam_carving)
 include(${CMAKE_MODULE_DIR}/demo.cmake)

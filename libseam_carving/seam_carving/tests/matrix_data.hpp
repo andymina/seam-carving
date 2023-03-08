@@ -18,7 +18,7 @@ struct adl_serializer<cv::Mat> {
     static void from_json(const nlohmann::json& j, cv::Mat& matrix) {
         int rows = j.at("rows"), cols = j.at("cols");
         std::vector<int> data = j.at("data");
-        matrix = cv::Mat(rows, cols, CV_32S, data.data());
+        matrix = cv::Mat(rows, cols, CV_32S, data.data()).reshape(1, rows);
     }
 };
 NLOHMANN_JSON_NAMESPACE_END

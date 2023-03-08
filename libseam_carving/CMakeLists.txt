@@ -1,18 +1,21 @@
 set(
-    LIB_SRCS
-        energy.cpp coord.cpp seam.cpp carver.cpp)
-
-add_library(seam_carving SHARED ${LIB_SRCS})
-
-find_package(OpenCV CONFIG REQUIRED)
-
-target_include_directories(
-    seam_carving
-        PUBLIC ${CMAKE_CURRENT_LIST_DIR}
-        PRIVATE ${CMAKE_CURRENT_LIST_DIR}/tests
+    LIBRARY_SOURCE_FILES
+        ${LIBRARY_ROOT_DIR}/energy.cpp
+        ${LIBRARY_ROOT_DIR}/coord.cpp
+        ${LIBRARY_ROOT_DIR}/seam.cpp
+        ${LIBRARY_ROOT_DIR}/carver.cpp
+    CACHE INTERNAL
+    "Source files for libseam_carving"
 )
 
-target_link_libraries(
-    seam_carving
-        PRIVATE ${OPENCV_LIBS}
+add_library(seam_carving SHARED)
+target_sources(seam_carving PRIVATE ${LIBRARY_SOURCE_FILES})
+target_include_directories(seam_carving
+    PUBLIC ${LIBRARY_ROOT_DIR}
+    PRIVATE ${LIBRARY_TEST_DIR}
 )
+target_link_libraries(seam_carving
+    PRIVATE ${OPENCV_LIBS}
+)
+
+add_subdirectory(tests)

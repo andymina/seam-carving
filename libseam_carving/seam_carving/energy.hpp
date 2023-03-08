@@ -17,7 +17,7 @@ namespace seam_carving::energy {
      * @brief Computes the energy of an image using the Scharr kernel.
      *
      * Computes the energy of an image using the gradient and returns a grayscale
-     * images where the brightness of a pixel is propotional to its energy. Uses the
+     * images where the brightness of a pixel is proportional to its energy. Uses the
      * energy function defined as described in Avidan et al., E(p) = | dx(p) | + |
      * dy(p) |, where p represents a pixel and dx/dy represent the first
      * derivatives. In the paper the first derivatives are found using the Sobel

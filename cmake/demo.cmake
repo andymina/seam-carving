@@ -1,11 +1,11 @@
 add_executable(demo)
 
-find_package(OpenCV CONFIG REQUIRED)
+
 
 target_sources(
     demo
         PRIVATE
-        demo.cpp
+        ../demo.cpp
 )
 
 target_link_libraries(

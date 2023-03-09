@@ -38,9 +38,8 @@ namespace seam_carving::tests {
     inline std::string PrintToString(const TestData& test_data) {
         std::stringstream ss;
         ss << ">\n";
-        ss << "- Test Id: " << test_data.test_id << "\n\n";
-        ss << "- Original Matrix\n" << test_data.original_matrix << "\n\n";
-        ss << "\n";
+        ss << "- Test Id: " << test_data.test_id << "\n";
+        ss << PrintToString("Original Matrix", test_data.original_matrix) << "\n";
         return ss.str();
     };
 

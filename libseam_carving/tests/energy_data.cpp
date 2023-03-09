@@ -16,11 +16,9 @@ namespace seam_carving::tests {
 
     std::string PrintToString(const EnergyData& energy_data) {
         std::stringstream ss;
-        ss << ">\n";
-        ss << "- Sobel\n" << energy_data.sobel_matrix << "\n\n";
-        ss << "- Vertical Map\n" << energy_data.vertical_map_matrix << "\n\n";
-        ss << "- Horizontal Map\n" << energy_data.horizontal_map_matrix << "\n";
-        ss << "\n";
+        ss << PrintToString("Sobel", energy_data.sobel_matrix) << "\n";
+        ss << PrintToString("Vertical Map", energy_data.vertical_map_matrix) << "\n";
+        ss << PrintToString("Horizontal Map", energy_data.horizontal_map_matrix) << "\n";
         return ss.str();
     }
 }

@@ -5,13 +5,21 @@
 #ifndef SEAM_CARVING_TEST_DATA_HPP
 #define SEAM_CARVING_TEST_DATA_HPP
 
+// project
+#include <seam_carving/tests/matrix_data.hpp>
+
 // 3rd party
 #include <nlohmann/json.hpp>
 #include <opencv2/core.hpp>
 
-namespace seam_carving {
+// std
+#include <fstream>
+#include <sstream>
+#include <vector>
+
+namespace seam_carving::tests {
     struct TestData {
-        std::string test_id;
+        int test_id;
         cv::Mat original_matrix;
     };
 
@@ -19,6 +27,24 @@ namespace seam_carving {
         test_data.test_id = j.at("test_id");
         test_data.original_matrix = j.at("input");
     }
+
+    template<typename T>
+    inline std::vector<T> GetData(const std::string& path) {
+        std::ifstream file(path);
+        nlohmann::json j = nlohmann::json::parse(file);
+        return j;
+    }
+
+    inline std::string PrintToString(const TestData& test_data) {
+        std::stringstream ss;
+        ss << ">\n";
+        ss << "- Test Id: " << test_data.test_id << "\n";
+        ss << PrintToString("Original Matrix", test_data.original_matrix) << "\n";
+        return ss.str();
+    };
+
+    /** Path to JSON data file for tests from libseam_carving/ */
+    const std::string kJSONDataFile = "tests/data.json";
 }
 
 #endif //SEAM_CARVING_TEST_DATA_HPP

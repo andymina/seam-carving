@@ -7,13 +7,14 @@
 
 // project
 #include <seam_carving/seam.hpp>
+#include <seam_carving/tests/matrix_data.hpp>
 #include <seam_carving/tests/test_data.hpp>
 
 // 3rd party
 #include <nlohmann/json.hpp>
 #include <opencv2/core.hpp>
 
-namespace seam_carving {
+namespace seam_carving::tests {
     struct CarverTestData : TestData {
         Seam vertical_seam, horizontal_seam;
         cv::Mat remove_vertical_matrix, remove_horizontal_matrix;

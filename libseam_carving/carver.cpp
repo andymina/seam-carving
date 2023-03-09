@@ -9,7 +9,7 @@ namespace seam_carving {
             // compute the energy map
             cv::Mat energy_map;
             energy::ComputeEnergy(img, energy_map);
-            energy::ComputeVerticalEnergyMap(energy_map, energy_map);
+            energy::ComputeVerticalMap(energy_map, energy_map);
 
             // find the starting val
             ushort col = 0, min_val = energy_map.at<ushort>(0, col);
@@ -51,7 +51,7 @@ namespace seam_carving {
             // compute the energy map
             cv::Mat energy_map;
             energy::ComputeEnergy(img, energy_map);
-            energy::ComputeVerticalEnergyMap(energy_map, energy_map);
+            energy::ComputeVerticalMap(energy_map, energy_map);
 
             // find the starting val
             ushort row = 0, min_val = energy_map.at<ushort>(row, 0);

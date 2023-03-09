@@ -25,7 +25,7 @@ namespace seam_carving::energy {
         cv::addWeighted(x_nrg, 0.5, y_nrg, 0.5, 0, out_img);
     }
 
-    void ComputeVerticalEnergyMap(cv::InputArray input, cv::OutputArray output) {
+    void ComputeVerticalMap(cv::InputArray input, cv::OutputArray output) {
         // setup
         cv::Mat input_mat = input.getMat();
         int rows = input_mat.rows, cols = input_mat.cols;
@@ -51,7 +51,7 @@ namespace seam_carving::energy {
         res.copyTo(output); // output depth is CV_16U
     }
 
-    void ComputeHorizontalEnergyMap(cv::InputArray input, cv::OutputArray output) {
+    void ComputeHorizontalMap(cv::InputArray input, cv::OutputArray output) {
         // setup
         cv::Mat input_mat = input.getMat();
         int rows = input_mat.rows, cols = input_mat.cols;

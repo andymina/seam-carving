@@ -50,7 +50,7 @@ private:
         int count = 0, size = rows * cols;
         while (count < size && std::getline(file, this->line_, '\r')) {
             std::stringstream ss(this->line_);
-            while (std::getline(ss, this->line_, '\t')) {
+            while (std::getline(ss, this->line_, ',')) {
                 if (this->line_.size() != 0) {
                     res.push_back(std::stoi(this->line_));
                     count++;
@@ -64,7 +64,7 @@ private:
                 {"data", res}
         };
 
-        if (parent_label == "") this->parsed_[label] = output;
+        if (parent_label.empty()) this->parsed_[label] = output;
         else this->parsed_[parent_label][label] = output;
     }
 
@@ -105,8 +105,8 @@ private:
         std::vector<json> data;
         int count = 0;
 
-        while (count < size && std::getline(ss, this->line_, '\t')) {
-            if (this->line_.size() != 0) {
+        while (count < size && std::getline(ss, this->line_, ',')) {
+            if (!this->line_.empty()) {
                 double coord = std::stod(this->line_);
                 double row;
                 double col = std::modf(coord, &row) * coord_range;
@@ -124,7 +124,7 @@ private:
                 { "coords", data }
         };
 
-        if (parent_label == "") this->parsed_[label] = seam;
+        if (parent_label.empty()) this->parsed_[label] = seam;
         else this->parsed_[parent_label][label] = seam;
     }
 
@@ -139,7 +139,7 @@ private:
         std::vector<int> header_vals;
         while (count < header_size && std::getline(file, this->line_, '\r')) {
             std::stringstream ss(this->line_);
-            while (std::getline(ss, this->line_, '\t')) {
+            while (std::getline(ss, this->line_, ',')) {
                 if (this->line_.size() != 0 && isnumber(this->line_[0])) {
                     header_vals.push_back(std::stoi(this->line_));
                     count++;
@@ -161,7 +161,7 @@ public:
      * @param path - the file path
      * @param test_id - the test_id of the current file
     */
-    Parser(const std::string& path, const int& test_id): file_path_{ path } {
+    Parser(std::string path, const int& test_id): file_path_{ std::move(path) } {
         this->parsed_["test_id"] = test_id;
     }
 
@@ -227,7 +227,7 @@ public:
 int main() {
     // count the number of seam carving tests
     int test_count = 0;
-    std::string test_data_dir = "test/raw-data/";
+    std::string test_data_dir = "tests/data/";
     for (const auto& entry : fs::directory_iterator(test_data_dir)) {
         std::string path = entry.path();
         if (path.find("Seam Carving") != std::string::npos) {
@@ -240,16 +240,21 @@ int main() {
 
     // file iteration setup
     std::string file_prefix = test_data_dir + "Seam Carving Tests - TestId_";
-    std::string file_suffix = ".tsv";
+    std::string file_suffix = ".csv";
+    std::string file_name;
 
     // parse test files
     for (int test_id = 0; test_id < test_count; test_id++) {
-        std::string file_name = file_prefix + std::to_string(test_id) + file_suffix;
+        // build file name
+        file_name += file_prefix;
+        file_name += std::to_string(test_id);
+        file_name += file_suffix;
         Parser p(file_name, test_id);
         p.parseFile();
         data.push_back(p.getJSON());
+        file_name = "";
     }
 
-    std::ofstream out_file("test/data.json");
+    std::ofstream out_file("tests/data.json");
     out_file << data.dump(4);
 }

@@ -17,11 +17,10 @@ namespace seam_carving::energy {
      * @brief Computes the energy of an image using the Scharr kernel.
      *
      * Computes the energy of an image using the gradient and returns a grayscale
-     * images where the brightness of a pixel is propotional to its energy. Uses the
+     * images where the brightness of a pixel is proportional to its energy. Uses the
      * energy function defined as described in Avidan et al., E(p) = | dx(p) | + |
      * dy(p) |, where p represents a pixel and dx/dy represent the first
-     * derivatives. In the paper the first derivatives are found using the Sobel
-     * kernel, but this function uses the Scharr kernel for better accuracy.
+     * derivatives.
      *
      * @param img an image read by OpenCV
      * @returns an image representing the energy of the original image
@@ -52,8 +51,8 @@ namespace seam_carving::energy {
      * @param energy_img a gradient image
      * @returns the energy map of energy_img
     */
-    void ComputeVerticalEnergyMap(cv::InputArray input, cv::OutputArray output);
-    void ComputeHorizontalEnergyMap(cv::InputArray input, cv::OutputArray output);
+    void ComputeVerticalMap(cv::InputArray input, cv::OutputArray output);
+    void ComputeHorizontalMap(cv::InputArray input, cv::OutputArray output);
 }
 
 #endif //SEAM_CARVING_ENERGY_HPP

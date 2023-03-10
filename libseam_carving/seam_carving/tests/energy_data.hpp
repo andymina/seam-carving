@@ -25,8 +25,6 @@ namespace seam_carving::tests {
     };
 
     void from_json(const nlohmann::json& j, EnergyData& energy_data);
-    std::string PrintToString(const EnergyData& energy_data);
-
     class EnergyTest : public testing::TestWithParam<EnergyData> { };
 }
 

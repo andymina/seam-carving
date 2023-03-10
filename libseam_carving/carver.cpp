@@ -5,7 +5,7 @@
 #include <seam_carving/carver.hpp>
 
 namespace seam_carving {
-        Seam Carver::FindOptimalVerticalSeam(cv::InputArray img) {
+        Seam Carver::FindVerticalSeam(cv::InputArray img) {
             // compute the energy map
             cv::Mat energy_map;
             energy::ComputeEnergy(img, energy_map);
@@ -25,7 +25,7 @@ namespace seam_carving {
             // loop through each row
             for (int row = 0; row < rows; row++) {
                 // add the current Coord to the seam
-                seam.pushCoord(Coord(row, col));
+                seam.push(Coord(row, col));
 
                 if (row != rows - 1) {
                     // find the direction of min and adjust path
@@ -47,7 +47,7 @@ namespace seam_carving {
             return seam;
         }
 
-        Seam Carver::FindOptimalHorizontalSeam(cv::InputArray img) {
+        Seam Carver::FindHorizontalSeam(cv::InputArray img) {
             // compute the energy map
             cv::Mat energy_map;
             energy::ComputeEnergy(img, energy_map);
@@ -68,7 +68,7 @@ namespace seam_carving {
             // loop through each col
             for (int col = 0; col < cols; col++) {
                 // add the current Coord to the seam
-                seam.pushCoord(Coord(row, col));
+                seam.push(Coord(row, col));
 
                 if (col != cols - 1) {
                     // find the direction of min and adjust path

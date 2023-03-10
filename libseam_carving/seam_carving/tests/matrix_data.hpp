@@ -24,15 +24,9 @@ struct adl_serializer<cv::Mat> {
 NLOHMANN_JSON_NAMESPACE_END
 
 namespace seam_carving::tests {
-    inline bool equalMatrices(const cv::Mat& lhs, const cv::Mat& rhs) {
-        return cv::countNonZero(lhs != rhs) == 0;
-    }
+    bool equalMatrices(const cv::Mat& lhs, const cv::Mat& rhs);
 
-    inline std::string PrintToString(const std::string& label, const cv::Mat& matrix) {
-        std::stringstream ss;
-        ss << ">>> " << label << "\n" << matrix << "\n";
-        return ss.str();
-    }
+    std::string PrintToString(const cv::Mat& matrix, const std::string& label = "");
 }
 
 #endif //SEAM_CARVING_MATRIX_DATA_HPP

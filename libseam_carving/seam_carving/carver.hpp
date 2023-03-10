@@ -26,8 +26,8 @@ namespace seam_carving {
          * @param img the image to find the optimal seam in
          * @returns the optimal seam to be removed
          */
-        Seam FindOptimalVerticalSeam(cv::InputArray img);
-        Seam FindOptimalHorizontalSeam(cv::InputArray img);
+        Seam FindVerticalSeam(cv::InputArray img);
+        Seam FindHorizontalSeam(cv::InputArray img);
 
         /**
          * @param seam the seam to be removed

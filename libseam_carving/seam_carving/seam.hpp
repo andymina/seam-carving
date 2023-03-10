@@ -13,6 +13,8 @@
 
 // stl
 #include <vector>
+#include <sstream>
+#include <ostream>
 
 namespace seam_carving {
     /** A Enum to help better describe what direction to use in functions and seams. */
@@ -40,16 +42,15 @@ namespace seam_carving {
          * @param dir - the direction of the seam
          * @param data - a vector of the pixels in the seam specified by Coord
         */
-        Seam(const Dir& dir = VERT, const std::vector<Coord>& coords = {});
+        explicit Seam(const Dir& dir = VERT, const std::vector<Coord>& coords = {});
 
         inline const Dir& dir() const { return dir_; };
         inline const std::vector<Coord>& coords() const { return coords_; };
-        inline Coord& operator[](int idx) { return coords_[idx]; };
-        inline const Coord& operator[](int idx) const { return coords_[idx]; };
+        inline size_t size() const { return coords_.size(); }
+        inline Coord& operator[](std::size_t idx) { return coords_[idx]; };
+        inline const Coord& operator[](std::size_t idx) const { return coords_[idx]; };
 
-        void pushCoord(const Coord& coord);
-
-
+        void push(const Coord& coord);
 
         /**
          * Determines if two seams are equivalent based on their direction, size, and data vectors.
@@ -57,11 +58,26 @@ namespace seam_carving {
          * @param rhs - the other Seam
          * @returns true if the seams are equal, false otherwise
         */
-        friend bool operator==(const Seam& lhs, const Seam& rhs);
+        inline friend bool operator==(const Seam& lhs, const Seam& rhs) {
+            return (lhs.dir() == rhs.dir()) &&
+                   (lhs.size() == rhs.size()) &&
+                   (lhs.coords() == rhs.coords());
+        }
+
+        inline friend std::ostream& operator<<(std::ostream& os, const Seam& seam) {
+            for (std::size_t i = 0; i < seam.size(); i++) {
+                os << seam[i];
+                if (i != seam.size() - 1)
+                    os << " ";
+            }
+            return os;
+        }
     };
 
     void to_json(nlohmann::json& j, const Seam& seam);
     void from_json(const nlohmann::json& j, Seam& seam);
+
+    std::string PrintToString(const Seam& seam, const std::string& label = "");
 }
 
 #endif //SEAM_CARVING_SEAM_HPP

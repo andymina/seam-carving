@@ -9,10 +9,6 @@ namespace seam_carving {
             row_{row}, col_{col}
     { }
 
-    bool operator==(const Coord& lhs, const Coord& rhs) {
-        return (lhs.row() == rhs.row()) && (lhs.col() == rhs.col());
-    }
-
     void to_json(nlohmann::json& j, const Coord& coord) {
         j = nlohmann::json{
                 {"row", coord.row()},

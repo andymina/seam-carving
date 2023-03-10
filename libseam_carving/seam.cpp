@@ -9,14 +9,8 @@ namespace seam_carving {
             dir_{dir}, coords_{coords}
     { }
 
-    void Seam::pushCoord(const Coord& coord) {
+    void Seam::push(const Coord& coord) {
         coords_.push_back(coord);
-    }
-
-    bool operator==(const Seam& lhs, const Seam& rhs) {
-        return (lhs.dir() == rhs.dir()) &&
-               (lhs.coords().size() == rhs.coords().size()) &&
-               (lhs.coords() == rhs.coords());
     }
 
     void to_json(nlohmann::json& j, const Seam& seam) {
@@ -28,5 +22,11 @@ namespace seam_carving {
 
     void from_json(const nlohmann::json& j, Seam& seam) {
         seam = Seam(j.at("dir"), j.at("coords"));
+    }
+
+    std::string PrintToString(const Seam& seam, const std::string& label) {
+        std::stringstream ss;
+        ss << ">>> " << label << "\n" << seam;
+        return ss.str();
     }
 }

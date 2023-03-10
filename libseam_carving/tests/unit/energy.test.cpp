@@ -10,15 +10,12 @@
 // 3rd party
 #include <gtest/gtest.h>
 
-// std
-#include <iostream>
-
 namespace sce = seam_carving::energy;
 namespace sct = seam_carving::tests;
 using sct::EnergyTest;
 
 INSTANTIATE_TEST_SUITE_P(
-    EnergyFromJSON,
+    EnergyDataFromJSON,
     EnergyTest,
     testing::ValuesIn(
         sct::GetData<sct::EnergyData>(sct::kJSONDataFile)
@@ -38,8 +35,8 @@ TEST_P(EnergyTest, ComputeVerticalMapReturnsCorrectValue) {
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
         << "TestId - " << energy_data.test_id << "\n"
-        << sct::PrintToString("expected", expected) << "\n"
-        << sct::PrintToString("actual", actual);
+        << sct::PrintToString(expected, "expected") << "\n"
+        << sct::PrintToString(actual, "actual");
 }
 
 TEST_P(EnergyTest, ComputeHorizontalMapReturnsCorrectValue) {
@@ -55,6 +52,6 @@ TEST_P(EnergyTest, ComputeHorizontalMapReturnsCorrectValue) {
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
         << "TestId - " << energy_data.test_id << "\n"
-        << sct::PrintToString("expected", expected) << "\n"
-        << sct::PrintToString("actual", actual);
+        << sct::PrintToString(expected, "expected") << "\n"
+        << sct::PrintToString(actual, "actual");
 }

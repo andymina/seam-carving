@@ -8,6 +8,9 @@
 // 3rd party
 #include <nlohmann/json.hpp>
 
+// stl
+#include <ostream>
+
 namespace seam_carving {
     /** TODO(andymina): document this */
     class Coord {
@@ -26,7 +29,14 @@ namespace seam_carving {
          * @param rhs - the coord to compare
          * @returns true if the Coords are equal, otherwise false
         */
-        friend bool operator==(const Coord& lhs, const Coord& rhs);
+        inline friend bool operator==(const Coord& lhs, const Coord& rhs) {
+            return (lhs.row() == rhs.row()) && (lhs.col() == rhs.col());
+        }
+
+        inline friend std::ostream& operator<<(std::ostream& os, const Coord& coord) {
+            os << "(" << coord.row() << ", " << coord.col() << ")";
+            return os;
+        }
     };
 
     void to_json(nlohmann::json& j, const Coord& coord);

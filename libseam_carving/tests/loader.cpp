@@ -46,6 +46,15 @@ private:
             const std::string& label,
             const int& rows, const int& cols
     ) {
+        // grab the first line
+        std::getline(file, this->line_, '\r');
+        std::stringstream ss_depth(this->line_);
+        // grab the depth header
+        std::getline(ss_depth, this->line_, ',');
+        // grab the depth value
+        std::getline(ss_depth, this->line_, ',');
+        int depth = std::stoi(this->line_);
+
         std::vector<int> res;
         int count = 0, size = rows * cols;
         while (count < size && std::getline(file, this->line_, '\r')) {
@@ -61,6 +70,7 @@ private:
         json output = {
                 {"rows", rows},
                 {"cols", cols},
+                {"depth", depth},
                 {"data", res}
         };
 

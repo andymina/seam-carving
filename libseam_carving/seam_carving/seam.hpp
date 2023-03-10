@@ -68,7 +68,7 @@ namespace seam_carving {
             for (std::size_t i = 0; i < seam.size(); i++) {
                 os << seam[i];
                 if (i != seam.size() - 1)
-                    os << " ";
+                    os << ", ";
             }
             return os;
         }

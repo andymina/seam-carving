@@ -7,7 +7,6 @@
 
 // project
 #include <seam_carving/seam.hpp>
-#include <seam_carving/tests/matrix_data.hpp>
 #include <seam_carving/tests/test_data.hpp>
 
 // 3rd party
@@ -22,7 +21,6 @@ namespace seam_carving::tests {
         cv::Mat insert_vertical_matrix, insert_horizontal_matrix;
     };
 
-    void from_json(const nlohmann::json& j, CarverData& carver_data);
     class CarverTest : public testing::TestWithParam<CarverData> { };
 }
 

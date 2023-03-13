@@ -1,7 +1,6 @@
 set(
     LIBRARY_SOURCE_FILES
         ${LIBRARY_ROOT_DIR}/energy.cpp
-        ${LIBRARY_ROOT_DIR}/coord.cpp
         ${LIBRARY_ROOT_DIR}/seam.cpp
         ${LIBRARY_ROOT_DIR}/carver.cpp
     CACHE INTERNAL

@@ -13,17 +13,6 @@ namespace seam_carving {
         coords_.push_back(coord);
     }
 
-    void to_json(nlohmann::json& j, const Seam& seam) {
-        j = nlohmann::json{
-                {"dir", seam.dir()},
-                {"coords", seam.coords()}
-        };
-    }
-
-    void from_json(const nlohmann::json& j, Seam& seam) {
-        seam = Seam(j.at("dir"), j.at("coords"));
-    }
-
     std::string PrintToString(const Seam& seam, const std::string& label) {
         std::stringstream ss;
         ss << ">>> " << label << "\n" << seam;

@@ -73,11 +73,6 @@ namespace seam_carving {
             return os;
         }
     };
-
-    void to_json(nlohmann::json& j, const Seam& seam);
-    void from_json(const nlohmann::json& j, Seam& seam);
-
-    std::string PrintToString(const Seam& seam, const std::string& label = "");
 }
 
 #endif //SEAM_CARVING_SEAM_HPP

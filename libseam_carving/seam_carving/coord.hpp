@@ -18,7 +18,9 @@ namespace seam_carving {
         int row_, col_;
 
     public:
-        explicit Coord(const int& row = 0, const int& col = 0);
+        inline explicit Coord(const int& row = 0, const int& col = 0):
+            row_{row}, col_{col}
+            { }
 
         inline const int& row() const { return row_; };
         inline const int& col() const { return col_; };
@@ -38,9 +40,6 @@ namespace seam_carving {
             return os;
         }
     };
-
-    void to_json(nlohmann::json& j, const Coord& coord);
-    void from_json(const nlohmann::json& j, Coord& coord);
 }
 
 #endif //SEAM_CARVING_COORD_HPP

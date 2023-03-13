@@ -13,7 +13,6 @@
 
 // stl
 #include <vector>
-#include <sstream>
 #include <ostream>
 
 namespace seam_carving {

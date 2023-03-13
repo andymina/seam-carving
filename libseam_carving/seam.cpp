@@ -12,10 +12,4 @@ namespace seam_carving {
     void Seam::push(const Coord& coord) {
         coords_.push_back(coord);
     }
-
-    std::string PrintToString(const Seam& seam, const std::string& label) {
-        std::stringstream ss;
-        ss << ">>> " << label << "\n" << seam;
-        return ss.str();
-    }
 }

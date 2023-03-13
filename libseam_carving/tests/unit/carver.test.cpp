@@ -43,12 +43,22 @@ TEST_P(CarverTest, FindVerticalSeamReturnsCorrectSeam) {
      *  2. rewrite tests and parser so they use 3-dimensional images as well
      *  3. refactor FindVerticalSeam to accept an energy image
      *
-     *  Solution 1 is kinda cheap but would ultimately require testing for OpenCV.
-     *  Solution 2 is super expensive but does make the tests a lot closer to the
-     *  use case.
-     *  Solution 3 is cheap but can ultimately bog down the user with having to perform all
-     *  of the steps of seam carving themselves, instead of just letting the magic happen.
+     * Solution 1 is kinda cheap but would ultimately require testing for OpenCV.
      *
+     * Solution 2 is super expensive but does make the tests a lot closer to the
+     * use case. We could give the tests a grayscale RGB image since we can trust OpenCV
+     * knows how to convert.
+     *
+     * Solution 3 is cheap but can ultimately bog down the user with having to perform all
+     * of the steps of seam carving themselves, instead of just letting the magic happen.
+     *
+     * After some thought it seems like Solution 2 is the best. We can keep the tests
+     * 1-dimensional but in the tests we can convert it to a 3-dimensional image where
+     * the RGB values are just the repeated gray values. This is possible because
+     * we can trust that OpenCV knows how to convert to grayscale so RGB has no relevance
+     * in seam carving since the image will ultimately be converted anyways. The conversion
+     * from 1 channel to 3 channels can happen in the loader/parser or the TestData.from_json.
+     * The latter makes the most sense to me since we can avoid data.json being bloated.
      */
     sc::Seam actual = carver.FindVerticalSeam(input);
 

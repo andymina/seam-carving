@@ -14,6 +14,9 @@
 // 3rd party
 #include <gtest/gtest.h>
 
+// stl
+#include <iostream>
+
 namespace sc = seam_carving;
 namespace sct = seam_carving::tests;
 using sct::CarverTest;
@@ -62,11 +65,13 @@ TEST_P(CarverTest, FindVerticalSeamReturnsCorrectSeam) {
      */
     sc::Seam actual = carver.FindVerticalSeam(input);
 
+
+
     /** @TODO(andymina) add PrintToString function back for TestData and children */
-    EXPECT_EQ(0, 0);
+    EXPECT_EQ(expected, actual);
 //        << "TestId - " << carver_data.test_id << "\n"
-//        << sct::Print(expected, "expected") << "\n"
-//        << sct::Print(actual, "actual");
+//        << sct::PrintWithLabel(expected, "expected") << "\n"
+//        << sct::PrintWithLabel(actual, "actual");
 }
 
 

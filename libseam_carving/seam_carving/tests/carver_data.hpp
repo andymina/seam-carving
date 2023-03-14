@@ -21,6 +21,7 @@ namespace seam_carving::tests {
         cv::Mat insert_vertical_matrix, insert_horizontal_matrix;
     };
 
+
     class CarverTest : public testing::TestWithParam<CarverData> { };
 }
 

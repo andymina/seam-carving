@@ -2,13 +2,17 @@
 // Created by Andy Mina on 3/7/23.
 //
 
+#include <iostream>
 #include <seam_carving/energy.hpp>
 
 namespace seam_carving::energy {
     void ComputeEnergy(cv::InputArray in_img, cv::OutputArray out_img) {
         // apply gaussian and convert grayscale
         cv::GaussianBlur(in_img, out_img, cv::Size(3, 3), 0, 0);
-        cv::cvtColor(out_img, out_img, cv::COLOR_BGR2GRAY);
+
+        if (in_img.channels() != 1) {
+            cv::cvtColor(out_img, out_img, cv::COLOR_BGR2GRAY);
+        }
 
         /**
          * apply kernel. set the depth on the kernel results to be 16-bit

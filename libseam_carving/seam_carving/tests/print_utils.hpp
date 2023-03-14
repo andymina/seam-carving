@@ -8,9 +8,12 @@
 // project
 #include <seam_carving/tests/print_utils.hpp>
 
+// stl
+#include <sstream>
+
 namespace seam_carving::tests {
     template <typename T>
-    inline std::string Print(const T& t, const std::string& label = "") {
+    inline std::string PrintWithLabel(const T& t, const std::string& label = "") {
         std::stringstream ss;
         ss << ">>> ";
         if (!label.empty()) {

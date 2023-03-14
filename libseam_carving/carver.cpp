@@ -2,6 +2,8 @@
 // Created by Andy Mina on 3/7/23.
 //
 
+#include <iostream>
+#include <seam_carving/tests/print_utils.hpp>
 #include <seam_carving/carver.hpp>
 
 namespace seam_carving {
@@ -10,6 +12,8 @@ namespace seam_carving {
             cv::Mat energy_map;
             energy::ComputeEnergy(img, energy_map);
             energy::ComputeVerticalMap(energy_map, energy_map);
+
+            std::cout << seam_carving::tests::PrintWithLabel(energy_map, "computed energy map") << "\n";
 
             // find the starting val
             ushort col = 0, min_val = energy_map.at<ushort>(0, col);

@@ -7,10 +7,10 @@
 
 namespace seam_carving::energy {
     void ComputeEnergy(cv::InputArray in_img, cv::OutputArray out_img) {
-        // apply gaussian and convert grayscale
-        cv::GaussianBlur(in_img, out_img, cv::Size(3, 3), 0, 0);
-
-        if (in_img.channels() != 1) {
+        // conversion should be skipped if img is grayscale already
+        const bool skip_conversion = in_img.channels() == 1;
+        if (!skip_conversion) {
+            cv::GaussianBlur(in_img, out_img, cv::Size(3, 3), 0, 0);
             cv::cvtColor(out_img, out_img, cv::COLOR_BGR2GRAY);
         }
 
@@ -20,8 +20,13 @@ namespace seam_carving::energy {
          */
         cv::Mat x_nrg, y_nrg;
         /** TODO(#23): investigate if Scharr is better */
-        cv::Sobel(out_img, x_nrg, CV_16S, 1, 0);
-        cv::Sobel(out_img, y_nrg, CV_16S, 0, 1);
+        if (!skip_conversion) {
+            cv::Sobel(out_img, x_nrg, CV_16S, 1, 0);
+            cv::Sobel(out_img, y_nrg, CV_16S, 0, 1);
+        } else {
+            cv::Sobel(in_img, x_nrg, CV_16S, 1, 0);
+            cv::Sobel(in_img, y_nrg, CV_16S, 0, 1);
+        }
 
         // convert back to CV_8U depth and merge
         cv::convertScaleAbs(x_nrg, x_nrg);
@@ -29,9 +34,9 @@ namespace seam_carving::energy {
         cv::addWeighted(x_nrg, 0.5, y_nrg, 0.5, 0, out_img);
     }
 
-    void ComputeVerticalMap(cv::InputArray input, cv::OutputArray output) {
+    void ComputeVerticalMap(cv::InputArray sobel, cv::OutputArray output) {
         // setup
-        cv::Mat input_mat = input.getMat();
+        cv::Mat input_mat = sobel.getMat();
         int rows = input_mat.rows, cols = input_mat.cols;
         cv::Mat res = cv::Mat(rows, cols, CV_16U);
 

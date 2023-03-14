@@ -13,8 +13,6 @@ namespace seam_carving {
             energy::ComputeEnergy(img, energy_map);
             energy::ComputeVerticalMap(energy_map, energy_map);
 
-            std::cout << seam_carving::tests::PrintWithLabel(energy_map, "computed energy map") << "\n";
-
             // find the starting val
             ushort col = 0, min_val = energy_map.at<ushort>(0, col);
             for (int i = 0; i < energy_map.cols; i++)
@@ -33,18 +31,17 @@ namespace seam_carving {
 
                 if (row != rows - 1) {
                     // find the direction of min and adjust path
-                    const ushort &center = energy_map.at<ushort>(row + 1, col);
-                    const ushort &left = (col - 1 < 0) ?
+                    const ushort& center = energy_map.at<ushort>(row + 1, col);
+                    const ushort& left = (col - 1 < 0) ?
                                          std::numeric_limits<ushort>::max() :
                                          energy_map.at<ushort>(row + 1, col - 1);
-                    const ushort &right = (col + 1 >= cols) ?
+                    const ushort& right = (col + 1 >= cols) ?
                                           std::numeric_limits<ushort>::max() :
                                           energy_map.at<ushort>(row + 1, col + 1);
 
                     // find the min pixel and adjust weight
-                    int min_energy = std::min({center, left, right});
-                    if (min_energy == left) col--;
-                    else if (min_energy == right) col++;
+                    if (left < center && left < right) col--;
+                    else if (right < center && right < left) col++;
                 }
             }
 
@@ -85,9 +82,8 @@ namespace seam_carving {
                                           energy_map.at<ushort>(row + 1, col + 1);
 
                     // find the min pixel and adjust weight
-                    int min_energy = std::min({center, above, below});
-                    if (min_energy == above) row--;
-                    else if (min_energy == below) row++;
+                    if (above < center && above < below) col--;
+                    else if (below < center && below < above) col++;
                 }
             }
 

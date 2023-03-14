@@ -51,7 +51,7 @@ namespace seam_carving::energy {
      * @param energy_img a gradient image
      * @returns the energy map of energy_img
     */
-    void ComputeVerticalMap(cv::InputArray input, cv::OutputArray output);
+    void ComputeVerticalMap(cv::InputArray sobel, cv::OutputArray output);
     void ComputeHorizontalMap(cv::InputArray input, cv::OutputArray output);
 }
 

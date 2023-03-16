@@ -65,13 +65,22 @@ TEST_P(CarverTest, FindVerticalSeamReturnsCorrectSeam) {
      */
     sc::Seam actual = carver.FindVerticalSeam(input);
 
-
-
     /** @TODO(andymina) add PrintToString function back for TestData and children */
-    EXPECT_EQ(expected, actual);
-//        << "TestId - " << carver_data.test_id << "\n"
-//        << sct::PrintWithLabel(expected, "expected") << "\n"
-//        << sct::PrintWithLabel(actual, "actual");
+    EXPECT_EQ(expected, actual)
+       << "TestId - " << carver_data.test_id;
+}
+
+TEST_P(CarverTest, FindHorizontalSeamReturnsCorrectSeam) {
+    sct::CarverData carver_data = GetParam();
+    sct::DummyCarver carver;
+
+    cv::Mat input = carver_data.original_matrix;
+    sc::Seam expected = carver_data.horizontal_seam;
+
+    sc::Seam actual = carver.FindHorizontalSeam(input);
+
+    EXPECT_EQ(expected, actual)
+        << "TestId - " << carver_data.test_id;
 }
 
 

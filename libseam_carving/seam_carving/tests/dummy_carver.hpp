@@ -18,7 +18,7 @@ namespace seam_carving::tests {
         }
 
         inline Seam FindHorizontalSeam(cv::InputArray img) {
-            return Carver::FindVerticalSeam(img);
+            return Carver::FindHorizontalSeam(img);
         }
 
         void Carve(cv::Mat &img, const int &target_rows, const int &target_cols) override { };

@@ -52,7 +52,7 @@ namespace seam_carving {
             // compute the energy map
             cv::Mat energy_map;
             energy::ComputeEnergy(img, energy_map);
-            energy::ComputeVerticalMap(energy_map, energy_map);
+            energy::ComputeHorizontalMap(energy_map, energy_map);
 
             // find the starting val
             ushort row = 0, min_val = energy_map.at<ushort>(row, 0);
@@ -62,8 +62,7 @@ namespace seam_carving {
                     min_val = energy_map.at<ushort>(i, 0);
                 }
 
-
-            Seam seam = Seam(HORZ, {});
+            Seam seam = Seam(HORZ);
             int rows = energy_map.rows, cols = energy_map.cols;
 
             // loop through each col
@@ -82,8 +81,8 @@ namespace seam_carving {
                                           energy_map.at<ushort>(row + 1, col + 1);
 
                     // find the min pixel and adjust weight
-                    if (above < center && above < below) col--;
-                    else if (below < center && below < above) col++;
+                    if (above < center && above < below) row--;
+                    else if (below < center && below < above) row++;
                 }
             }
 

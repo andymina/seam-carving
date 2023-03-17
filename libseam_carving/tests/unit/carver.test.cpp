@@ -90,4 +90,20 @@ TEST_P(CarverTest, RemoveHorizontalSeamReturnsImageWithoutSpecifiedSeam) {
         << sct::PrintWithLabel(actual, "actual");
 }
 
+TEST_P(CarverTest, InsertVerticalSeamReturnsImageWithNewSeam) {
+    sct::CarverData carver_data = GetParam();
+    sct::DummyCarver carver;
 
+    cv::Mat input = carver_data.original_matrix;
+    cv::Mat expected = carver_data.insert_vertical_matrix;
+    cv::Mat actual;
+
+    sc::Seam seam = carver_data.vertical_seam;
+    carver.InsertVerticalSeam(seam, input, actual);
+
+    EXPECT_TRUE(sct::equalMatrices(expected, actual))
+        << "TestId - " << carver_data.test_id << "\n"
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual") << "\n"
+        << sct::PrintWithLabel(seam, "seam");
+}

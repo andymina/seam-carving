@@ -40,8 +40,8 @@ namespace seam_carving {
          * @param seam the seam to be inserted
          * @param img the target image
          */
-        void InsertVerticalSeam(const Seam &seam, cv::InputArray in_img, cv::OutputArray out_img);
-        void InsertHorizontalSeam(const Seam &seam, cv::InputArray in_img, cv::OutputArray out_img);
+        void InsertVerticalSeam(const Seam &seam, cv::InputArray input, cv::OutputArray output);
+        void InsertHorizontalSeam(const Seam &seam, cv::InputArray input, cv::OutputArray output);
 
     public:
         /**

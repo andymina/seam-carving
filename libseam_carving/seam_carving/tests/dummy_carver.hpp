@@ -29,6 +29,14 @@ namespace seam_carving::tests {
             Carver::RemoveHorizontalSeam(seam, input, output);
         }
 
+        inline void InsertVerticalSeam(const Seam& seam, cv::InputArray input, cv::OutputArray output) {
+            Carver::InsertVerticalSeam(seam, input, output);
+        }
+
+        inline void InsertHorizontalSeam(const Seam &seam, cv::InputArray input, cv::OutputArray output) {
+            Carver::InsertHorizontalSeam(seam, input, output);
+        }
+
         void Carve(cv::Mat &img, const int &target_rows, const int &target_cols) override { };
     };
 }

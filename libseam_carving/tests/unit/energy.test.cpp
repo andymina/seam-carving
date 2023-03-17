@@ -4,21 +4,20 @@
 
 // project
 #include <seam_carving/energy.hpp>
-#include <seam_carving/tests/test_data.hpp>
+#include <seam_carving/tests/matrix_utils.hpp>
+#include <seam_carving/tests/print_utils.hpp>
+#include <seam_carving/tests/json_utils.hpp>
 #include <seam_carving/tests/energy_data.hpp>
 
 // 3rd party
 #include <gtest/gtest.h>
-
-// std
-#include <iostream>
 
 namespace sce = seam_carving::energy;
 namespace sct = seam_carving::tests;
 using sct::EnergyTest;
 
 INSTANTIATE_TEST_SUITE_P(
-    EnergyFromJSON,
+    EnergyDataFromJSON,
     EnergyTest,
     testing::ValuesIn(
         sct::GetData<sct::EnergyData>(sct::kJSONDataFile)
@@ -29,32 +28,28 @@ TEST_P(EnergyTest, ComputeVerticalMapReturnsCorrectValue) {
     sct::EnergyData energy_data = GetParam();
 
     cv::Mat input = energy_data.sobel_matrix;
-    input.convertTo(input, CV_8U);
     cv::Mat expected = energy_data.vertical_map_matrix;
-    expected.convertTo(expected, CV_16U);
     cv::Mat actual;
 
     sce::ComputeVerticalMap(input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
-        << "TestId - " << energy_data.test_id << "\n"
-        << sct::PrintToString("expected", expected) << "\n"
-        << sct::PrintToString("actual", actual);
+                        << "TestId - " << energy_data.test_id << "\n"
+                        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
 }
 
 TEST_P(EnergyTest, ComputeHorizontalMapReturnsCorrectValue) {
     sct::EnergyData energy_data = GetParam();
 
     cv::Mat input = energy_data.sobel_matrix;
-    input.convertTo(input, CV_8U);
     cv::Mat expected = energy_data.horizontal_map_matrix;
-    expected.convertTo(expected, CV_16U);
     cv::Mat actual;
 
     sce::ComputeHorizontalMap(input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
-        << "TestId - " << energy_data.test_id << "\n"
-        << sct::PrintToString("expected", expected) << "\n"
-        << sct::PrintToString("actual", actual);
+                        << "TestId - " << energy_data.test_id << "\n"
+                        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
 }

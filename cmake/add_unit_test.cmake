@@ -1,14 +1,19 @@
-macro(add_unit_test TESTNAME LIBRARIES)
-    add_executable(${TESTNAME}
-        ${TESTNAME}.test.cpp
-        ${LIBRARY_TEST_DIR}/${TESTNAME}_data.cpp)
-    target_link_libraries(${TESTNAME} PRIVATE seam_carving ${LIBRARIES})
-    target_include_directories(${TESTNAME} PRIVATE ${LIBRARY_TEST_DIR})
+function(add_unit_test TEST_NAME)
+    set(TEST_LIBS
+            ${OPENCV_LIBS} ${JSON_LIBS} ${GTEST_LIBS})
 
-    message(STATUS ${PROJECT_SOURCE_DIR})
-    gtest_discover_tests(${TESTNAME}
+    add_executable(${TEST_NAME}
+        ${TEST_NAME}.test.cpp
+        ${LIBRARY_TEST_DIR}/json_utils.cpp
+        ${ARGN})
+    target_link_libraries(${TEST_NAME}
+            PRIVATE seam_carving ${TEST_LIBS})
+    target_include_directories(${TEST_NAME}
+            PRIVATE ${LIBRARY_TEST_DIR})
+
+    gtest_discover_tests(${TEST_NAME}
         EXTRA_ARGS --gtest_color=yes
         WORKING_DIRECTORY ${LIBRARY_ROOT_DIR}
         PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${LIBRARY_ROOT_DIR}")
-    set_target_properties(${TESTNAME} PROPERTIES FOLDER tests)
-endmacro()
+    set_target_properties(${TEST_NAME} PROPERTIES FOLDER tests)
+endfunction()

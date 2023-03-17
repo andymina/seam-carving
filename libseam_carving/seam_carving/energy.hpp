@@ -37,7 +37,7 @@ namespace seam_carving::energy {
      * the brightness is proportional to the energy of the pixel. Seams can be
      * created by following the path of least energy. The vertical path of least
      * energy is found by the following algorithm:
-     *    1. initalize the bottom row with weights equal to their energy
+     *    1. initialize the bottom row with weights equal to their energy
      *    2. move to the next row above (row - 1 -> row)
      *    3. loop through each pixel in the next row
      *    4. compute the weights adjacent pixels in the row underneath, specified
@@ -51,8 +51,8 @@ namespace seam_carving::energy {
      * @param energy_img a gradient image
      * @returns the energy map of energy_img
     */
-    void ComputeVerticalMap(cv::InputArray input, cv::OutputArray output);
-    void ComputeHorizontalMap(cv::InputArray input, cv::OutputArray output);
+    void ComputeVerticalMap(cv::InputArray sobel, cv::OutputArray output);
+    void ComputeHorizontalMap(cv::InputArray sobel, cv::OutputArray output);
 }
 
 #endif //SEAM_CARVING_ENERGY_HPP

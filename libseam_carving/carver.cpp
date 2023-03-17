@@ -2,10 +2,11 @@
 // Created by Andy Mina on 3/7/23.
 //
 
+// project
 #include <seam_carving/carver.hpp>
 
 namespace seam_carving {
-        Seam Carver::FindOptimalVerticalSeam(cv::InputArray img) {
+        Seam Carver::FindVerticalSeam(cv::InputArray img) {
             // compute the energy map
             cv::Mat energy_map;
             energy::ComputeEnergy(img, energy_map);
@@ -25,33 +26,32 @@ namespace seam_carving {
             // loop through each row
             for (int row = 0; row < rows; row++) {
                 // add the current Coord to the seam
-                seam.pushCoord(Coord(row, col));
+                seam.push(Coord(row, col));
 
                 if (row != rows - 1) {
                     // find the direction of min and adjust path
-                    const ushort &center = energy_map.at<ushort>(row + 1, col);
-                    const ushort &left = (col - 1 < 0) ?
+                    const ushort& center = energy_map.at<ushort>(row + 1, col);
+                    const ushort& left = (col - 1 < 0) ?
                                          std::numeric_limits<ushort>::max() :
                                          energy_map.at<ushort>(row + 1, col - 1);
-                    const ushort &right = (col + 1 >= cols) ?
+                    const ushort& right = (col + 1 >= cols) ?
                                           std::numeric_limits<ushort>::max() :
                                           energy_map.at<ushort>(row + 1, col + 1);
 
                     // find the min pixel and adjust weight
-                    int min_energy = std::min({center, left, right});
-                    if (min_energy == left) col--;
-                    else if (min_energy == right) col++;
+                    if (left < center && left < right) col--;
+                    else if (right < center && right < left) col++;
                 }
             }
 
             return seam;
         }
 
-        Seam Carver::FindOptimalHorizontalSeam(cv::InputArray img) {
+        Seam Carver::FindHorizontalSeam(cv::InputArray img) {
             // compute the energy map
             cv::Mat energy_map;
             energy::ComputeEnergy(img, energy_map);
-            energy::ComputeVerticalMap(energy_map, energy_map);
+            energy::ComputeHorizontalMap(energy_map, energy_map);
 
             // find the starting val
             ushort row = 0, min_val = energy_map.at<ushort>(row, 0);
@@ -61,14 +61,13 @@ namespace seam_carving {
                     min_val = energy_map.at<ushort>(i, 0);
                 }
 
-
-            Seam seam = Seam(HORZ, {});
+            Seam seam = Seam(HORZ);
             int rows = energy_map.rows, cols = energy_map.cols;
 
             // loop through each col
             for (int col = 0; col < cols; col++) {
                 // add the current Coord to the seam
-                seam.pushCoord(Coord(row, col));
+                seam.push(Coord(row, col));
 
                 if (col != cols - 1) {
                     // find the direction of min and adjust path
@@ -81,9 +80,8 @@ namespace seam_carving {
                                           energy_map.at<ushort>(row + 1, col + 1);
 
                     // find the min pixel and adjust weight
-                    int min_energy = std::min({center, above, below});
-                    if (min_energy == above) row--;
-                    else if (min_energy == below) row++;
+                    if (above < center && above < below) row--;
+                    else if (below < center && below < above) row++;
                 }
             }
 
@@ -204,7 +202,7 @@ namespace seam_carving {
 
             // loop through all cols
             for (int idx = 0; idx < res.cols; idx++) {
-                // grab the currrent row and coord
+                // grab the current row and coord
                 const cv::Mat &current_src_col = in_mat.col(idx);
                 const Coord &current_coord = seam[idx];
                 std::vector<cv::Mat> mats;

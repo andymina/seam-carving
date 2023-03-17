@@ -7,7 +7,7 @@
 
 namespace seam_carving::energy {
     void ComputeEnergy(cv::InputArray in_img, cv::OutputArray out_img) {
-        /** @TODO(#57) */
+        /** @TODO(#57): investigate how to handle single-channel matrices */
         // conversion should be skipped if img is grayscale already
         const bool skip_conversion = in_img.channels() == 1;
         if (!skip_conversion) {

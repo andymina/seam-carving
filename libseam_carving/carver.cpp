@@ -2,8 +2,7 @@
 // Created by Andy Mina on 3/7/23.
 //
 
-#include <iostream>
-#include <seam_carving/tests/print_utils.hpp>
+// project
 #include <seam_carving/carver.hpp>
 
 namespace seam_carving {
@@ -203,7 +202,7 @@ namespace seam_carving {
 
             // loop through all cols
             for (int idx = 0; idx < res.cols; idx++) {
-                // grab the currrent row and coord
+                // grab the current row and coord
                 const cv::Mat &current_src_col = in_mat.col(idx);
                 const Coord &current_coord = seam[idx];
                 std::vector<cv::Mat> mats;

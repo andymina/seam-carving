@@ -33,7 +33,7 @@ TEST_P(EnergyTest, ComputeVerticalMapReturnsCorrectValue) {
 
     sce::ComputeVerticalMap(input, actual);
 
-    EXPECT_TRUE(false)
+    EXPECT_TRUE(sct::equalMatrices(expected, actual))
                         << "TestId - " << energy_data.test_id << "\n"
                         << sct::PrintWithLabel(expected, "expected") << "\n"
         << sct::PrintWithLabel(actual, "actual");

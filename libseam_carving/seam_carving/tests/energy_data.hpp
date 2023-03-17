@@ -14,7 +14,7 @@
 #include <gtest/gtest.h>
 
 namespace seam_carving::tests {
-    struct EnergyData : public TestData {
+    struct EnergyData : TestData {
         cv::Mat sobel_matrix;
         cv::Mat vertical_map_matrix, horizontal_map_matrix;
     };

@@ -33,8 +33,8 @@ namespace seam_carving {
          * @param seam the seam to be removed
          * @param img the target image
          */
-        void RemoveVerticalSeam(const Seam &seam, cv::InputArray in_img, cv::OutputArray out_img);
-        void RemoveHorizontalSeam(const Seam &seam, cv::InputArray in_img, cv::OutputArray out_img);
+        void RemoveVerticalSeam(const Seam &seam, cv::InputArray input, cv::OutputArray output);
+        void RemoveHorizontalSeam(const Seam &seam, cv::InputArray input, cv::OutputArray output);
 
         /**
          * @param seam the seam to be inserted

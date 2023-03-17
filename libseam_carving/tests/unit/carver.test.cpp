@@ -7,6 +7,7 @@
 #include <seam_carving/seam.hpp>
 
 #include <seam_carving/tests/print_utils.hpp>
+#include <seam_carving/tests/matrix_utils.hpp>
 #include <seam_carving/tests/json_utils.hpp>
 #include <seam_carving/tests/carver_data.hpp>
 #include <seam_carving/tests/dummy_carver.hpp>
@@ -54,6 +55,42 @@ TEST_P(CarverTest, FindHorizontalSeamReturnsCorrectSeam) {
 
     EXPECT_EQ(expected, actual)
         << "TestId - " << carver_data.test_id;
+}
+
+TEST_P(CarverTest, RemoveVerticalSeamReturnsImageWithoutSpecifiedSeam) {
+    sct::CarverData carver_data = GetParam();
+    sct::DummyCarver carver;
+
+    cv::Mat input = carver_data.original_matrix;
+    cv::Mat expected = carver_data.remove_vertical_matrix;
+    cv::Mat actual;
+
+    sc::Seam seam = carver_data.vertical_seam;
+    carver.RemoveVerticalSeam(seam, input, actual);
+
+    EXPECT_TRUE(sct::equalMatrices(expected, actual))
+        << "TestId - " << carver_data.test_id << "\n"
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual") << "\n"
+        << sct::PrintWithLabel(seam, "seam");
+}
+
+TEST_P(CarverTest, RemoveHorizontalSeamReturnsImageWithoutSpecifiedSeam) {
+    sct::CarverData carver_data = GetParam();
+    sct::DummyCarver carver;
+
+    cv::Mat input = carver_data.original_matrix;
+    cv::Mat expected = carver_data.remove_horizontal_matrix;
+    cv::Mat actual;
+
+    sc::Seam seam = carver_data.horizontal_seam;
+    carver.RemoveHorizontalSeam(seam, input, actual);
+
+    EXPECT_TRUE(sct::equalMatrices(expected, actual))
+        << "TestId - " << carver_data.test_id << "\n"
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual") << "\n"
+        << sct::PrintWithLabel(seam, "seam");
 }
 
 

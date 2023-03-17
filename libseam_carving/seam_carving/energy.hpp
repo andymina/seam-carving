@@ -52,7 +52,7 @@ namespace seam_carving::energy {
      * @returns the energy map of energy_img
     */
     void ComputeVerticalMap(cv::InputArray sobel, cv::OutputArray output);
-    void ComputeHorizontalMap(cv::InputArray input, cv::OutputArray output);
+    void ComputeHorizontalMap(cv::InputArray sobel, cv::OutputArray output);
 }
 
 #endif //SEAM_CARVING_ENERGY_HPP

@@ -88,9 +88,9 @@ namespace seam_carving {
             return seam;
         }
 
-        void Carver::RemoveVerticalSeam(const Seam &seam, cv::InputArray in_img, cv::OutputArray out_img) {
+        void Carver::RemoveVerticalSeam(const Seam &seam, cv::InputArray input, cv::OutputArray output) {
             // setup
-            cv::Mat in_mat = in_img.getMat();
+            cv::Mat in_mat = input.getMat();
             cv::Mat res = cv::Mat(in_mat.rows, in_mat.cols - 1, in_mat.type());
 
             // loop through all rows
@@ -116,13 +116,13 @@ namespace seam_carving {
                 }
             }
 
-            res.copyTo(out_img);
+            res.copyTo(output);
         }
 
-        void Carver::RemoveHorizontalSeam(const Seam &seam, cv::InputArray in_img, cv::OutputArray out_img) {
+        void Carver::RemoveHorizontalSeam(const Seam &seam, cv::InputArray input, cv::OutputArray output) {
             // setup
-            cv::Mat in_mat = in_img.getMat();
-            cv::Mat res = cv::Mat(in_mat.rows, in_mat.cols - 1, in_mat.type());
+            cv::Mat in_mat = input.getMat();
+            cv::Mat res = cv::Mat(in_mat.rows - 1, in_mat.cols, in_mat.type());
 
             // loop through all cols
             for (int idx = 0; idx < res.cols; idx++) {
@@ -147,7 +147,7 @@ namespace seam_carving {
                 }
             }
 
-            res.copyTo(out_img);
+            res.copyTo(output);
         }
 
         void Carver::InsertVerticalSeam(const Seam &seam, cv::InputArray in_img, cv::OutputArray out_img) {

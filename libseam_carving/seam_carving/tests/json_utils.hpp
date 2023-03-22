@@ -38,7 +38,7 @@ NLOHMANN_JSON_NAMESPACE_BEGIN
 template<>
 struct adl_serializer<cv::Mat> {
     static void from_json(const nlohmann::json& j, cv::Mat& matrix) {
-        int rows = j.at("rows_"), cols = j.at("cols_");
+        int rows = j.at("rows"), cols = j.at("cols");
         int type = j.at("type");
         std::vector<int> data = j.at("data");
         matrix = cv::Mat(rows, cols, type, data.data()).clone();

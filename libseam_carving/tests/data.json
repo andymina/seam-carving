@@ -4,7 +4,7 @@
         "input": {
             "rows": 6,
             "cols": 6,
-            "depth": 0,
+            "type": 0,
             "data": [
                 117,
                 189,
@@ -48,7 +48,7 @@
             "sobel": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     0,
                     23,
@@ -91,7 +91,7 @@
             "map - vertical": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 2,
+                "type": 2,
                 "data": [
                     480,
                     380,
@@ -134,7 +134,7 @@
             "map - horizontal": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 2,
+                "type": 2,
                 "data": [
                     196,
                     196,
@@ -237,7 +237,7 @@
             "remove - vertical": {
                 "rows": 6,
                 "cols": 5,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     117,
                     114,
@@ -274,7 +274,7 @@
             "remove - horizontal": {
                 "rows": 5,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     230,
                     32,
@@ -311,7 +311,7 @@
             "insert - vertical": {
                 "rows": 6,
                 "cols": 7,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     117,
                     189,
@@ -360,7 +360,7 @@
             "insert - horizontal": {
                 "rows": 7,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     117,
                     189,
@@ -413,7 +413,7 @@
         "input": {
             "rows": 6,
             "cols": 6,
-            "depth": 0,
+            "type": 0,
             "data": [
                 81,
                 12,
@@ -457,7 +457,7 @@
             "sobel": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     0,
                     128,
@@ -500,7 +500,7 @@
             "map - vertical": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 2,
+                "type": 2,
                 "data": [
                     310,
                     438,
@@ -543,7 +543,7 @@
             "map - horizontal": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 2,
+                "type": 2,
                 "data": [
                     277,
                     277,
@@ -646,7 +646,7 @@
             "remove - vertical": {
                 "rows": 6,
                 "cols": 5,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     81,
                     12,
@@ -683,7 +683,7 @@
             "remove - horizontal": {
                 "rows": 5,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     12,
                     212,
@@ -720,7 +720,7 @@
             "insert - vertical": {
                 "rows": 6,
                 "cols": 7,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     81,
                     12,
@@ -769,7 +769,7 @@
             "insert - horizontal": {
                 "rows": 7,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     81,
                     12,
@@ -822,7 +822,7 @@
         "input": {
             "rows": 6,
             "cols": 6,
-            "depth": 0,
+            "type": 0,
             "data": [
                 207,
                 110,
@@ -866,7 +866,7 @@
             "sobel": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     0,
                     67,
@@ -909,7 +909,7 @@
             "map - vertical": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 2,
+                "type": 2,
                 "data": [
                     272,
                     339,
@@ -952,7 +952,7 @@
             "map - horizontal": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 2,
+                "type": 2,
                 "data": [
                     276,
                     276,
@@ -1055,7 +1055,7 @@
             "remove - vertical": {
                 "rows": 6,
                 "cols": 5,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     110,
                     237,
@@ -1092,13 +1092,13 @@
             "remove - horizontal": {
                 "rows": 5,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     39,
                     94,
                     76,
                     129,
-                    112,
+                    66,
                     95,
                     111,
                     196,
@@ -1129,7 +1129,7 @@
             "insert - vertical": {
                 "rows": 6,
                 "cols": 7,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     207,
                     207,
@@ -1178,7 +1178,7 @@
             "insert - horizontal": {
                 "rows": 7,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     207,
                     110,
@@ -1231,7 +1231,7 @@
         "input": {
             "rows": 6,
             "cols": 6,
-            "depth": 0,
+            "type": 0,
             "data": [
                 132,
                 134,
@@ -1275,7 +1275,7 @@
             "sobel": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     0,
                     128,
@@ -1318,7 +1318,7 @@
             "map - vertical": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 2,
+                "type": 2,
                 "data": [
                     273,
                     401,
@@ -1361,7 +1361,7 @@
             "map - horizontal": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 2,
+                "type": 2,
                 "data": [
                     311,
                     311,
@@ -1464,7 +1464,7 @@
             "remove - vertical": {
                 "rows": 6,
                 "cols": 5,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     134,
                     102,
@@ -1501,7 +1501,7 @@
             "remove - horizontal": {
                 "rows": 5,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     215,
                     189,
@@ -1538,7 +1538,7 @@
             "insert - vertical": {
                 "rows": 6,
                 "cols": 7,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     132,
                     132,
@@ -1587,7 +1587,7 @@
             "insert - horizontal": {
                 "rows": 7,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     132,
                     134,
@@ -1640,7 +1640,7 @@
         "input": {
             "rows": 6,
             "cols": 6,
-            "depth": 0,
+            "type": 0,
             "data": [
                 55,
                 78,
@@ -1684,7 +1684,7 @@
             "sobel": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     0,
                     102,
@@ -1727,7 +1727,7 @@
             "map - vertical": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 2,
+                "type": 2,
                 "data": [
                     325,
                     427,
@@ -1770,7 +1770,7 @@
             "map - horizontal": {
                 "rows": 6,
                 "cols": 6,
-                "depth": 2,
+                "type": 2,
                 "data": [
                     217,
                     217,
@@ -1873,7 +1873,7 @@
             "remove - vertical": {
                 "rows": 6,
                 "cols": 5,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     55,
                     78,
@@ -1910,7 +1910,7 @@
             "remove - horizontal": {
                 "rows": 5,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     144,
                     161,
@@ -1947,7 +1947,7 @@
             "insert - vertical": {
                 "rows": 6,
                 "cols": 7,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     55,
                     78,
@@ -1996,7 +1996,7 @@
             "insert - horizontal": {
                 "rows": 7,
                 "cols": 6,
-                "depth": 0,
+                "type": 0,
                 "data": [
                     55,
                     78,

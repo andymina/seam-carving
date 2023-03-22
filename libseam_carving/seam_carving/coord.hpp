@@ -26,7 +26,7 @@ namespace seam_carving {
         inline const int& col() const { return col_; };
 
         /**
-         * Determines if two Coords are equal based on their rows and cols.
+         * Determines if two Coords are equal based on their rows_ and cols_.
          *
          * @param rhs - the coord to compare
          * @returns true if the Coords are equal, otherwise false

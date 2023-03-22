@@ -93,7 +93,7 @@ namespace seam_carving {
             cv::Mat in_mat = input.getMat();
             cv::Mat res = cv::Mat(in_mat.rows, in_mat.cols - 1, in_mat.type());
 
-            // loop through all rows
+            // loop through all rows_
             for (int idx = 0; idx < res.rows; idx++) {
                 // grab the current row and coord
                 const cv::Mat &current_src_row = in_mat.row(idx);
@@ -101,15 +101,15 @@ namespace seam_carving {
 
                 // check where to split the image since you cant have jagged matrix. colRange is exclusive
                 if (current_coord.col() == 0) { // seam removes (row, 0)
-                    // copy (row, 1) to (row, in_mat.cols)
+                    // copy (row, 1) to (row, in_mat.cols_)
                     current_src_row.colRange(1, in_mat.cols).copyTo(res.row(idx));
-                } else if (current_coord.col() == in_mat.cols - 1) { // seam removes (row, in_mat.cols - 1)
-                    // copy (row, 0) to (row, in_mat.cols - 1)
+                } else if (current_coord.col() == in_mat.cols - 1) { // seam removes (row, in_mat.cols_ - 1)
+                    // copy (row, 0) to (row, in_mat.cols_ - 1)
                     current_src_row.colRange(0, in_mat.cols - 1).copyTo(res.row(idx));
                 } else { // seam removes (row, current_coord.col()
                     // copy (row, 0) to (row, current_coord.col()
                     const cv::Mat &left_partition = current_src_row.colRange(0, current_coord.col());
-                    // copy (row, current_coord.col() + 1) to (row, in_mat.cols)
+                    // copy (row, current_coord.col() + 1) to (row, in_mat.cols_)
                     const cv::Mat &right_partition = current_src_row.colRange(current_coord.col() + 1, in_mat.cols);
                     // merge the two halves and store into row
                     cv::hconcat(left_partition, right_partition, res.row(idx));
@@ -124,7 +124,7 @@ namespace seam_carving {
             cv::Mat in_mat = input.getMat();
             cv::Mat res = cv::Mat(in_mat.rows - 1, in_mat.cols, in_mat.type());
 
-            // loop through all cols
+            // loop through all cols_
             for (int idx = 0; idx < res.cols; idx++) {
                 // grab the current col and coord
                 const cv::Mat &current_src_col = in_mat.col(idx);
@@ -132,15 +132,15 @@ namespace seam_carving {
 
                 // check where to split the image since you cant have jagged matrix. rowRange is exclusive
                 if (current_coord.row() == 0) { // seam removes (0, col)
-                    // copy (1, col) to (in_mat.rows, col)
+                    // copy (1, col) to (in_mat.rows_, col)
                     current_src_col.rowRange(1, in_mat.rows).copyTo(res.col(idx));
-                } else if (current_coord.row() == in_mat.rows - 1) { // seam removes (in_mat.rows - 1, col)
-                    // copy (0, col) to (in_mat.rows - 1, col)
+                } else if (current_coord.row() == in_mat.rows - 1) { // seam removes (in_mat.rows_ - 1, col)
+                    // copy (0, col) to (in_mat.rows_ - 1, col)
                     current_src_col.rowRange(0, in_mat.rows - 1).copyTo(res.col(idx));
                 } else { // seam removes (current_coord.row, col)
                     // copy (0, col) to (current_coord.row, col)
                     const cv::Mat &top_partition = current_src_col.rowRange(0, current_coord.row());
-                    // copy (current_coord.row() + 1, col) to (in_mat.rows, col)
+                    // copy (current_coord.row() + 1, col) to (in_mat.rows_, col)
                     const cv::Mat &bottom_partition = current_src_col.rowRange(current_coord.row() + 1, in_mat.rows);
                     // merge the two halves and store into row
                     cv::vconcat(top_partition, bottom_partition, res.col(idx));
@@ -154,7 +154,7 @@ namespace seam_carving {
             cv::Mat in_mat = in_img.getMat();
             cv::Mat res = cv::Mat(in_mat.rows, in_mat.cols + 1, in_mat.type());
 
-            // loop through all rows
+            // loop through all rows_
             for (int idx = 0; idx < res.rows; idx++) {
                 // grab the current row and coord
                 const cv::Mat &current_src_row = in_mat.row(idx);
@@ -172,7 +172,7 @@ namespace seam_carving {
                     // insert new col then original row
                     mats.push_back(col_insert);
                     mats.push_back(current_src_row);
-                } else if (current_coord.col() == in_mat.cols - 1) { // seam inserts (row, in_mat.cols - 1)
+                } else if (current_coord.col() == in_mat.cols - 1) { // seam inserts (row, in_mat.cols_ - 1)
                     // insert original row then new col
                     mats.push_back(current_src_row);
                     mats.push_back(col_insert);
@@ -200,7 +200,7 @@ namespace seam_carving {
             cv::Mat in_mat = in_img.getMat();
             cv::Mat res = cv::Mat(in_mat.rows + 1, in_mat.cols, in_mat.type());
 
-            // loop through all cols
+            // loop through all cols_
             for (int idx = 0; idx < res.cols; idx++) {
                 // grab the current row and coord
                 const cv::Mat &current_src_col = in_mat.col(idx);
@@ -218,7 +218,7 @@ namespace seam_carving {
                     // insert new row then original col
                     mats.push_back(row_insert);
                     mats.push_back(current_src_col);
-                } else if (current_coord.row() == in_mat.rows - 1) { // seam inserts (in_mat.rows - 1, col)
+                } else if (current_coord.row() == in_mat.rows - 1) { // seam inserts (in_mat.rows_ - 1, col)
                     // insert original col then new row
                     mats.push_back(current_src_col);
                     mats.push_back(row_insert);

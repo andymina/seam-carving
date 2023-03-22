@@ -14,6 +14,7 @@
 
 // 3rd party
 #include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
 #include <nlohmann/json.hpp>
 
 // stl
@@ -39,10 +40,14 @@ template<>
 struct adl_serializer<cv::Mat> {
     static void from_json(const nlohmann::json& j, cv::Mat& matrix) {
         int rows = j.at("rows"), cols = j.at("cols");
-        int depth = j.at("depth");
+        int type = j.at("type");
         std::vector<int> data = j.at("data");
-        matrix = cv::Mat(rows, cols, CV_32S, data.data()).clone();
-        matrix.convertTo(matrix, depth);
+        matrix = cv::Mat(rows, cols, type, data.data()).clone();
+
+        // if the matrix only has one channel, convert it to 3
+        if (matrix.channels() == 1) {
+            cv::cvtColor(matrix, matrix, cv::COLOR_GRAY2BGR, 3);
+        }
     }
 };
 NLOHMANN_JSON_NAMESPACE_END

@@ -6,7 +6,7 @@ include(GoogleTest)
 
 add_subdirectory(unit)
 
-add_executable(loader loader.cpp)
+add_executable(loader loader.cpp parser.cpp)
 target_link_libraries(loader
     PRIVATE ${JSON_LIBS}
 )

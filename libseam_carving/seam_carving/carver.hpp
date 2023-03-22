@@ -53,8 +53,8 @@ namespace seam_carving {
          * image passed.
          *
          * @param img the source img; will be modified
-         * @param target_rows the desired number of rows_ in the target image
-         * @param target_cols the desired number of cols_ in the target image
+         * @param target_rows the desired number of rows in the target image
+         * @param target_cols the desired number of cols in the target image
          */
         virtual void Carve(cv::Mat &img, const int &target_rows, const int &target_cols) = 0;
     };

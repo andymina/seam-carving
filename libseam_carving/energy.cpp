@@ -46,7 +46,7 @@ namespace seam_carving::energy {
 
         // step 2: move to the next row
         for (int row = rows - 2; row >= 0; row--) {
-            // step 3: loop through all pixels in this row (cols_)
+            // step 3: loop through all pixels in this row (cols)
             for (int col = 0; col < cols; col++) {
                 // step 4: compute weights of adjacent pixels
                 const ushort &center = res.at<ushort>(row + 1, col);

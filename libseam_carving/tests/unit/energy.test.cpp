@@ -34,9 +34,7 @@ TEST_P(EnergyTest, ComputeVerticalMapReturnsCorrectValue) {
     sce::ComputeVerticalMap(input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
-                        << "TestId - " << energy_data.test_id << "\n"
-                        << sct::PrintWithLabel(expected, "expected") << "\n"
-        << sct::PrintWithLabel(actual, "actual");
+        << energy_data;
 }
 
 TEST_P(EnergyTest, ComputeHorizontalMapReturnsCorrectValue) {
@@ -49,7 +47,5 @@ TEST_P(EnergyTest, ComputeHorizontalMapReturnsCorrectValue) {
     sce::ComputeHorizontalMap(input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
-        << "TestId - " << energy_data.test_id << "\n"
-        << sct::PrintWithLabel(expected, "expected") << "\n"
-        << sct::PrintWithLabel(actual, "actual");
+        << energy_data;
 }

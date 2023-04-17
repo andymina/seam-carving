@@ -42,7 +42,8 @@ struct adl_serializer<cv::Mat> {
         int rows = j.at("rows"), cols = j.at("cols");
         int type = j.at("type");
         std::vector<int> data = j.at("data");
-        matrix = cv::Mat(rows, cols, type, data.data()).clone();
+        matrix = cv::Mat(rows, cols, CV_32S, data.data()).clone();
+        matrix.convertTo(matrix, type);
 
         // if the matrix only has one channel, convert it to 3
         if (matrix.channels() == 1) {

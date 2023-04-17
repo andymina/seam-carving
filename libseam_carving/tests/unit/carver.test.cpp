@@ -39,7 +39,6 @@ TEST_P(CarverTest, FindVerticalSeamReturnsCorrectSeam) {
 
     sc::Seam actual = carver.FindVerticalSeam(input);
 
-    /** @TODO(#58): add printing for TestData and children */
     EXPECT_EQ(expected, actual)
        << carver_data;
 }

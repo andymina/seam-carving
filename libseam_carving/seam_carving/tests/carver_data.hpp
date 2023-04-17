@@ -8,6 +8,7 @@
 // project
 #include <seam_carving/seam.hpp>
 #include <seam_carving/tests/test_data.hpp>
+#include <seam_carving/tests/print_utils.hpp>
 
 // 3rd party
 #include <nlohmann/json.hpp>
@@ -22,6 +23,7 @@ namespace seam_carving::tests {
         cv::Mat insert_vertical_matrix, insert_horizontal_matrix;
 
         inline friend std::ostream& operator<<(std::ostream& os, const CarverData& data) {
+            os << "TestId - " << data.test_id << "\n";
             os << PrintWithLabel(data.vertical_seam, "vertical seam") << "\n";
             os << PrintWithLabel(data.horizontal_seam, "horizontal seam") << "\n";
 

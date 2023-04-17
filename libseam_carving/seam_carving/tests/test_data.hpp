@@ -5,6 +5,9 @@
 #ifndef SEAM_CARVING_TEST_DATA_HPP
 #define SEAM_CARVING_TEST_DATA_HPP
 
+// project
+#include <seam_carving/tests/print_utils.hpp>
+
 // 3rd party
 #include <nlohmann/json.hpp>
 #include <opencv2/core.hpp>

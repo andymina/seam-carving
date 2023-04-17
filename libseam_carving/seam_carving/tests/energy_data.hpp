@@ -7,6 +7,7 @@
 
 // project
 #include <seam_carving/tests/test_data.hpp>
+#include <seam_carving/tests/print_utils.hpp>
 
 // 3rd party
 #include <nlohmann/json.hpp>
@@ -20,6 +21,7 @@ namespace seam_carving::tests {
         cv::Mat vertical_map_matrix, horizontal_map_matrix;
 
         inline friend std::ostream& operator<<(std::ostream& os, const EnergyData& data) {
+            os << "TestId - " << data.test_id << "\n";
             os << PrintWithLabel(data.sobel_matrix, "sobel matrix") << "\n";
             os << PrintWithLabel(data.vertical_map_matrix, "vertical map") << "\n";
             os << PrintWithLabel(data.horizontal_map_matrix, "horizontal map");

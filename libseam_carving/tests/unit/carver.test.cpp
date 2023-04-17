@@ -32,12 +32,11 @@ INSTANTIATE_TEST_SUITE_P(
 
 TEST_P(CarverTest, FindVerticalSeamReturnsCorrectSeam) {
     sct::CarverData carver_data = GetParam();
-    sct::DummyCarver carver;
 
     cv::Mat input = carver_data.original_matrix;
     sc::Seam expected = carver_data.vertical_seam;
 
-    sc::Seam actual = carver.FindVerticalSeam(input);
+    sc::Seam actual = sct::DummyCarver::FindVerticalSeam(input);
 
     EXPECT_EQ(expected, actual)
         << sct::PrintWithLabel(expected, "expected") << "\n"

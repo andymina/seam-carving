@@ -11,33 +11,29 @@
 namespace seam_carving::tests {
     class DummyCarver : public Carver {
     public:
-        DummyCarver() = default;
-
-        inline Seam FindVerticalSeam(cv::InputArray img) {
+        inline static Seam FindVerticalSeam(cv::InputArray img) {
             return Carver::FindVerticalSeam(img);
         }
 
-        inline Seam FindHorizontalSeam(cv::InputArray img) {
+        inline static Seam FindHorizontalSeam(cv::InputArray img) {
             return Carver::FindHorizontalSeam(img);
         }
 
-        inline void RemoveVerticalSeam(const Seam& seam, cv::InputArray input, cv::OutputArray output) {
+        inline static void RemoveVerticalSeam(const Seam& seam, cv::InputArray input, cv::OutputArray output) {
             Carver::RemoveVerticalSeam(seam, input, output);
         }
 
-        inline void RemoveHorizontalSeam(const Seam& seam, cv::InputArray input, cv::OutputArray output) {
+        inline static void RemoveHorizontalSeam(const Seam& seam, cv::InputArray input, cv::OutputArray output) {
             Carver::RemoveHorizontalSeam(seam, input, output);
         }
 
-        inline void InsertVerticalSeam(const Seam& seam, cv::InputArray input, cv::OutputArray output) {
+        inline static void InsertVerticalSeam(const Seam& seam, cv::InputArray input, cv::OutputArray output) {
             Carver::InsertVerticalSeam(seam, input, output);
         }
 
-        inline void InsertHorizontalSeam(const Seam &seam, cv::InputArray input, cv::OutputArray output) {
+        inline static void InsertHorizontalSeam(const Seam &seam, cv::InputArray input, cv::OutputArray output) {
             Carver::InsertHorizontalSeam(seam, input, output);
         }
-
-        void Carve(cv::Mat &img, const int &target_rows, const int &target_cols) override { };
     };
 }
 

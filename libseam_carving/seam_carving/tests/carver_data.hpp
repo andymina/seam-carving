@@ -15,10 +15,23 @@
 #include <gtest/gtest.h>
 
 namespace seam_carving::tests {
-    struct CarverData : TestData {
+    class CarverData : public TestData {
+    public:
         Seam vertical_seam, horizontal_seam;
         cv::Mat remove_vertical_matrix, remove_horizontal_matrix;
         cv::Mat insert_vertical_matrix, insert_horizontal_matrix;
+
+        inline friend std::ostream& operator<<(std::ostream& os, const CarverData& data) {
+            os << PrintWithLabel(data.vertical_seam, "vertical seam") << "\n";
+            os << PrintWithLabel(data.horizontal_seam, "horizontal seam") << "\n";
+
+            os << PrintWithLabel(data.remove_vertical_matrix, "remove vertical matrix") << "\n";
+            os << PrintWithLabel(data.remove_horizontal_matrix, "remove horizontal matrix") << "\n";
+
+            os << PrintWithLabel(data.insert_vertical_matrix, "insert vertical matrix") << "\n";
+            os << PrintWithLabel(data.insert_horizontal_matrix, "insert horizontal matrix");
+            return os;
+        }
     };
 
 

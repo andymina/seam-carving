@@ -40,7 +40,8 @@ TEST_P(CarverTest, FindVerticalSeamReturnsCorrectSeam) {
     sc::Seam actual = carver.FindVerticalSeam(input);
 
     EXPECT_EQ(expected, actual)
-       << carver_data;
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
 }
 
 TEST_P(CarverTest, FindHorizontalSeamReturnsCorrectSeam) {
@@ -53,7 +54,8 @@ TEST_P(CarverTest, FindHorizontalSeamReturnsCorrectSeam) {
     sc::Seam actual = carver.FindHorizontalSeam(input);
 
     EXPECT_EQ(expected, actual)
-        << carver_data;
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
 }
 
 TEST_P(CarverTest, RemoveVerticalSeamReturnsImageWithoutSpecifiedSeam) {
@@ -68,7 +70,8 @@ TEST_P(CarverTest, RemoveVerticalSeamReturnsImageWithoutSpecifiedSeam) {
     carver.RemoveVerticalSeam(seam, input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
-        << carver_data;
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
 }
 
 TEST_P(CarverTest, RemoveHorizontalSeamReturnsImageWithoutSpecifiedSeam) {
@@ -83,7 +86,8 @@ TEST_P(CarverTest, RemoveHorizontalSeamReturnsImageWithoutSpecifiedSeam) {
     carver.RemoveHorizontalSeam(seam, input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
-        << carver_data;
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
 }
 
 

@@ -45,8 +45,11 @@ struct adl_serializer<cv::Mat> {
         matrix = cv::Mat(rows, cols, CV_32S, data.data()).clone();
         matrix.convertTo(matrix, type);
 
-        // if the matrix only has one channel, convert it to 3
-        if (matrix.channels() == 1) {
+        /**
+         * if the type is more than one channel, but the matrix
+         * only has one channel, duplicate.
+         */
+        if (matrix.type() > 6 && matrix.channels() == 1) {
             cv::cvtColor(matrix, matrix, cv::COLOR_GRAY2BGR, 3);
         }
     }

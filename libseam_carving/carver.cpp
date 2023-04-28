@@ -108,9 +108,9 @@ namespace seam_carving {
                 current_src_row.colRange(0, in_mat.cols - 1).copyTo(res.row(idx));
             } else { // seam removes (row, current_coord.col()
                 // copy (row, 0) to (row, current_coord.col()
-                const cv::Mat &left_partition = current_src_row.colRange(0, current_coord.col());
+                const cv::Mat &left_partition = current_src_row.colRange(0, current_coord.col()).clone();
                 // copy (row, current_coord.col() + 1) to (row, in_mat.cols)
-                const cv::Mat &right_partition = current_src_row.colRange(current_coord.col() + 1, in_mat.cols);
+                const cv::Mat &right_partition = current_src_row.colRange(current_coord.col() + 1, in_mat.cols).clone();
                 // merge the two halves and store into row
                 cv::hconcat(left_partition, right_partition, res.row(idx));
             }
@@ -163,13 +163,15 @@ namespace seam_carving {
 
             // create a 1x1 to insert with the pixel in the input
             cv::Mat col_insert = cv::Mat(
-                    1, 1, in_mat.type(),
-                    in_mat.at<cv::Vec3b>(current_coord.row(), current_coord.col())
+                1, 1, in_mat.type(),
+                in_mat.at<cv::Vec3b>(current_coord.row(), current_coord.col())
             );
 
-            // check order to merge since you cant have jagged matrix
+            /**
+             * check order to merge since you can't have jagged matrix.
+             * duplicated nodes are always inserted on the right of their original counterpart
+             */
             if (current_coord.col() == 0) { // seam inserts (row, 0)
-                // insert new col then original row
                 mats.push_back(col_insert);
                 mats.push_back(current_src_row);
             } else if (current_coord.col() == in_mat.cols - 1) { // seam inserts (row, in_mat.cols - 1)
@@ -178,15 +180,15 @@ namespace seam_carving {
                 mats.push_back(col_insert);
             } else { // seam inserts (row, current_coord.col()
                 // get left partition
-                const cv::Mat &left_partition = current_src_row.colRange(0, current_coord.col());
+                const cv::Mat &left_partition = current_src_row.colRange(0, current_coord.col()).clone();
                 // get right partition
-                const cv::Mat &right_partition = current_src_row.colRange(current_coord.col(), in_mat.cols);
+                const cv::Mat &right_partition = current_src_row.colRange(current_coord.col(), in_mat.cols).clone();
                 // insert left, new col, right
                 mats.push_back(left_partition);
                 mats.push_back(col_insert);
                 mats.push_back(right_partition);
 
-                // // color correct since i will have a left and right neighbor
+                // color correct since i will have a left and right neighbor
                 // const cv::Vec3b &left = in_mat.at<cv::Vec3b>(current_coord.row(), current_coord.col() - 1);
                 // const cv::Vec3b &right = in_mat.at<cv::Vec3b>(current_coord.row(), current_coord.col());
                 // col_insert.at<cv::Vec3b>(0, 0) = (left + right) / 2;
@@ -227,9 +229,9 @@ namespace seam_carving {
                 mats.push_back(row_insert);
             } else { // seam inserts (current_coord.row, col)
                 // get top partition
-                const cv::Mat &top_partition = current_src_col.rowRange(0, current_coord.row());
+                const cv::Mat &top_partition = current_src_col.rowRange(0, current_coord.row()).clone();
                 // get bottom partition
-                const cv::Mat &bottom_partition = current_src_col.rowRange(current_coord.row(), in_mat.rows);
+                const cv::Mat &bottom_partition = current_src_col.rowRange(current_coord.row(), in_mat.rows).clone();
                 // insert top, new, middle
                 mats.push_back(top_partition);
                 mats.push_back(row_insert);

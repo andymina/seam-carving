@@ -4,7 +4,7 @@
         "input": {
             "rows": 6,
             "cols": 6,
-            "type": 0,
+            "type": 16,
             "data": [
                 117,
                 189,
@@ -237,7 +237,7 @@
             "remove - vertical": {
                 "rows": 6,
                 "cols": 5,
-                "type": 0,
+                "type": 16,
                 "data": [
                     117,
                     114,
@@ -274,7 +274,7 @@
             "remove - horizontal": {
                 "rows": 5,
                 "cols": 6,
-                "type": 0,
+                "type": 16,
                 "data": [
                     230,
                     32,
@@ -311,7 +311,7 @@
             "insert - vertical": {
                 "rows": 6,
                 "cols": 7,
-                "type": 0,
+                "type": 16,
                 "data": [
                     117,
                     189,
@@ -360,7 +360,7 @@
             "insert - horizontal": {
                 "rows": 7,
                 "cols": 6,
-                "type": 0,
+                "type": 16,
                 "data": [
                     117,
                     189,
@@ -413,7 +413,7 @@
         "input": {
             "rows": 6,
             "cols": 6,
-            "type": 0,
+            "type": 16,
             "data": [
                 81,
                 12,
@@ -646,7 +646,7 @@
             "remove - vertical": {
                 "rows": 6,
                 "cols": 5,
-                "type": 0,
+                "type": 16,
                 "data": [
                     81,
                     12,
@@ -683,7 +683,7 @@
             "remove - horizontal": {
                 "rows": 5,
                 "cols": 6,
-                "type": 0,
+                "type": 16,
                 "data": [
                     12,
                     212,
@@ -720,7 +720,7 @@
             "insert - vertical": {
                 "rows": 6,
                 "cols": 7,
-                "type": 0,
+                "type": 16,
                 "data": [
                     81,
                     12,
@@ -769,7 +769,7 @@
             "insert - horizontal": {
                 "rows": 7,
                 "cols": 6,
-                "type": 0,
+                "type": 16,
                 "data": [
                     81,
                     12,
@@ -822,7 +822,7 @@
         "input": {
             "rows": 6,
             "cols": 6,
-            "type": 0,
+            "type": 16,
             "data": [
                 207,
                 110,
@@ -1055,7 +1055,7 @@
             "remove - vertical": {
                 "rows": 6,
                 "cols": 5,
-                "type": 0,
+                "type": 16,
                 "data": [
                     110,
                     237,
@@ -1092,7 +1092,7 @@
             "remove - horizontal": {
                 "rows": 5,
                 "cols": 6,
-                "type": 0,
+                "type": 16,
                 "data": [
                     39,
                     94,
@@ -1129,7 +1129,7 @@
             "insert - vertical": {
                 "rows": 6,
                 "cols": 7,
-                "type": 0,
+                "type": 16,
                 "data": [
                     207,
                     207,
@@ -1178,7 +1178,7 @@
             "insert - horizontal": {
                 "rows": 7,
                 "cols": 6,
-                "type": 0,
+                "type": 16,
                 "data": [
                     207,
                     110,
@@ -1231,7 +1231,7 @@
         "input": {
             "rows": 6,
             "cols": 6,
-            "type": 0,
+            "type": 16,
             "data": [
                 132,
                 134,
@@ -1464,7 +1464,7 @@
             "remove - vertical": {
                 "rows": 6,
                 "cols": 5,
-                "type": 0,
+                "type": 16,
                 "data": [
                     134,
                     102,
@@ -1501,7 +1501,7 @@
             "remove - horizontal": {
                 "rows": 5,
                 "cols": 6,
-                "type": 0,
+                "type": 16,
                 "data": [
                     215,
                     189,
@@ -1538,7 +1538,7 @@
             "insert - vertical": {
                 "rows": 6,
                 "cols": 7,
-                "type": 0,
+                "type": 16,
                 "data": [
                     132,
                     132,
@@ -1587,7 +1587,7 @@
             "insert - horizontal": {
                 "rows": 7,
                 "cols": 6,
-                "type": 0,
+                "type": 16,
                 "data": [
                     132,
                     134,
@@ -1640,7 +1640,7 @@
         "input": {
             "rows": 6,
             "cols": 6,
-            "type": 0,
+            "type": 16,
             "data": [
                 55,
                 78,
@@ -1873,7 +1873,7 @@
             "remove - vertical": {
                 "rows": 6,
                 "cols": 5,
-                "type": 0,
+                "type": 16,
                 "data": [
                     55,
                     78,
@@ -1910,7 +1910,7 @@
             "remove - horizontal": {
                 "rows": 5,
                 "cols": 6,
-                "type": 0,
+                "type": 16,
                 "data": [
                     144,
                     161,
@@ -1947,7 +1947,7 @@
             "insert - vertical": {
                 "rows": 6,
                 "cols": 7,
-                "type": 0,
+                "type": 16,
                 "data": [
                     55,
                     78,
@@ -1996,7 +1996,7 @@
             "insert - horizontal": {
                 "rows": 7,
                 "cols": 6,
-                "type": 0,
+                "type": 16,
                 "data": [
                     55,
                     78,

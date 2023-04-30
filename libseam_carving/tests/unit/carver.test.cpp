@@ -105,10 +105,10 @@ TEST_P(CarverTest, InsertHorizontalSeam) {
     sct::CarverData carver_data = GetParam();
 
     cv::Mat input = carver_data.original_matrix;
-    cv::Mat expected = carver_data.insert_vertical_matrix;
+    cv::Mat expected = carver_data.insert_horizontal_matrix;
     cv::Mat actual;
 
-    sc::Seam seam = carver_data.vertical_seam;
+    sc::Seam seam = carver_data.horizontal_seam;
     sct::DummyCarver::InsertHorizontalSeam(seam, input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))

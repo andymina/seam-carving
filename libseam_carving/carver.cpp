@@ -238,10 +238,13 @@ namespace seam_carving {
                 mats.push_back(bottom_partition);
 
                 // color correct since i will have top and bottom neighbors
-                const cv::Vec3b &top = in_mat.at<cv::Vec3b>(current_coord.row(), current_coord.col());
-                const cv::Vec3b &bottom = in_mat.at<cv::Vec3b>(current_coord.row() + 1, current_coord.col());
-                row_insert.at<cv::Vec3b>(0, 0) = (top + bottom) / 2;
+                //const cv::Vec3b &top = in_mat.at<cv::Vec3b>(current_coord.row(), current_coord.col());
+                //const cv::Vec3b &bottom = in_mat.at<cv::Vec3b>(current_coord.row() + 1, current_coord.col());
+                //row_insert.at<cv::Vec3b>(0, 0) = (top + bottom) / 2;
             }
+
+            // merge
+            cv::vconcat(mats, res.col(seam[idx].col()));
         }
 
         res.copyTo(output);

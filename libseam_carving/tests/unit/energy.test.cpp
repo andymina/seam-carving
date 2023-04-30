@@ -24,7 +24,9 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-TEST_P(EnergyTest, ComputeVerticalMapReturnsCorrectValue) {
+TEST_P(EnergyTest, ComputeEnergy)
+
+TEST_P(EnergyTest, ComputeVerticalMap) {
     sct::EnergyData energy_data = GetParam();
 
     cv::Mat input = energy_data.sobel_matrix;
@@ -37,7 +39,7 @@ TEST_P(EnergyTest, ComputeVerticalMapReturnsCorrectValue) {
         << energy_data;
 }
 
-TEST_P(EnergyTest, ComputeHorizontalMapReturnsCorrectValue) {
+TEST_P(EnergyTest, ComputeHorizontalMap) {
     sct::EnergyData energy_data = GetParam();
 
     cv::Mat input = energy_data.sobel_matrix;

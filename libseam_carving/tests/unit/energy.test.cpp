@@ -24,7 +24,21 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-TEST_P(EnergyTest, ComputeVerticalMapReturnsCorrectValue) {
+TEST_P(EnergyTest, ComputeEnergy) {
+    sct::EnergyData energy_data = GetParam();
+
+    cv::Mat input = energy_data.original_matrix;
+    cv::Mat expected = energy_data.sobel_matrix;
+    cv::Mat actual;
+
+    sce::ComputeEnergy(input, actual);
+
+    EXPECT_TRUE(sct::equalMatrices(expected, actual))
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
+}
+
+TEST_P(EnergyTest, ComputeVerticalMap) {
     sct::EnergyData energy_data = GetParam();
 
     cv::Mat input = energy_data.sobel_matrix;
@@ -34,10 +48,11 @@ TEST_P(EnergyTest, ComputeVerticalMapReturnsCorrectValue) {
     sce::ComputeVerticalMap(input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
-        << energy_data;
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
 }
 
-TEST_P(EnergyTest, ComputeHorizontalMapReturnsCorrectValue) {
+TEST_P(EnergyTest, ComputeHorizontalMap) {
     sct::EnergyData energy_data = GetParam();
 
     cv::Mat input = energy_data.sobel_matrix;
@@ -47,5 +62,6 @@ TEST_P(EnergyTest, ComputeHorizontalMapReturnsCorrectValue) {
     sce::ComputeHorizontalMap(input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
-        << energy_data;
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
 }

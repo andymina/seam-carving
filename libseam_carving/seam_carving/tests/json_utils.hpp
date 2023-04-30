@@ -49,7 +49,7 @@ struct adl_serializer<cv::Mat> {
          * if the type is more than one channel, but the matrix
          * only has one channel, duplicate.
          */
-        if (matrix.type() > 6 && matrix.channels() == 1) {
+        if (type > 6 && matrix.channels() == 1) {
             cv::cvtColor(matrix, matrix, cv::COLOR_GRAY2BGR, 3);
         }
     }

@@ -7,12 +7,11 @@
 
 namespace seam_carving::energy {
     void ComputeEnergy(cv::InputArray in_img, cv::OutputArray out_img) {
+        cv::GaussianBlur(in_img, out_img, cv::Size(3, 3), 0, 0);
+
         // conversion should be skipped if img is grayscale already
-        const bool skip_conversion = in_img.channels() == 1;
-        if (!skip_conversion) {
-            cv::GaussianBlur(in_img, out_img, cv::Size(3, 3), 0, 0);
+        if (in_img.channels() != 1)
             cv::cvtColor(out_img, out_img, cv::COLOR_BGR2GRAY);
-        }
 
         /**
          * apply kernel. set the depth on the kernel results to be 16-bit
@@ -20,7 +19,7 @@ namespace seam_carving::energy {
          */
         cv::Mat x_nrg, y_nrg;
         /** TODO(#23): investigate if Scharr is better */
-        if (!skip_conversion) {
+        if (in_img.channels() != 1) {
             cv::Sobel(out_img, x_nrg, CV_16S, 1, 0);
             cv::Sobel(out_img, y_nrg, CV_16S, 0, 1);
         } else {

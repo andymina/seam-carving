@@ -8,3 +8,4 @@ lib/
 cmake-build-*/
 .idea/
 sandbox.cpp
+CMakeFiles/

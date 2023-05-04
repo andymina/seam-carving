@@ -29,6 +29,9 @@ jobs:
           opencv-version: '4.7.0'
           install-deps: false
 
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@v1.1
+
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -G ${{env.GENERATOR}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
       - name: Build

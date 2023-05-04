@@ -43,6 +43,20 @@ jobs:
       - name: Checkout latest code
         uses: actions/checkout@v3
 
+      - name: Cache OpenCV
+        id: opencv-cache
+        uses: actions/cache@v3
+        with:
+          path: opencv-install
+          key: ${{runner.os}}-opencv-cache
+
+      - name: Cache Ninja
+        id: ninja-cache
+        uses: actions/cache@v3
+        with:
+          path: ninja-install
+          key: ${{runner.os}}-ninja-cache
+
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -G ${{env.GENERATOR}} -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 

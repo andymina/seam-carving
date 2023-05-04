@@ -31,6 +31,8 @@ jobs:
       - name: Install Ninja
         if: steps.cache-ninja.outputs.cache-hit != 'true'
         uses: ashutoshvarma/setup-ninja@v1.1
+        with:
+          dest: ./ninja-install
 
   build-debug:
     name: build-debug

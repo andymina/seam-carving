@@ -59,11 +59,15 @@ jobs:
           path: ninja-install
           key: ${{runner.os}}-ninja-cache
 
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -G ${{env.GENERATOR}} -D CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      - name: Build CMake
+        uses: ashutoshvarma/action-cmake-build@v1
+        with:
+          build-dir: ${{runner.workspace}}/build
+          cc: gcc
+          cxx: g++
+          build-type: Debug
+          target: libseam_carving
 
-      - name: Build
-        run: cmake -B ${{github.workspace}} -t seam_carving
 #
 #    - name: Build
 #      # Build your program with the given configuration

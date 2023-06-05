@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "cmakeMinimumRequired": {
     "major": 3,
     "minor": 24,
@@ -8,14 +8,17 @@
   "configurePresets": [
     {
       "name": "debug",
-      "displayName": "blah",
-      "description": "bleh",
+      "displayName": "Debug build",
       "generator": "Ninja",
+      "binaryDir": "${sourceDir}/cmake-build-${presetName}",
       "cacheVariables": {
-        "OPENCV_LIBS": { "value": "opencv_core opencv_imgcodecs opencv_highgui opencv_imgproc" },
-        "PYBIND11_LIBS": { "value": "pybind11::lto pybind11::module" },
-        "JSON_LIBS": { "value": "nlohmann_json::nlohmann_json" },
-        "GTEST_LIBS": { "value": "GTest::gtest_main GTest::gtest" }
+        "OPENCV_LIBS": "opencv_core opencv_imgcodecs opencv_highgui opencv_imgproc",
+        "PYBIND11_LIBS": "pybind11::lto pybind11::module",
+        "JSON_LIBS": "nlohmann_json::nlohmann_json",
+        "GTEST_LIBS": "GTest::gtest_main GTest::gtest",
+        "LIBRARY_ROOT_DIR": "${sourceDir}/libseam_carving",
+        "LIBRARY_TEST_DIR": "${sourceDir}/tests",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake"
       }
     }
   ]

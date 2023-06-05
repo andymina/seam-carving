@@ -1,0 +1,22 @@
+{
+  "version": 5,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 24,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "debug",
+      "displayName": "blah",
+      "description": "bleh",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "OPENCV_LIBS": { "value": "opencv_core opencv_imgcodecs opencv_highgui opencv_imgproc" },
+        "PYBIND11_LIBS": { "value": "pybind11::lto pybind11::module" },
+        "JSON_LIBS": { "value": "nlohmann_json::nlohmann_json" },
+        "GTEST_LIBS": { "value": "GTest::gtest_main GTest::gtest" }
+      }
+    }
+  ]
+}

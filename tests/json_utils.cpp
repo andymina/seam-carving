@@ -3,7 +3,7 @@
 //
 
 // project
-#include <seam_carving/tests/json_utils.hpp>
+#include "seam_carving/tests/json_utils.hpp"
 
 namespace seam_carving {
     void to_json(nlohmann::json& j, const Coord& coord) {

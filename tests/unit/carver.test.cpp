@@ -3,14 +3,14 @@
 //
 
 // project
-#include <seam_carving/carver.hpp>
-#include <seam_carving/seam.hpp>
+#include "seam_carving/carver.hpp"
+#include "seam_carving/seam.hpp"
 
-#include <seam_carving/tests/print_utils.hpp>
-#include <seam_carving/tests/matrix_utils.hpp>
-#include <seam_carving/tests/json_utils.hpp>
-#include <seam_carving/tests/carver_data.hpp>
-#include <seam_carving/tests/dummy_carver.hpp>
+#include "seam_carving/tests/print_utils.hpp"
+#include "seam_carving/tests/matrix_utils.hpp"
+#include "seam_carving/tests/json_utils.hpp"
+#include "seam_carving/tests/carver_data.hpp"
+#include "seam_carving/tests/dummy_carver.hpp"
 
 // 3rd party
 #include <gtest/gtest.h>

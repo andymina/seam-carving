@@ -11,8 +11,5 @@ target_include_directories(seam_carving
         PUBLIC
         ${LIBRARY_ROOT_DIR})
 target_link_libraries(seam_carving
-        PUBLIC
-        ${OPENCV_LIBS}
-        ${JSON_LIBS})
-
-#add_subdirectory(tests)
+        PRIVATE
+        ${OPENCV_LIBS} ${JSON_LIBS})

@@ -10,3 +10,4 @@ cmake-build-*/
 sandbox.cpp
 CMakeFiles/
 vcpkg_installed/
+Testing/

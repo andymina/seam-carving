@@ -8,9 +8,12 @@ target_link_libraries(generator
         PRIVATE
         ${OPENCV_LIBS} ${JSON_LIBS})
 
-enable_testing()
-include(GoogleTest)
+set(TEST_LIBS
+        seam_carving
+        ${OPENCV_LIBS}
+        ${JSON_LIBS}
+        ${GTEST_LIBS}
+        CACHE INTERNAL
+        "Libraries needed for testing")
 
 add_subdirectory(unit)
-
-

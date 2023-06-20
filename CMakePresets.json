@@ -9,7 +9,7 @@
     {
       "name": "default",
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/cmake-build-${presetName}",
+      "binaryDir": "${sourceDir}/cmake-build-debug",
       "cacheVariables": {
         "OPENCV_LIBS": "opencv_core;opencv_imgcodecs;opencv_highgui;opencv_imgproc",
         "PYBIND11_LIBS": "pybind11::lto;pybind11::module",

@@ -7,8 +7,7 @@
   },
   "configurePresets": [
     {
-      "name": "debug",
-      "displayName": "Debug build",
+      "name": "default",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/cmake-build-${presetName}",
       "cacheVariables": {

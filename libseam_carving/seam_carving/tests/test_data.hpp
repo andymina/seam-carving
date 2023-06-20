@@ -15,6 +15,7 @@
 // std
 #include <fstream>
 #include <vector>
+#include <iostream>
 
 namespace seam_carving::tests {
     /** Path to JSON data file for tests from libseam_carving/ */
@@ -24,6 +25,7 @@ namespace seam_carving::tests {
     inline std::vector<T> GetData(const std::string& path) {
         std::ifstream file(path);
         nlohmann::json j = nlohmann::json::parse(file);
+        file.close();
         return j;
     }
 

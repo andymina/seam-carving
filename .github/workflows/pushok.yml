@@ -3,12 +3,12 @@ on: [push]
 
 jobs:
   lib-debug:
-    name: ${{matrix.os}}-${{github.workflow}}
+    name: ${{matrix.os}}-${{github.run-name}}
     runs-on: ${{matrix.os}}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [macos-latest]
 
     steps:
       - uses: actions/checkout@v3
@@ -33,5 +33,5 @@ jobs:
         uses: lukka/run-cmake@v10
         id: runcmake
         with:
-          cmakeListsTxtPath: '${{ github.workspace }}/cmakepresets/CMakeLists.txt'
-          configurePreset: ${{github.workflow}}
+          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+          configurePreset: ${{github.run-name}}

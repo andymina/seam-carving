@@ -29,9 +29,24 @@ jobs:
       - name: Print run-vcpkg output
         run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}' "
 
+      - name: print var
+        run: echo "job name=${{job.name}}"
+
       - name: Run CMake with Ninja and vcpkg
         uses: lukka/run-cmake@v10
         id: runcmake
         with:
           cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
           configurePreset: lib-debug
+
+#  unit-tests:
+#    name: unit-tests (${{matrix.os}})
+#    runs-on: ${{matrix.os}}
+#    needs: lib-release
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os: [macos-latest]
+#
+#    steps:
+#      - uses: action

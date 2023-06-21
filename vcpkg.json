@@ -1,22 +1,21 @@
 {
   "version" : "1.0.0",
   "name" : "seam-carving",
-  "description": "",
-  "documentation": "",
-  "homepage": "",
-  "dependencies": [
-    {
-      "name": "nlohmann-json",
-      "version>=": "3.11.2"
-    },
-    {
-      "name": "opencv",
-      "version>=": "4.7.0"
-    },
-    {
-      "name": "gtest",
-      "version>=": "1.13.0"
-    }
-  ],
-  "builtin-baseline": "04d50defc7ead2841b593c358f9b15e03ea4bf0e"
+  "description" : "",
+  "documentation" : "",
+  "homepage" : "",
+  "dependencies" : [ {
+    "name" : "nlohmann-json",
+    "version>=" : "3.11.2"
+  }, {
+    "name" : "opencv",
+    "version>=" : "4.7.0"
+  }, {
+    "name" : "gtest",
+    "version>=" : "1.13.0"
+  }, {
+    "name" : "plog",
+    "version>=" : "1.1.9"
+  } ],
+  "builtin-baseline" : "04d50defc7ead2841b593c358f9b15e03ea4bf0e"
 }

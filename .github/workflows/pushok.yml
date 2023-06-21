@@ -2,79 +2,36 @@ name: pushok
 on: [push]
 
 jobs:
-  install-deps:
-    name: install-deps
-    runs-on: ubuntu-latest
+  lib-debug:
+    name: ${{matrix.os}}-${{github.workflow}}
+    runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
     steps:
-      - name: Cache OpenCV
-        id: opencv-cache
-        uses: actions/cache@v3
+      - uses: actions/checkout@v3
         with:
-          path: opencv-install
-          key: ${{runner.os}}-opencv-cache
+          submodules: true
+            # fetch-depth: 0 (only use if needed)
 
-      - name: Install OpenCV
-        uses: rayandrews/with-opencv-action@v1
+      - uses: lukka/get-cmake@latest
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@main
+        id: runvcpkg
+
+      - name: List $RUNNER_WORKSPACE before build
+        run: find $RUNNER_WORKSPACE
+        shell: bash
+
+      - name: Prints run-vcppkg output
+        run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}' "
+
+      - name: Run CMake with Ninja and vcpkg
+        uses: lukka/run-cmake@v10
+        id: runcmake
         with:
-          dir: ./opencv-install
-          cached: ${{steps.opencv-cache.outputs.cache-hit}}
-          opencv-version: '4.7.0'
-          install-deps: false
-
-      - name: Cache Ninja
-        id: ninja-cache
-        uses: actions/cache@v3
-        with:
-          path: ninja-install
-          key: ${{runner.os}}-ninja-cache
-
-      - name: Install Ninja
-        if: steps.cache-ninja.outputs.cache-hit != 'true'
-        uses: ashutoshvarma/setup-ninja@v1.1
-        with:
-          dest: ./ninja-install
-
-  build-debug:
-    name: build-debug
-    runs-on: ubuntu-latest
-    needs: install-deps
-    env:
-      BUILD_TYPE: Debug
-      GENERATOR: Ninja
-    steps:
-      - name: Checkout latest code
-        uses: actions/checkout@v3
-
-      - name: Cache OpenCV
-        id: opencv-cache
-        uses: actions/cache@v3
-        with:
-          path: opencv-install
-          key: ${{runner.os}}-opencv-cache
-
-      - name: Cache Ninja
-        id: ninja-cache
-        uses: actions/cache@v3
-        with:
-          path: ninja-install
-          key: ${{runner.os}}-ninja-cache
-
-      - name: Build CMake
-        uses: ashutoshvarma/action-cmake-build@v1
-        with:
-          build-dir: ${{runner.workspace}}/build
-          cc: gcc
-          cxx: g++
-          build-type: Debug
-          target: libseam_carving
-
-#
-#    - name: Build
-#      # Build your program with the given configuration
-#      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-#
-#    - name: Test
-#      working-directory: ${{github.workspace}}/build
-#      # Execute tests defined by the CMake configuration.
-#      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-#      run: ctest -C ${{env.BUILD_TYPE}}
+          cmakeListsTxtPath: '${{ github.workspace }}/cmakepresets/CMakeLists.txt'
+          configurePreset: ${{github.workflow}}

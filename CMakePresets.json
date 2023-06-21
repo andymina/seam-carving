@@ -12,7 +12,7 @@
       "binaryDir": "${sourceDir}/build/${presetName}",
       "generator": "Ninja Multi-Config",
       "environment": {
-        "VCPKG_ROOT": "${sourceDir}/vcpkg"
+        "VCPKG_ROOT": "./vcpkg"
       },
       "cacheVariables": {
         "OPENCV_LIBS": "opencv_core;opencv_imgcodecs;opencv_highgui;opencv_imgproc",
@@ -26,6 +26,9 @@
       "displayName": "Library (release)",
       "binaryDir": "${sourceDir}/build/${presetName}",
       "generator": "Ninja Multi-Config",
+      "environment": {
+        "VCPKG_ROOT": "./vcpkg"
+      },
       "cacheVariables": {
         "OPENCV_LIBS": "opencv_core;opencv_imgcodecs;opencv_highgui;opencv_imgproc",
         "LIBRARY_ROOT_DIR": "${sourceDir}/libseam_carving",

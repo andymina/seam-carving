@@ -2,8 +2,8 @@ name: pushok
 on: [push]
 
 jobs:
-  lib-release:
-    name: lib-release-${{matrix.os}}
+  lib-debug:
+    name: lib-debug (${{matrix.os}})
     runs-on: ${{matrix.os}}
     strategy:
       fail-fast: false
@@ -34,4 +34,4 @@ jobs:
         id: runcmake
         with:
           cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-          configurePreset: lib-release
+          configurePreset: lib-debug

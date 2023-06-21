@@ -52,6 +52,12 @@ jobs:
       matrix:
         os: [macos-latest]
     steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          fetch-depth: 0
+      - uses: lukka/get-cmake@latest
+      - uses: lukka/run-vcpkg@main
       - name: Run CMake with Ninja and vcpkg
         uses: lukka/run-cmake@v10
         with:
@@ -59,4 +65,3 @@ jobs:
           configurePreset: debug
           buildPreset: unit-test
           testPreset: unit
-

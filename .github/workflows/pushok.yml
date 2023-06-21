@@ -24,39 +24,23 @@ jobs:
           buildPreset: lib-debug
           testPreset: unit
 
-  lib-release:
-    name: lib-release / ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest]
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-          fetch-depth: 0
-      - uses: lukka/get-cmake@latest
-      - uses: lukka/run-vcpkg@main
-      - name: Run CMake with Ninja and vcpkg
-        uses: lukka/run-cmake@v10
-        with:
-          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-          configurePreset: release
-          buildPreset: lib-release
-
-#  unit-tests:
-#    name: unit-tests / ${{matrix.os}}
-#    runs-on: ${{matrix.os}}
-#    needs: lib-debug
+#  lib-release:
+#    name: lib-release / ${{ matrix.os }}
+#    runs-on: ${{ matrix.os }}
 #    strategy:
 #      fail-fast: false
 #      matrix:
 #        os: [macos-latest]
-#
 #    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          submodules: true
+#          fetch-depth: 0
+#      - uses: lukka/get-cmake@latest
+#      - uses: lukka/run-vcpkg@main
 #      - name: Run CMake with Ninja and vcpkg
 #        uses: lukka/run-cmake@v10
 #        with:
 #          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-#          configurePreset: lib-release
+#          configurePreset: release
+#          buildPreset: lib-release

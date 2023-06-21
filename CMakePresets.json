@@ -46,7 +46,7 @@
       "displayName": "Library (debug)",
       "inherits": ["default"],
       "configurePreset": "debug",
-      "targets": ["seam_carving"]
+      "targets": ["seam_carving", "energy_unit"]
     },
     {
       "name": "lib-release",

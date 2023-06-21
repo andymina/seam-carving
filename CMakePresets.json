@@ -7,73 +7,78 @@
   },
   "configurePresets": [
     {
-      "name": "lib-debug",
-      "displayName": "Library (debug)",
+      "name": "default",
+      "hidden": true,
       "binaryDir": "${sourceDir}/build/${presetName}",
       "generator": "Ninja Multi-Config",
       "environment": {
         "VCPKG_ROOT": "./vcpkg"
       },
-      "cacheVariables": {
-        "OPENCV_LIBS": "opencv_core;opencv_imgcodecs;opencv_highgui;opencv_imgproc",
-        "LIBRARY_ROOT_DIR": "${sourceDir}/libseam_carving",
-        "LIBRARY_TEST_DIR": "${sourceDir}/tests",
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-      }
-    },
-    {
-      "name": "lib-release",
-      "displayName": "Library (release)",
-      "binaryDir": "${sourceDir}/build/${presetName}",
-      "generator": "Ninja Multi-Config",
-      "environment": {
-        "VCPKG_ROOT": "./vcpkg"
-      },
-      "cacheVariables": {
-        "OPENCV_LIBS": "opencv_core;opencv_imgcodecs;opencv_highgui;opencv_imgproc",
-        "LIBRARY_ROOT_DIR": "${sourceDir}/libseam_carving",
-        "LIBRARY_TEST_DIR": "${sourceDir}/tests",
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-      }
-    },
-    {
-      "name": "unit-test",
-      "displayName": "Unit Tests",
-      "binaryDir": "${sourceDir}/build/${presetName}",
-      "generator": "Ninja Multi-Config",
       "cacheVariables": {
         "OPENCV_LIBS": "opencv_core;opencv_imgcodecs;opencv_highgui;opencv_imgproc",
         "JSON_LIBS": "nlohmann_json::nlohmann_json",
         "GTEST_LIBS": "GTest::gtest_main;GTest::gtest",
+        "PLOG_LIBS": "plog::plog",
         "LIBRARY_ROOT_DIR": "${sourceDir}/libseam_carving",
         "LIBRARY_TEST_DIR": "${sourceDir}/tests",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       }
     },
     {
-      "name": "py-debug",
-      "displayName": "Python Module (debug)",
-      "binaryDir": "${sourceDir}/build/${presetName}",
-      "generator": "Ninja Multi-Config",
+      "name": "debug",
+      "inherits": ["default"],
       "cacheVariables": {
-        "OPENCV_LIBS": "opencv_core;opencv_imgcodecs;opencv_highgui;opencv_imgproc",
-        "PYBIND11_LIBS": "pybind11::lto;pybind11::module",
-        "LIBRARY_ROOT_DIR": "${sourceDir}/libseam_carving",
-        "LIBRARY_TEST_DIR": "${sourceDir}/tests",
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
-      "name": "py-release",
-      "displayName": "Python Module (release)",
-      "binaryDir": "${sourceDir}/build/${presetName}",
-      "generator": "Ninja Multi-Config",
+      "name": "release",
+      "inherits": ["default"],
       "cacheVariables": {
-        "OPENCV_LIBS": "opencv_core;opencv_imgcodecs;opencv_highgui;opencv_imgproc",
-        "PYBIND11_LIBS": "pybind11::lto;pybind11::module",
-        "LIBRARY_ROOT_DIR": "${sourceDir}/libseam_carving",
-        "LIBRARY_TEST_DIR": "${sourceDir}/tests",
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "default",
+      "hidden": true,
+      "jobs": 8,
+      "cleanFirst": true,
+      "verbose": true
+    },
+    {
+      "name": "lib-debug",
+      "displayName": "Library (debug)",
+      "inherits": ["default"],
+      "configurePreset": "debug",
+      "targets": ["seam_carving"]
+    },
+    {
+      "name": "lib-release",
+      "displayName": "Library (release)",
+      "inherits": ["default"],
+      "configurePreset": "release",
+      "targets": ["seam_carving"]
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "default",
+      "configurePreset": "debug",
+      "hidden": true,
+      "execution": {
+        "jobs": 8
+      }
+    },
+    {
+      "name": "unit",
+      "displayName": "Unit Tests",
+      "description": "Runs all unit tests",
+      "configurePreset": "debug",
+      "output": {
+        "shortProgress": true,
+        "outputOnFailure": true
       }
     }
   ]

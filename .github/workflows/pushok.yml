@@ -3,50 +3,60 @@ on: [push]
 
 jobs:
   lib-debug:
-    name: lib-debug (${{matrix.os}})
-    runs-on: ${{matrix.os}}
+    name: lib-debug / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [macos-latest]
-
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
           fetch-depth: 0
-
       - uses: lukka/get-cmake@latest
-
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@main
-        id: runvcpkg
-
-      - name: List $RUNNER_WORKSPACE before build
-        run: find $RUNNER_WORKSPACE
-        shell: bash
-
-      - name: Print run-vcpkg output
-        run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}' "
-
-      - name: print var
-        run: echo "job name=${{vars.JOB_NAME}}"
-
+      - uses: lukka/run-vcpkg@main
       - name: Run CMake with Ninja and vcpkg
         uses: lukka/run-cmake@v10
-        id: runcmake
         with:
           cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-          configurePreset: lib-debug
+          configurePreset: debug
+          buildPreset: lib-debug
+          testPreset: unit
+
+  lib-release:
+    name: lib-release / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          fetch-depth: 0
+      - uses: lukka/get-cmake@latest
+      - uses: lukka/run-vcpkg@main
+      - name: Run CMake with Ninja and vcpkg
+        uses: lukka/run-cmake@v10
+        with:
+          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+          configurePreset: release
+          buildPreset: lib-release
 
 #  unit-tests:
-#    name: unit-tests (${{matrix.os}})
+#    name: unit-tests / ${{matrix.os}}
 #    runs-on: ${{matrix.os}}
-#    needs: lib-release
+#    needs: lib-debug
 #    strategy:
 #      fail-fast: false
 #      matrix:
 #        os: [macos-latest]
 #
 #    steps:
-#      - uses: action
+#      - name: Run CMake with Ninja and vcpkg
+#        uses: lukka/run-cmake@v10
+#        with:
+#          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+#          configurePreset: lib-release

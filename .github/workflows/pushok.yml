@@ -21,8 +21,7 @@ jobs:
         with:
           cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
           configurePreset: debug
-          buildPreset: lib-debug
-          testPreset: unit
+          buildPreset: unit-test
 
 #  lib-release:
 #    name: lib-release / ${{ matrix.os }}

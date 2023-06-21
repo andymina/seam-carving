@@ -6,9 +6,9 @@
 #define SEAM_CARVING_CARVER_DATA_HPP
 
 // project
-#include <seam_carving/seam.hpp>
-#include <seam_carving/tests/test_data.hpp>
-#include <seam_carving/tests/print_utils.hpp>
+#include "seam_carving/seam.hpp"
+#include "test_data.hpp"
+#include "print_utils.hpp"
 
 // 3rd party
 #include <nlohmann/json.hpp>

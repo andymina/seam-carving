@@ -1,9 +1,7 @@
 {
   "version" : "1.0.0",
   "name" : "seam-carving",
-  "description" : "",
-  "documentation" : "",
-  "homepage" : "",
+  "description" : "A native C++ implementation of content-aware image resizing",
   "dependencies" : [ {
     "name" : "nlohmann-json",
     "version>=" : "3.11.2"

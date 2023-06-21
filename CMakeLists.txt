@@ -9,6 +9,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 find_package(OpenCV CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(GTest CONFIG REQUIRED)
+find_package(plog CONFIG REQUIRED)
 
 add_subdirectory(libseam_carving)
 

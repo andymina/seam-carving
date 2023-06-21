@@ -6,7 +6,7 @@
 #define SEAM_CARVING_TEST_DATA_HPP
 
 // project
-#include <seam_carving/tests/print_utils.hpp>
+#include "print_utils.hpp"
 
 // 3rd party
 #include <nlohmann/json.hpp>
@@ -15,7 +15,6 @@
 // std
 #include <fstream>
 #include <vector>
-#include <iostream>
 
 namespace seam_carving::tests {
     /** Path to JSON data file for tests from libseam_carving/ */

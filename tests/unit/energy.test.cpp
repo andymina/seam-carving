@@ -4,10 +4,10 @@
 
 // project
 #include "seam_carving/energy.hpp"
-#include "seam_carving/tests/matrix_utils.hpp"
-#include "seam_carving/tests/print_utils.hpp"
-#include "seam_carving/tests/json_utils.hpp"
-#include "seam_carving/tests/energy_data.hpp"
+#include "matrix_utils.hpp"
+#include "print_utils.hpp"
+#include "json_utils.hpp"
+#include "energy_data.hpp"
 
 // 3rd party
 #include <gtest/gtest.h>

@@ -6,7 +6,7 @@
 #define SEAM_CARVING_CARVER_DATA_HPP
 
 // project
-#include "seam_carving/seam.hpp"
+#include <seam_carving/seam.hpp>
 #include "test_data.hpp"
 #include "print_utils.hpp"
 

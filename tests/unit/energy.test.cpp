@@ -3,7 +3,9 @@
 //
 
 // project
-#include "seam_carving/energy.hpp"
+#include <seam_carving/energy.hpp>
+
+// test
 #include "matrix_utils.hpp"
 #include "print_utils.hpp"
 #include "json_utils.hpp"

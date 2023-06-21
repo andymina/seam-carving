@@ -6,7 +6,7 @@
 #define SEAM_CARVING_DUMMY_CARVER_HPP
 
 // project
-#include "seam_carving/carver.hpp"
+#include <seam_carving/carver.hpp>
 
 namespace seam_carving::tests {
     class DummyCarver : public Carver {

@@ -6,11 +6,11 @@
 #define SEAM_CARVING_JSON_UTILS_HPP
 
 // project
-#include "seam_carving/coord.hpp"
-#include "seam_carving/seam.hpp"
+#include <seam_carving/coord.hpp>
+#include <seam_carving/seam.hpp>
 #include "test_data.hpp"
-#include "energy_data.hpp"
-#include "carver_data.hpp"
+#include "include/energy_data.hpp"
+#include "include/carver_data.hpp"
 
 // 3rd party
 #include <opencv2/core.hpp>

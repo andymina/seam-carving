@@ -30,7 +30,7 @@ jobs:
         run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}' "
 
       - name: print var
-        run: echo "job name=${{job.name}}"
+        run: echo "job name=${{vars.JOB_NAME}}"
 
       - name: Run CMake with Ninja and vcpkg
         uses: lukka/run-cmake@v10

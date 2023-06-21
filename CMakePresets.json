@@ -55,6 +55,14 @@
       "configurePreset": "release",
       "targets": ["seam_carving"]
     },
-    {"name": "unit-test"}
+    {
+      "name": "unit-test",
+      "displayName": "Unit Tests",
+      "inherits": ["default"],
+      "configurePreset": "debug",
+      "targets": [
+        "energy_unit"
+      ]
+    }
   ]
 }

@@ -65,7 +65,6 @@
   "testPresets": [
     {
       "name": "default",
-      "configurePreset": "debug",
       "hidden": true,
       "execution": {
         "jobs": 8

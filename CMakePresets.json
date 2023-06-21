@@ -8,7 +8,6 @@
   "configurePresets": [
     {
       "name": "default",
-      "hidden": true,
       "binaryDir": "${sourceDir}/build/${presetName}",
       "generator": "Ninja",
       "environment": {

@@ -22,7 +22,7 @@ jobs:
         with:
           cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
           configurePreset: default
-          configurePresetAdditionalArgs: "-D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache"
+          configurePresetAdditionalArgs: "-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
           buildPreset: lib-debug
   unit-test:
     name: unit-test / ${{ matrix.os }}

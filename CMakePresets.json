@@ -14,6 +14,7 @@
       "cacheVariables": {
         "OPENCV_LIBS": "opencv_core;opencv_imgcodecs;opencv_highgui;opencv_imgproc",
         "LIBRARY_ROOT_DIR": "${sourceDir}/libseam_carving",
+        "LIBRARY_TEST_DIR": "${sourceDir}/tests",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       }
     },
@@ -24,9 +25,8 @@
       "generator": "Ninja Multi-Config",
       "cacheVariables": {
         "OPENCV_LIBS": "opencv_core;opencv_imgcodecs;opencv_highgui;opencv_imgproc",
-        "JSON_LIBS": "nlohmann_json::nlohmann_json",
-        "GTEST_LIBS": "GTest::gtest_main;GTest::gtest",
         "LIBRARY_ROOT_DIR": "${sourceDir}/libseam_carving",
+        "LIBRARY_TEST_DIR": "${sourceDir}/tests",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       }
     },
@@ -37,6 +37,8 @@
       "generator": "Ninja Multi-Config",
       "cacheVariables": {
         "OPENCV_LIBS": "opencv_core;opencv_imgcodecs;opencv_highgui;opencv_imgproc",
+        "JSON_LIBS": "nlohmann_json::nlohmann_json",
+        "GTEST_LIBS": "GTest::gtest_main;GTest::gtest",
         "LIBRARY_ROOT_DIR": "${sourceDir}/libseam_carving",
         "LIBRARY_TEST_DIR": "${sourceDir}/tests",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
@@ -51,6 +53,7 @@
         "OPENCV_LIBS": "opencv_core;opencv_imgcodecs;opencv_highgui;opencv_imgproc",
         "PYBIND11_LIBS": "pybind11::lto;pybind11::module",
         "LIBRARY_ROOT_DIR": "${sourceDir}/libseam_carving",
+        "LIBRARY_TEST_DIR": "${sourceDir}/tests",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       }
     },
@@ -63,6 +66,7 @@
         "OPENCV_LIBS": "opencv_core;opencv_imgcodecs;opencv_highgui;opencv_imgproc",
         "PYBIND11_LIBS": "pybind11::lto;pybind11::module",
         "LIBRARY_ROOT_DIR": "${sourceDir}/libseam_carving",
+        "LIBRARY_TEST_DIR": "${sourceDir}/tests",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       }
     }

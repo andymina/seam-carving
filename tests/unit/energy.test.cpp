@@ -67,10 +67,3 @@ TEST_P(EnergyTest, ComputeHorizontalMap) {
         << sct::PrintWithLabel(expected, "expected") << "\n"
         << sct::PrintWithLabel(actual, "actual");
 }
-
-//TEST(HelloTest, BasicAssertions) {
-//    // Expect two strings not to be equal.
-//    EXPECT_STRNE("hello", "world");
-//    // Expect equality.
-//    EXPECT_EQ(7 * 6, 42);
-//}

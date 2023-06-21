@@ -10,7 +10,7 @@
       "name": "default",
       "hidden": true,
       "binaryDir": "${sourceDir}/build/${presetName}",
-      "generator": "Ninja Multi-Config",
+      "generator": "Ninja",
       "environment": {
         "VCPKG_ROOT": "./vcpkg"
       },
@@ -23,14 +23,6 @@
         "LIBRARY_TEST_DIR": "${sourceDir}/tests",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       }
-    },
-    {
-      "name": "debug",
-      "inherits": ["default"]
-    },
-    {
-      "name": "release",
-      "inherits": ["default"]
     }
   ],
   "buildPresets": [
@@ -45,21 +37,14 @@
       "name": "lib-debug",
       "displayName": "Library (debug)",
       "inherits": ["default"],
-      "configurePreset": "debug",
-      "targets": ["seam_carving"]
-    },
-    {
-      "name": "lib-release",
-      "displayName": "Library (release)",
-      "inherits": ["default"],
-      "configurePreset": "release",
+      "configurePreset": "default",
       "targets": ["seam_carving"]
     },
     {
       "name": "unit-test",
       "displayName": "Unit Tests",
       "inherits": ["default"],
-      "configurePreset": "debug",
+      "configurePreset": "default",
       "targets": [
         "energy_unit"
       ]
@@ -77,9 +62,8 @@
       "name": "unit",
       "displayName": "Unit Tests",
       "description": "Runs all unit tests",
-      "configurePreset": "debug",
+      "configurePreset": "default",
       "output": {
-        "shortProgress": true,
         "outputOnFailure": true,
         "verbosity": "extra"
       }

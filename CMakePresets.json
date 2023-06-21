@@ -46,7 +46,7 @@
       "displayName": "Library (debug)",
       "inherits": ["default"],
       "configurePreset": "debug",
-      "targets": ["seam_carving", "energy_unit"]
+      "targets": ["seam_carving"]
     },
     {
       "name": "lib-release",
@@ -54,26 +54,7 @@
       "inherits": ["default"],
       "configurePreset": "release",
       "targets": ["seam_carving"]
-    }
-  ],
-  "testPresets": [
-    {
-      "name": "default",
-      "hidden": true,
-      "execution": {
-        "jobs": 8
-      }
     },
-    {
-      "name": "unit",
-      "displayName": "Unit Tests",
-      "description": "Runs all unit tests",
-      "configurePreset": "debug",
-      "output": {
-        "shortProgress": true,
-        "outputOnFailure": true,
-        "verbosity": "extra"
-      }
-    }
+    {"name": "unit-test"}
   ]
 }

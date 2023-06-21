@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   lib-debug:
-    name: ${{matrix.os}}-${{github.run-name}}
+    name: ${{matrix.os}}-lib-debug
     runs-on: ${{matrix.os}}
     strategy:
       fail-fast: false
@@ -26,7 +26,7 @@ jobs:
         run: find $RUNNER_WORKSPACE
         shell: bash
 
-      - name: Prints run-vcppkg output
+      - name: Print run-vcpkg output
         run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}' "
 
       - name: Run CMake with Ninja and vcpkg

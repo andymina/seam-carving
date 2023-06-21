@@ -2,26 +2,26 @@ name: pushok
 on: [push]
 
 jobs:
-  lib-debug:
-    name: lib-debug / ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest]
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-          fetch-depth: 0
-      - uses: lukka/get-cmake@latest
-      - uses: lukka/run-vcpkg@main
-      - name: Run CMake with Ninja and vcpkg
-        uses: lukka/run-cmake@v10
-        with:
-          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-          configurePreset: debug
-          buildPreset: unit-test
+#  lib-debug:
+#    name: lib-debug / ${{ matrix.os }}
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os: [macos-latest]
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          submodules: true
+#          fetch-depth: 0
+#      - uses: lukka/get-cmake@latest
+#      - uses: lukka/run-vcpkg@main
+#      - name: Run CMake with Ninja and vcpkg
+#        uses: lukka/run-cmake@v10
+#        with:
+#          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+#          configurePreset: debug
+#          buildPreset: lib-debug
 
 #  lib-release:
 #    name: lib-release / ${{ matrix.os }}
@@ -43,3 +43,20 @@ jobs:
 #          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
 #          configurePreset: release
 #          buildPreset: lib-release
+
+  unit-test:
+    name: unit-test / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest]
+    steps:
+      - name: Run CMake with Ninja and vcpkg
+        uses: lukka/run-cmake@v10
+        with:
+          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+          configurePreset: debug
+          buildPreset: unit-test
+          testPreset: unit
+

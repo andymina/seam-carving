@@ -64,5 +64,25 @@
         "energy_unit"
       ]
     }
+  ],
+  "testPresets": [
+    {
+      "name": "default",
+      "hidden": true,
+      "execution": {
+        "jobs": 8
+      }
+    },
+    {
+      "name": "unit",
+      "displayName": "Unit Tests",
+      "description": "Runs all unit tests",
+      "configurePreset": "debug",
+      "output": {
+        "shortProgress": true,
+        "outputOnFailure": true,
+        "verbosity": "extra"
+      }
+    }
   ]
 }

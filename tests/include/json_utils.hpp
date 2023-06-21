@@ -8,9 +8,11 @@
 // project
 #include <seam_carving/coord.hpp>
 #include <seam_carving/seam.hpp>
+
+// test
 #include "test_data.hpp"
-#include "include/energy_data.hpp"
-#include "include/carver_data.hpp"
+#include "energy_data.hpp"
+#include "carver_data.hpp"
 
 // 3rd party
 #include <opencv2/core.hpp>

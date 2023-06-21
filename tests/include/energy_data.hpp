@@ -5,7 +5,7 @@
 #ifndef SEAM_CARVING_ENERGY_DATA_HPP
 #define SEAM_CARVING_ENERGY_DATA_HPP
 
-// project
+// test
 #include "test_data.hpp"
 #include "print_utils.hpp"
 

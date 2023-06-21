@@ -5,7 +5,7 @@
 #ifndef SEAM_CARVING_TEST_DATA_HPP
 #define SEAM_CARVING_TEST_DATA_HPP
 
-// project
+// test
 #include "print_utils.hpp"
 
 // 3rd party

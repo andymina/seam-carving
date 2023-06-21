@@ -26,17 +26,11 @@
     },
     {
       "name": "debug",
-      "inherits": ["default"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
+      "inherits": ["default"]
     },
     {
       "name": "release",
-      "inherits": ["default"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
+      "inherits": ["default"]
     }
   ],
   "buildPresets": [
@@ -77,7 +71,8 @@
       "configurePreset": "debug",
       "output": {
         "shortProgress": true,
-        "outputOnFailure": true
+        "outputOnFailure": true,
+        "verbosity": "extra"
       }
     }
   ]

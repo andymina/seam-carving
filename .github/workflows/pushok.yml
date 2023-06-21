@@ -34,4 +34,4 @@ jobs:
         id: runcmake
         with:
           cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-          configurePreset: lib-debug
+          configurePreset: lib-release

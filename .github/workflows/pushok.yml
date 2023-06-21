@@ -2,8 +2,8 @@ name: pushok
 on: [push]
 
 jobs:
-  lib-debug:
-    name: ${{matrix.os}}-lib-debug
+  lib-release:
+    name: lib-release-${{matrix.os}}
     runs-on: ${{matrix.os}}
     strategy:
       fail-fast: false

@@ -2,6 +2,9 @@
 // Created by Andy Mina on 3/7/23.
 //
 
+// stl
+#include <iostream>
+
 // project
 #include <seam_carving/energy.hpp>
 
@@ -34,6 +37,9 @@ TEST_P(EnergyTest, ComputeEnergy) {
     cv::Mat actual;
 
     sce::ComputeEnergy(input, actual);
+
+    std::cout << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual") << "\n";
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
         << sct::PrintWithLabel(expected, "expected") << "\n"

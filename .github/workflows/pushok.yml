@@ -33,7 +33,7 @@ jobs:
       matrix:
         os: [macos-latest]
     env:
-      VCPKG_DEFAULT_TRIPLET: arm64-osx
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
     steps:
       - uses: actions/checkout@v3
         with:

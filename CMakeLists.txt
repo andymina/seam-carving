@@ -13,6 +13,7 @@ if(CMAKE_CXX_COMPILER_LOADED)
              ${CMAKE_CXX_COMPILER_VERSION}")
     message(STATUS "Compiler is part of GCC:
              ${CMAKE_COMPILER_IS_GNUCXX}")
+    message(STATUS "CXX Flags: ${CMAKE_CXX_FLAGS}")
 endif()
 
 # find all packages ahead of time

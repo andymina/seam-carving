@@ -41,10 +41,18 @@ jobs:
           fetch-depth: 0
       - uses: lukka/get-cmake@latest
       - uses: lukka/run-vcpkg@main
-      - name: Run CMake with Ninja and vcpkg
-        uses: lukka/run-cmake@v10
         with:
-          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
-          configurePreset: default
-          buildPreset: unit-test
-          testPreset: unit
+          runVcpkgInstall: true
+      - name: configure
+        run: cmake -B build/default -S ./ -G Ninja --preset default
+      - name: build
+        run: cmake --build build/default --target energy_unit --preset unit-test
+      - name: test
+        run: ctest --test-dir build/default/tests/unit energy_unit --preset unit
+#      - name: Run CMake with Ninja and vcpkg
+#        uses: lukka/run-cmake@v10
+#        with:
+#          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+#          configurePreset: default
+#          buildPreset: unit-test
+#          testPreset: unit

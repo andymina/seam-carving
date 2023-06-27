@@ -27,7 +27,7 @@ jobs:
   unit-test:
     name: unit-test / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    needs: lib-debug
+#    needs: lib-debug
     strategy:
       fail-fast: false
       matrix:

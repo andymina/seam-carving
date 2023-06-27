@@ -1,0 +1,58 @@
+name: pushok
+on: [push]
+
+jobs:
+#  lib-debug:
+#    name: lib-debug / ${{ matrix.os }}
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os: [macos-latest]
+#    env:
+#      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          submodules: true
+#          fetch-depth: 0
+#      - uses: lukka/get-cmake@latest
+#      - uses: lukka/run-vcpkg@main
+#      - name: Run CMake with Ninja and vcpkg
+#        uses: lukka/run-cmake@v10
+#        with:
+#          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+#          configurePreset: default
+#          buildPreset: lib-debug
+  unit-test:
+    name: unit-test / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+#    needs: lib-debug
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest]
+    env:
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          fetch-depth: 0
+      - uses: lukka/get-cmake@latest
+      - uses: lukka/run-vcpkg@main
+        with:
+          runVcpkgInstall: true
+      - name: configure
+        run: cmake -B build/default -S ./ -G Ninja --preset default
+      - name: build
+        run: cmake --build build/default --target energy_unit --preset unit-test
+      - name: test
+        run: ctest --test-dir build/default/tests/unit energy_unit --preset unit
+#      - name: Run CMake with Ninja and vcpkg
+#        uses: lukka/run-cmake@v10
+#        with:
+#          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+#          configurePreset: default
+#          buildPreset: unit-test
+#          testPreset: unit

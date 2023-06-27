@@ -5,9 +5,9 @@
 #ifndef SEAM_CARVING_ENERGY_DATA_HPP
 #define SEAM_CARVING_ENERGY_DATA_HPP
 
-// project
-#include <seam_carving/tests/test_data.hpp>
-#include <seam_carving/tests/print_utils.hpp>
+// test
+#include "test_data.hpp"
+#include "print_utils.hpp"
 
 // 3rd party
 #include <nlohmann/json.hpp>

@@ -5,8 +5,8 @@
 #ifndef SEAM_CARVING_PRINT_UTILS_HPP
 #define SEAM_CARVING_PRINT_UTILS_HPP
 
-// project
-#include <seam_carving/tests/print_utils.hpp>
+// test
+#include "print_utils.hpp"
 
 // stl
 #include <sstream>

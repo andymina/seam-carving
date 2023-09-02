@@ -27,7 +27,9 @@ jobs:
   unit-test:
     name: unit-test / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-#    needs: lib-debug
+    strategy:
+      matrix:
+        os: [macos-13]
     env:
       VCPKG_DEFAULT_TRIPLET: arm64-osx
     steps:

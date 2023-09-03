@@ -31,6 +31,8 @@ namespace seam_carving::energy {
         cv::convertScaleAbs(x_nrg, x_nrg);
         cv::convertScaleAbs(y_nrg, y_nrg);
         cv::addWeighted(x_nrg, 0.5, y_nrg, 0.5, 0, out_img);
+
+        std::cout << out_img.getMat() << "out";
     }
 
     void ComputeVerticalMap(cv::InputArray sobel, cv::OutputArray output) {

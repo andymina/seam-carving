@@ -34,6 +34,10 @@ namespace seam_carving::energy {
             cv::Sobel(in_img, y_nrg, CV_16S, 0, 1);
         }
 
+        std::cout << "post-sobel!\n";
+        std::cout << "x\n" << x_nrg << "\n";
+        std::cout << "y\n" << y_nrg << "\n\n";
+
         // convert back to CV_8U depth and merge
         cv::convertScaleAbs(x_nrg, x_nrg);
         cv::convertScaleAbs(y_nrg, y_nrg);

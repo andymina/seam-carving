@@ -10,13 +10,8 @@ namespace seam_carving::energy {
         cv::GaussianBlur(in_img, out_img, cv::Size(3, 3), 0, 0, cv::BORDER_DEFAULT);
 
         // conversion should be skipped if img is grayscale already
-        if (in_img.channels() != 1) {
-            std::cout << "converting!\n";
+        if (in_img.channels() != 1)
             cv::cvtColor(out_img, out_img, cv::COLOR_BGR2GRAY, 0);
-        }
-
-        std::cout << "pre-sobel!\n";
-        std::cout << out_img.getMat() << "\n\n";
 
         /**
          * apply kernel. set the depth on the kernel results to be 16-bit
@@ -25,11 +20,9 @@ namespace seam_carving::energy {
         cv::Mat x_nrg, y_nrg;
         /** TODO(#23): investigate if Scharr is better */
         if (in_img.channels() != 1) {
-            std::cout << "multi-channel\n";
             cv::Sobel(out_img, x_nrg, CV_16S, 1, 0);
             cv::Sobel(out_img, y_nrg, CV_16S, 0, 1);
         } else {
-            std::cout << "single-channel\n";
             cv::Sobel(in_img, x_nrg, CV_16S, 1, 0);
             cv::Sobel(in_img, y_nrg, CV_16S, 0, 1);
         }
@@ -41,6 +34,10 @@ namespace seam_carving::energy {
         // convert back to CV_8U depth and merge
         cv::convertScaleAbs(x_nrg, x_nrg);
         cv::convertScaleAbs(y_nrg, y_nrg);
+
+        std::cout << "post-abs!\n";
+        std::cout << "x\n" << x_nrg << "\n";
+        std::cout << "y\n" << y_nrg << "\n\n";
         cv::addWeighted(x_nrg, 0.5, y_nrg, 0.5, 0, out_img);
 
         std::cout << out_img.getMat() << "out\n";

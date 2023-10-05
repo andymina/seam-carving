@@ -38,7 +38,7 @@ namespace seam_carving::energy {
         std::cout << "post-abs!\n";
         std::cout << "x\n" << x_nrg << "\n";
         std::cout << "y\n" << y_nrg << "\n\n";
-        cv::addWeighted(x_nrg, 0.5, y_nrg, 0.5, 0, out_img);
+        cv::addWeighted(x_nrg, 0.5, y_nrg, 0.5, 0, out_img, CV_8U);
 
         std::cout << out_img.getMat() << "out\n";
     }

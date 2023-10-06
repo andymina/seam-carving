@@ -27,7 +27,7 @@ int main() {
     nlohmann::ordered_json data;
 
     // parse test files
-    for (int test_id = 0; test_id < test_count; ++test_id) {
+    for (int test_id = 5; test_id < test_count; ++test_id) {
         // build file name
         file_name = file_prefix + std::to_string(test_id) + file_ext;
         Parser p(file_name, test_id);

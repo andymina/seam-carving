@@ -7,25 +7,21 @@
 
 namespace seam_carving::energy {
     void ComputeEnergy(cv::InputArray in_img, cv::OutputArray out_img) {
-        cv::GaussianBlur(in_img, out_img, cv::Size(3, 3), 0, 0, cv::BORDER_DEFAULT);
+        // blur to remove noise
+        cv::GaussianBlur(in_img, out_img, cv::Size(3, 3), 0, 0);
 
-        // conversion should be skipped if img is grayscale already
-        if (in_img.channels() != 1)
-            cv::cvtColor(out_img, out_img, cv::COLOR_BGR2GRAY, 0);
+        // conversion should be skipped if the incoming img is grayscale already
+        if (out_img.channels() != 1)
+            cv::cvtColor(out_img, out_img, cv::COLOR_BGR2GRAY, 1);
 
         /**
          * apply kernel. set the depth on the kernel results to be 16-bit
          * signed ints to avoid overflow since img.depth() will be CV_8U;
+         * TODO(#23): investigate if Scharr is better
          */
         cv::Mat x_nrg, y_nrg;
-        /** TODO(#23): investigate if Scharr is better */
-        if (in_img.channels() != 1) {
-            cv::Sobel(out_img, x_nrg, CV_16S, 1, 0);
-            cv::Sobel(out_img, y_nrg, CV_16S, 0, 1);
-        } else {
-            cv::Sobel(in_img, x_nrg, CV_16S, 1, 0);
-            cv::Sobel(in_img, y_nrg, CV_16S, 0, 1);
-        }
+        cv::Sobel(out_img, x_nrg, CV_16S, 1, 0);
+        cv::Sobel(out_img, y_nrg, CV_16S, 0, 1);
 
         std::cout << "post-sobel!\n";
         std::cout << "x\n" << x_nrg << "\n";
@@ -38,9 +34,11 @@ namespace seam_carving::energy {
         std::cout << "post-abs!\n";
         std::cout << "x\n" << x_nrg << "\n";
         std::cout << "y\n" << y_nrg << "\n\n";
-        cv::addWeighted(x_nrg, 0.5, y_nrg, 0.5, 0, out_img, CV_8U);
 
-        std::cout << out_img.getMat() << "out\n";
+        cv::addWeighted(x_nrg, 0.5, y_nrg, 0.5, 0, out_img);
+
+        std::cout << "out\n";
+        std::cout << out_img.getMat() << "\n\n";
     }
 
     void ComputeVerticalMap(cv::InputArray sobel, cv::OutputArray output) {

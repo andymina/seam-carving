@@ -31,11 +31,11 @@ vector<uchar> generateMatrix(size_t size) {
  * Applies the Sobel convolution operator to the input.
 */
 void applySobel(cv::InputArray input, cv::OutputArray output) {
-    cv::Mat input_mat = input.getMat();
-    cv::Mat x_nrg, y_nrg;
+    cv::GaussianBlur(input, output, cv::Size(3, 3), 0, 0);
 
-    cv::Sobel(input_mat, x_nrg, CV_16S, 1, 0);
-    cv::Sobel(input_mat, y_nrg, CV_16S, 0, 1);
+    cv::Mat x_nrg, y_nrg;
+    cv::Sobel(output, x_nrg, CV_16S, 1, 0);
+    cv::Sobel(output, y_nrg, CV_16S, 0, 1);
 
     // convert back to CV_8U depth and merge
     cv::convertScaleAbs(x_nrg, x_nrg);

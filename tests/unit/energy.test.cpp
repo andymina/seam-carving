@@ -36,6 +36,7 @@ TEST_P(EnergyTest, ComputeEnergy) {
     cv::Mat expected = energy_data.sobel_matrix;
     cv::Mat actual;
 
+    std::cout << sct::PrintWithLabel(input, "input") << "\n";
     std::cout << sct::PrintWithLabel(expected, "expected") << "\n";
 
     sce::ComputeEnergy(input, actual);

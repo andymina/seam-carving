@@ -40,7 +40,7 @@
       "targets": ["seam_carving"]
     },
     {
-      "name": "unit-test",
+      "name": "unit-tests",
       "displayName": "Unit Tests",
       "inherits": ["default"],
       "configurePreset": "default",
@@ -55,13 +55,10 @@
       "hidden": true
     },
     {
-      "name": "unit",
+      "name": "unit-tests",
       "displayName": "Unit Tests",
       "description": "Runs all unit tests",
-      "configurePreset": "default",
-      "output": {
-        "verbosity": "extra"
-      }
+      "configurePreset": "default"
     }
   ]
 }

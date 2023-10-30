@@ -39,8 +39,8 @@ TEST_P(EnergyTest, ComputeEnergy) {
     sce::ComputeEnergy(input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
-                        << sct::PrintWithLabel(expected, "expected") << "\n"
-                        << sct::PrintWithLabel(actual, "actual");
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
 }
 
 TEST_P(EnergyTest, ComputeVerticalMap) {
@@ -53,8 +53,8 @@ TEST_P(EnergyTest, ComputeVerticalMap) {
     sce::ComputeVerticalMap(input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
-                        << sct::PrintWithLabel(expected, "expected") << "\n"
-                        << sct::PrintWithLabel(actual, "actual");
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
 }
 
 TEST_P(EnergyTest, ComputeHorizontalMap) {
@@ -67,6 +67,6 @@ TEST_P(EnergyTest, ComputeHorizontalMap) {
     sce::ComputeHorizontalMap(input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
-                        << sct::PrintWithLabel(expected, "expected") << "\n"
-                        << sct::PrintWithLabel(actual, "actual");
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
 }

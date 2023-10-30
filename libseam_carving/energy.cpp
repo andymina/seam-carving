@@ -10,7 +10,7 @@ namespace seam_carving::energy {
         // blur to remove noise
         cv::GaussianBlur(in_img, out_img, cv::Size(3, 3), 0, 0);
 
-        // conversion should be skipped if the incoming img is grayscale already
+        // conversion should be skipped if the img is grayscale already
         if (out_img.channels() != 1)
             cv::cvtColor(out_img, out_img, cv::COLOR_BGR2GRAY, 1);
 

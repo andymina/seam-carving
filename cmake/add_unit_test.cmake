@@ -9,6 +9,6 @@ function(add_unit_test TARGET_NAME TEST_PREFIX)
             PUBLIC ${LIBRARY_TEST_DIR}/include)
 
     gtest_discover_tests(${TARGET_NAME}
-        EXTRA_ARGS --gtest_color=no
+        EXTRA_ARGS --gtest_color=yes
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 endfunction()

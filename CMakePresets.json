@@ -45,7 +45,8 @@
       "inherits": ["default"],
       "configurePreset": "default",
       "targets": [
-        "energy_unit"
+        "energy_unit",
+        "carver_unit"
       ]
     }
   ],

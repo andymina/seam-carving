@@ -23,22 +23,10 @@ namespace seam_carving::energy {
         cv::Sobel(out_img, x_nrg, CV_16S, 1, 0);
         cv::Sobel(out_img, y_nrg, CV_16S, 0, 1);
 
-        std::cout << "post-sobel!\n";
-        std::cout << "x\n" << x_nrg << "\n";
-        std::cout << "y\n" << y_nrg << "\n\n";
-
         // convert back to CV_8U depth and merge
         cv::convertScaleAbs(x_nrg, x_nrg);
         cv::convertScaleAbs(y_nrg, y_nrg);
-
-        std::cout << "post-abs!\n";
-        std::cout << "x\n" << x_nrg << "\n";
-        std::cout << "y\n" << y_nrg << "\n\n";
-
         cv::addWeighted(x_nrg, 0.5, y_nrg, 0.5, 0, out_img);
-
-        std::cout << "out\n";
-        std::cout << out_img.getMat() << "\n\n";
     }
 
     void ComputeVerticalMap(cv::InputArray sobel, cv::OutputArray output) {

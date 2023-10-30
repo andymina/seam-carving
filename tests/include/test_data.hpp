@@ -5,8 +5,8 @@
 #ifndef SEAM_CARVING_TEST_DATA_HPP
 #define SEAM_CARVING_TEST_DATA_HPP
 
-// project
-#include <seam_carving/tests/print_utils.hpp>
+// test
+#include "print_utils.hpp"
 
 // 3rd party
 #include <nlohmann/json.hpp>
@@ -24,6 +24,7 @@ namespace seam_carving::tests {
     inline std::vector<T> GetData(const std::string& path) {
         std::ifstream file(path);
         nlohmann::json j = nlohmann::json::parse(file);
+        file.close();
         return j;
     }
 

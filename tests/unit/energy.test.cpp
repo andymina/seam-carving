@@ -2,12 +2,17 @@
 // Created by Andy Mina on 3/7/23.
 //
 
+// stl
+#include <iostream>
+
 // project
 #include <seam_carving/energy.hpp>
-#include <seam_carving/tests/matrix_utils.hpp>
-#include <seam_carving/tests/print_utils.hpp>
-#include <seam_carving/tests/json_utils.hpp>
-#include <seam_carving/tests/energy_data.hpp>
+
+// test
+#include "matrix_utils.hpp"
+#include "print_utils.hpp"
+#include "json_utils.hpp"
+#include "energy_data.hpp"
 
 // 3rd party
 #include <gtest/gtest.h>

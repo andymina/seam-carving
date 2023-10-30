@@ -1,0 +1,49 @@
+name: pushok
+on: [push]
+
+jobs:
+  lib-debug:
+    name: lib-debug / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+    env:
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          fetch-depth: 0
+      - uses: lukka/get-cmake@latest
+      - uses: lukka/run-vcpkg@main
+      - uses: lukka/run-cmake@v10
+        with:
+          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+          configurePreset: default
+          buildPreset: lib-debug
+  unit-tests:
+    name: unit-tests / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+    env:
+      VCPKG_DEFAULT_TRIPLET: $ {{ matrix.triplet }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          fetch-depth: 0
+      - uses: lukka/get-cmake@latest
+      - uses: lukka/run-vcpkg@v10
+        with:
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          vcpkgJsonGlob: '${{ github.workspace }}/vcpkg.json'
+          runVcpkgInstall: false
+      - uses: lukka/run-cmake@v10
+        with:
+          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+          configurePreset: default
+          buildPreset: unit-tests
+          testPreset: unit-tests

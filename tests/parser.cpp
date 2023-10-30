@@ -6,7 +6,7 @@
 
 void Parser::ParseMatrix(
         const std::size_t& rows, const std::size_t& cols,
-        const std::string &label, const std::string &parent_label) {
+        const std::string& label, const std::string& parent_label) {
     int type = ParseMatrixType();
 
     std::vector<int> res;

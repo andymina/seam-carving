@@ -7,25 +7,21 @@
 
 namespace seam_carving::energy {
     void ComputeEnergy(cv::InputArray in_img, cv::OutputArray out_img) {
+        // blur to remove noise
         cv::GaussianBlur(in_img, out_img, cv::Size(3, 3), 0, 0);
 
-        // conversion should be skipped if img is grayscale already
-        if (in_img.channels() != 1)
-            cv::cvtColor(out_img, out_img, cv::COLOR_BGR2GRAY);
+        // conversion should be skipped if the img is grayscale already
+        if (out_img.channels() != 1)
+            cv::cvtColor(out_img, out_img, cv::COLOR_BGR2GRAY, 1);
 
         /**
          * apply kernel. set the depth on the kernel results to be 16-bit
          * signed ints to avoid overflow since img.depth() will be CV_8U;
+         * TODO(#23): investigate if Scharr is better
          */
         cv::Mat x_nrg, y_nrg;
-        /** TODO(#23): investigate if Scharr is better */
-        if (in_img.channels() != 1) {
-            cv::Sobel(out_img, x_nrg, CV_16S, 1, 0);
-            cv::Sobel(out_img, y_nrg, CV_16S, 0, 1);
-        } else {
-            cv::Sobel(in_img, x_nrg, CV_16S, 1, 0);
-            cv::Sobel(in_img, y_nrg, CV_16S, 0, 1);
-        }
+        cv::Sobel(out_img, x_nrg, CV_16S, 1, 0);
+        cv::Sobel(out_img, y_nrg, CV_16S, 0, 1);
 
         // convert back to CV_8U depth and merge
         cv::convertScaleAbs(x_nrg, x_nrg);

@@ -4,6 +4,7 @@
 
 // project
 #include <seam_carving/carver.hpp>
+#include <iostream>
 
 namespace seam_carving {
     Seam Carver::FindVerticalSeam(cv::InputArray img) {
@@ -162,37 +163,41 @@ namespace seam_carving {
             std::vector<cv::Mat> mats;
 
             // create a 1x1 to insert with the pixel in the input
-            cv::Mat col_insert = cv::Mat(
-                1, 1, in_mat.type(),
-                in_mat.at<cv::Vec3b>(current_coord.row(), current_coord.col())
+            cv::Mat col_insert = cv::Mat(1, 1, in_mat.type());
+            cv::Mat left_partition, right_partition;
+
+            // Insertion is always done such that an inserted pixel has neighbors and can be color corrected
+            if (current_coord.col() == 0) {
+                // insert the new pixel into index 1
+                left_partition = current_src_row.colRange(0, 1).clone();
+                right_partition = current_src_row.colRange(1, in_mat.cols).clone();
+            } else if (current_coord.col() == in_mat.cols - 1) {
+                // insert the new pixel into in_mat.cols - 2
+                left_partition = current_src_row.colRange(0, in_mat.cols - 1).clone();
+                right_partition = current_src_row.colRange(in_mat.cols - 1, in_mat.cols).clone();
+            } else {
+                // insert the pixel where it should be
+                left_partition = current_src_row.colRange(0, current_coord.col()).clone();
+                right_partition = current_src_row.colRange(current_coord.col(), in_mat.cols).clone();
+            }
+
+            // grab the color at the last pixel of the left partition
+            const cv::Vec3b& left_color = left_partition.at<cv::Vec3b>(left_partition.cols - 1);
+
+            // grab the color at the first pixel of the right partition
+            const cv::Vec3b& right_color = right_partition.at<cv::Vec3b>(0);
+
+            // set the new color
+            col_insert.at<cv::Vec3b>(0) = cv::Vec3b(
+                (left_color[0] + right_color[0]) / 2,
+                (left_color[1] + right_color[1]) / 2,
+                (left_color[2] + right_color[2]) / 2
             );
 
-            /**
-             * check order to merge since you can't have jagged matrix.
-             * duplicated nodes are always inserted on the right of their original counterpart
-             */
-            if (current_coord.col() == 0) { // seam inserts (row, 0)
-                mats.push_back(col_insert);
-                mats.push_back(current_src_row);
-            } else if (current_coord.col() == in_mat.cols - 1) { // seam inserts (row, in_mat.cols - 1)
-                // insert original row then new col
-                mats.push_back(current_src_row);
-                mats.push_back(col_insert);
-            } else { // seam inserts (row, current_coord.col()
-                // get left partition
-                const cv::Mat &left_partition = current_src_row.colRange(0, current_coord.col()).clone();
-                // get right partition
-                const cv::Mat &right_partition = current_src_row.colRange(current_coord.col(), in_mat.cols).clone();
-                // insert left, new col, right
-                mats.push_back(left_partition);
-                mats.push_back(col_insert);
-                mats.push_back(right_partition);
-
-                // color correct since i will have a left and right neighbor
-                // const cv::Vec3b &left = in_mat.at<cv::Vec3b>(current_coord.row(), current_coord.col() - 1);
-                // const cv::Vec3b &right = in_mat.at<cv::Vec3b>(current_coord.row(), current_coord.col());
-                // col_insert.at<cv::Vec3b>(0, 0) = (left + right) / 2;
-            }
+            // assemble the merge array
+            mats.push_back(left_partition);
+            mats.push_back(col_insert);
+            mats.push_back(right_partition);
 
             // merge
             cv::hconcat(mats, res.row(seam[idx].row()));
@@ -213,35 +218,41 @@ namespace seam_carving {
             std::vector<cv::Mat> mats;
 
             // create a 1x1 to insert with the pixel in the input
-            cv::Mat row_insert = cv::Mat(
-                    1, 1, in_mat.type(),
-                    in_mat.at<cv::Vec3b>(current_coord.row(), current_coord.col())
+            cv::Mat row_insert = cv::Mat(1, 1, in_mat.type());
+            cv::Mat top_partition, bottom_partition;
+
+            // Insertion is always done such that an inserted pixel has neighbors and can be color corrected
+            if (current_coord.row() == 0) {
+                // insert the new pixel into row 1
+                top_partition = current_src_col.rowRange(0, 1).clone();
+                bottom_partition = current_src_col.rowRange(1, in_mat.rows).clone();
+            } else if (current_coord.row() == in_mat.rows - 1) {
+                // insert the new pixel into index in_mat.rows - 2
+                top_partition = current_src_col.rowRange(0, in_mat.rows - 1).clone();
+                bottom_partition = current_src_col.rowRange(in_mat.rows - 1, in_mat.rows).clone();
+            } else {
+                // insert the new pixel wherever it should be
+                top_partition = current_src_col.rowRange(0, current_coord.row()).clone();
+                bottom_partition = current_src_col.rowRange(current_coord.row(), in_mat.rows).clone();
+            }
+
+            // grab the color at the last pixel of the left partition
+            const cv::Vec3b& top_color = top_partition.at<cv::Vec3b>(top_partition.rows - 1);
+
+            // grab the color at the first pixel of the right partition
+            const cv::Vec3b& bottom_color = bottom_partition.at<cv::Vec3b>(0);
+
+            // set the new color
+            row_insert.at<cv::Vec3b>(0) = cv::Vec3b(
+                (top_color[0] + bottom_color[0]) / 2,
+                (top_color[1] + bottom_color[1]) / 2,
+                (top_color[2] + bottom_color[2]) / 2
             );
 
-            // check order to merge since you can't have a jagged matrix
-            if (current_coord.row() == 0) { // seam inserts (0, col)
-                // insert new row then original col
-                mats.push_back(row_insert);
-                mats.push_back(current_src_col);
-            } else if (current_coord.row() == in_mat.rows - 1) { // seam inserts (in_mat.rows - 1, col)
-                // insert original col then new row
-                mats.push_back(current_src_col);
-                mats.push_back(row_insert);
-            } else { // seam inserts (current_coord.row, col)
-                // get top partition
-                const cv::Mat &top_partition = current_src_col.rowRange(0, current_coord.row()).clone();
-                // get bottom partition
-                const cv::Mat &bottom_partition = current_src_col.rowRange(current_coord.row(), in_mat.rows).clone();
-                // insert top, new, middle
-                mats.push_back(top_partition);
-                mats.push_back(row_insert);
-                mats.push_back(bottom_partition);
-
-                // color correct since i will have top and bottom neighbors
-                //const cv::Vec3b &top = in_mat.at<cv::Vec3b>(current_coord.row(), current_coord.col());
-                //const cv::Vec3b &bottom = in_mat.at<cv::Vec3b>(current_coord.row() + 1, current_coord.col());
-                //row_insert.at<cv::Vec3b>(0, 0) = (top + bottom) / 2;
-            }
+            // assemble the merge array
+            mats.push_back(top_partition);
+            mats.push_back(row_insert);
+            mats.push_back(bottom_partition);
 
             // merge
             cv::vconcat(mats, res.col(seam[idx].col()));

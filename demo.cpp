@@ -18,8 +18,26 @@
 
 #include <iostream>
 #include <string>
+#include <chrono>
 
 namespace sc = seam_carving;
+
+template <class Duration = std::chrono::milliseconds, class Clock = std::chrono::steady_clock>
+class Timer {
+    using time_pt = typename Clock::time_point;
+
+    time_pt _start = Clock::now();
+    time_pt _end = {};
+
+public:
+    void tick() { _start = Clock::now(); }
+    void tock() { _end = Clock::now(); }
+
+    template <class T = Duration>
+    auto duration() const {
+        return std::chrono::duration_cast<T>(_end - _start).count();
+    }
+};
 
 int main(int argc, char **argv) {
     if (argc != 4) {

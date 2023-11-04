@@ -7,6 +7,7 @@
 #include <iostream>
 
 namespace seam_carving {
+    /** PROTECTED */
     Seam Carver::FindVerticalSeam(cv::InputArray img) {
         // compute the energy map
         cv::Mat energy_map;
@@ -261,6 +262,87 @@ namespace seam_carving {
         res.copyTo(output);
     }
 
+    /** PUBLIC */
+    std::vector<Seam> Carver::FindVerticalSeams(const int &k, cv::InputArray input) {
+        cv::Mat temp = input.getMat();
+        std::vector<Seam> seams;
+
+        int count = k;
+        while (count > 0) {
+            Seam seam = FindVerticalSeam(temp);
+            seams.push_back(seam);
+            RemoveVerticalSeam(seam, temp, temp);
+            count--;
+        }
+
+        return seams;
+    }
+
+    std::vector<Seam> Carver::FindHorizontalSeams(const int &k, cv::InputArray input) {
+        cv::Mat temp = input.getMat();
+        std::vector<Seam> seams;
+
+        int count = k;
+        while (count > 0) {
+            Seam seam = FindHorizontalSeam(temp);
+            seams.push_back(seam);
+            RemoveHorizontalSeam(seam, temp, temp);
+            count--;
+        }
+
+        return seams;
+    }
+
+    void Carver::InsertVerticalSeams(const int& k, cv::InputArray input, cv::OutputArray output) {
+        std::vector<Seam> seams = FindVerticalSeams(k, input);
+        input.copyTo(output);
+
+        for (const Seam& s : seams)
+            InsertVerticalSeam(s, output, output);
+    }
+
+    void Carver::InsertHorizontalSeams(const int& k, cv::InputArray input, cv::OutputArray output) {
+        std::vector<Seam> seams = FindHorizontalSeams(k, input);
+        input.copyTo(output);
+
+        for (const Seam& s : seams)
+            InsertHorizontalSeam(s, output, output);
+    }
+
+    void Carver::InsertSeams(const std::vector<Seam>& seams, cv::InputOutputArray output) {
+        for (const Seam& s : seams) {
+            if (s.dir() == VERT)
+                InsertVerticalSeam(s, output, output);
+            else
+                InsertHorizontalSeam(s, output, output);
+        }
+    }
+
+    void Carver::RemoveVerticalSeams(const int& k, cv::InputArray input, cv::OutputArray output) {
+        std::vector<Seam> seams = FindVerticalSeams(k, input);
+        input.copyTo(output);
+
+        for (const Seam& s : seams)
+            RemoveVerticalSeam(s, output, output);
+    }
+
+    void Carver::RemoveHorizontalSeams(const int& k, cv::InputArray input, cv::OutputArray output) {
+        std::vector<Seam> seams = FindHorizontalSeams(k, input);
+        input.copyTo(output);
+
+        for (const Seam& s : seams)
+            RemoveHorizontalSeam(s, output, output);
+    }
+
+    void Carver::RemoveSeams(const std::vector<Seam>& seams, cv::InputOutputArray output) {
+        for (const Seam& s : seams) {
+            if (s.dir() == VERT)
+                RemoveVerticalSeam(s, output, output);
+            else
+                RemoveHorizontalSeam(s, output, output);
+        }
+    }
+
     void Carver::Carve(const int& rows, const int& cols, cv::InputArray input, cv::OutputArray output) {
         // (0, 0)
         if (rows == 0 && cols == 0) {
@@ -278,55 +360,47 @@ namespace seam_carving {
         int col_diff = cols - res.cols;
 
         /** HANDLE ALL CASES WHERE ONE DIMENSION IS POSITIVE */
-        // (+, +)
+        // (+, +) - alternate seam inserting starting with vertical
         while (row_diff > 0 && col_diff > 0) {
-            const Seam verticalSeam = FindVerticalSeam(res);
-            InsertVerticalSeam(verticalSeam, res, res);
+            InsertVerticalSeams(1, res, res);
             col_diff--; // update the remaining difference
 
-            const Seam horizontalSeam = FindHorizontalSeam(res);
-            InsertHorizontalSeam(horizontalSeam, res, res);
+            InsertHorizontalSeams(1, res, res);
             row_diff--; // update the remaining difference
         }
 
-        // (0/-, +)
-        while (col_diff > 0) {
-            const Seam verticalSeam = FindVerticalSeam(res);
-            InsertVerticalSeam(verticalSeam, res, res);
-            col_diff--;
+        // (0/-, +) - insert any remaining vertical seams necessary
+        if (col_diff > 0) {
+            InsertVerticalSeams(col_diff, res, res);
+            col_diff = 0;
         }
 
-        // (+, 0/-)
-        while (row_diff > 0) {
-            const Seam horizontalSeam = FindHorizontalSeam(res);
-            InsertHorizontalSeam(horizontalSeam, res, res);
-            row_diff--;
+        // (+, 0/-) - insert any remaining horizontal seams necessary
+        if (row_diff > 0) {
+            InsertHorizontalSeams(row_diff, res, res);
+            row_diff = 0;
         }
 
         /** HANDLE ALL CASES WHERE ONE DIMENSION IS NEGATIVE */
-        // (-, -)
+        // (-, -) - alternate seam removal starting with vertical
         while (row_diff < 0 && col_diff < 0) {
-            const Seam verticalSeam = FindVerticalSeam(res);
-            RemoveVerticalSeam(verticalSeam, res, res);
+            RemoveVerticalSeams(1, res, res);
             col_diff++; // update the remaining difference
 
-            const Seam horizontalSeam = FindHorizontalSeam(res);
-            RemoveHorizontalSeam(horizontalSeam, res, res);
+            RemoveHorizontalSeams(1, res, res);
             row_diff++; // update the remaining difference
         }
 
-        // (0/+, -)
-        while (col_diff < 0) {
-            const Seam verticalSeam = FindVerticalSeam(res);
-            RemoveVerticalSeam(verticalSeam, res, res);
-            col_diff++;
+        // (0/+, -) - remove any remaining vertical seams necessary
+        if (col_diff < 0) {
+            RemoveVerticalSeams(col_diff * -1, res, res);
+            col_diff = 0;
         }
 
-        // (-, 0/+)
-        while (row_diff < 0) {
-            const Seam horizontalSeam = FindHorizontalSeam(res);
-            RemoveHorizontalSeam(horizontalSeam, res, res);
-            row_diff++;
+        // (-, 0/+) - remove any remaining horizontal seams necessary
+        if (row_diff < 0) {
+            RemoveHorizontalSeams(row_diff * -1, res, res);
+            row_diff = 0;
         }
 
         res.copyTo(output);

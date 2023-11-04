@@ -9,6 +9,7 @@
  *    {target rows}
  *    {target cols}
 */
+#include "timer.hpp"
 #include <seam_carving/carver.hpp>
 
 #include <opencv2/core.hpp>
@@ -51,7 +52,7 @@ int main(int argc, char **argv) {
     cv::Mat img = cv::imread(input_path);
     std::cout << "Original size: " << img.cols << "x" << img.rows << "\n";
 
-    cv::Mat res;
+    cv::Mat res = img;
     Timer carver_timer;
 
     std::cout << "Starting carving...\n";
@@ -60,30 +61,11 @@ int main(int argc, char **argv) {
     sc::Carver::Carve(target_rows, target_cols, img, res);
     carver_timer.tock();
 
-    std::cout << "Carving took " << carver_timer.duration() << " ms\n";
-
     std::cout << "Carved size: " << res.cols << "x" << res.rows << "\n";
+    std::cout << "Carving took " << carver_timer.duration() << " ms\n";
 
     cv::imshow("Original", img);
     cv::imshow("Carved", res);
     int k = cv::waitKey(0);
     return 0;
 }
-
-//int main() {
-//    const std::string input_path = "samples/dali.jpeg";
-//
-//    cv::Mat img = cv::imread(input_path);
-//    std::cout << "Original size: " << img.cols << "x" << img.rows << "\n";
-//
-//    cv::Mat res;
-//
-//    sc::Carver::InsertVerticalSeam(sc::Carver::FindVerticalSeam(img), img, res);
-//
-//    std::cout << "Carved size: " << res.cols << "x" << res.rows << "\n";
-//
-//    cv::imshow("Original", img);
-//    cv::imshow("Carved", res);
-//    int k = cv::waitKey(0);
-//    return 0;
-//}

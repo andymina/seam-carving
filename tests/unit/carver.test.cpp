@@ -30,33 +30,33 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-TEST_P(CarverTest, FindVerticalSeam) {
+TEST_P(CarverTest, FindVerticalSeams) {
     sct::CarverData carver_data = GetParam();
 
     cv::Mat input = carver_data.original_matrix;
     sc::Seam expected = carver_data.vertical_seam;
 
-    sc::Seam actual = sc::Carver::FindVerticalSeam(input);
+    sc::Seam actual = sc::Carver::FindVerticalSeams(1, input)[0];
 
     EXPECT_EQ(expected, actual)
         << sct::PrintWithLabel(expected, "expected") << "\n"
         << sct::PrintWithLabel(actual, "actual");
 }
 
-TEST_P(CarverTest, FindHorizontalSeam) {
+TEST_P(CarverTest, FindHorizontalSeams) {
     sct::CarverData carver_data = GetParam();
 
     cv::Mat input = carver_data.original_matrix;
     sc::Seam expected = carver_data.horizontal_seam;
 
-    sc::Seam actual = sc::Carver::FindHorizontalSeam(input);
+    sc::Seam actual = sc::Carver::FindHorizontalSeams(1, input)[0];
 
     EXPECT_EQ(expected, actual)
         << sct::PrintWithLabel(expected, "expected") << "\n"
         << sct::PrintWithLabel(actual, "actual");
 }
 
-TEST_P(CarverTest, RemoveVerticalSeam) {
+TEST_P(CarverTest, RemoveVerticalSeams) {
     sct::CarverData carver_data = GetParam();
 
     cv::Mat input = carver_data.original_matrix;
@@ -64,14 +64,14 @@ TEST_P(CarverTest, RemoveVerticalSeam) {
     cv::Mat actual;
 
     sc::Seam seam = carver_data.vertical_seam;
-    sc::Carver::RemoveVerticalSeam(seam, input, actual);
+    sc::Carver::RemoveVerticalSeams(1, input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
         << sct::PrintWithLabel(expected, "expected") << "\n"
         << sct::PrintWithLabel(actual, "actual");
 }
 
-TEST_P(CarverTest, RemoveHorizontalSeam) {
+TEST_P(CarverTest, RemoveHorizontalSeams) {
     sct::CarverData carver_data = GetParam();
 
     cv::Mat input = carver_data.original_matrix;
@@ -79,7 +79,7 @@ TEST_P(CarverTest, RemoveHorizontalSeam) {
     cv::Mat actual;
 
     sc::Seam seam = carver_data.horizontal_seam;
-    sc::Carver::RemoveHorizontalSeam(seam, input, actual);
+    sc::Carver::RemoveHorizontalSeams(1, input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
         << sct::PrintWithLabel(expected, "expected") << "\n"
@@ -94,7 +94,7 @@ TEST_P(CarverTest, InsertVerticalSeam) {
     cv::Mat actual;
 
     sc::Seam seam = carver_data.vertical_seam;
-    sc::Carver::InsertVerticalSeam(seam, input, actual);
+    sc::Carver::InsertVerticalSeams(1, input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
         << sct::PrintWithLabel(expected, "expected") << "\n"
@@ -109,7 +109,7 @@ TEST_P(CarverTest, InsertHorizontalSeam) {
     cv::Mat actual;
 
     sc::Seam seam = carver_data.horizontal_seam;
-    sc::Carver::InsertHorizontalSeam(seam, input, actual);
+    sc::Carver::InsertHorizontalSeams(1, input, actual);
 
     EXPECT_TRUE(sct::equalMatrices(expected, actual))
         << sct::PrintWithLabel(expected, "expected") << "\n"

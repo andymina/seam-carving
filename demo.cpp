@@ -9,7 +9,6 @@
  *    {target rows}
  *    {target cols}
 */
-#include "timer.hpp"
 #include <seam_carving/carver.hpp>
 
 #include <opencv2/core.hpp>

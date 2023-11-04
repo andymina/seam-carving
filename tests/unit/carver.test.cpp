@@ -115,3 +115,41 @@ TEST_P(CarverTest, InsertHorizontalSeam) {
         << sct::PrintWithLabel(expected, "expected") << "\n"
         << sct::PrintWithLabel(actual, "actual");
 }
+
+TEST_P(CarverTest, Carve) {
+    sct::CarverData carver_data = GetParam();
+    cv::Mat input = carver_data.original_matrix;
+    cv::Mat actual;
+
+    /** #CASE: expand one column */
+    cv::Mat expected = carver_data.insert_vertical_matrix;
+    sc::Carver::Carve(input.rows, input.cols + 1, input, actual);
+    EXPECT_TRUE(sct::equalMatrices(expected, actual))
+        << "#CASE: expand one column\n"
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
+
+    /** #CASE: shrink one column */
+    expected = carver_data.remove_vertical_matrix;
+    sc::Carver::Carve(input.rows, input.cols - 1, input, actual);
+    EXPECT_TRUE(sct::equalMatrices(expected, actual))
+        << "#CASE: shrink one column\n"
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
+
+    /** #CASE: expand one row */
+    expected = carver_data.insert_horizontal_matrix;
+    sc::Carver::Carve(input.rows + 1, input.cols, input, actual);
+    EXPECT_TRUE(sct::equalMatrices(expected, actual))
+        << "#CASE: expand one row\n"
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
+
+    /** #CASE: shrink one row */
+    expected = carver_data.remove_horizontal_matrix;
+    sc::Carver::Carve(input.rows - 1, input.cols, input, actual);
+    EXPECT_TRUE(sct::equalMatrices(expected, actual))
+        << "#CASE: shrink one row\n"
+        << sct::PrintWithLabel(expected, "expected") << "\n"
+        << sct::PrintWithLabel(actual, "actual");
+}

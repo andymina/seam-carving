@@ -17,3 +17,12 @@ add_subdirectory(libseam_carving)
 enable_testing()
 include(GoogleTest)
 add_subdirectory(tests)
+
+# demo
+add_executable(demo demo.cpp)
+target_include_directories(demo
+        PRIVATE
+        ${LIBRARY_TEST_DIR}/include)
+target_link_libraries(demo
+        PRIVATE
+        seam_carving ${OPENCV_LIBS})

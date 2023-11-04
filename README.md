@@ -9,21 +9,30 @@ content-aware image resizing](https://doi.org/10.1145/1275808.1276390). Learn mo
 
 ## Getting Started
 
-It is recommended to make a virtual environment as the setup command will install pip packages.
-This project uses [vcpkg](https://github.com/microsoft/vcpkg) as its C++ package manager and
-[CMake](https://cmake.org) as the build-system.
+The seam carving library can be built using CMake. The available targets are:
 
-Run `make setup` from the root directory to set up the project. This will create and populate a `build/` directory and create a new `out/` directory where output files will
-go by default.
+- `seam_carving` - builds the dylib
+- `demo` - runs the demo at `./demo.cpp`
+- `carver_unit/energy_unit` - runs the unit tests at `tests/unit/[carver/energy].test.cpp` respectively
 
-The following `make` commands are currently available:
+### Running the demo
 
-- `make demo`: builds a C++17 executable to demo seam carving. Sample images are provided in the
-`samples/` directory
-- `make py`: exports the existing C++ seam carving code to a Python 3.10 package called `seam_carving`
-- `make clean`: cleans the project and removes any build files
+1. Configure the CMake project. The code sample below uses Ninja as the generator. There are presets in `CMakePresets.json`
+available to use. 
+2. Build the `demo` target.
+3. Run the demo target with a path to an image (sample images are provided in `samples/`), and the target size
+
+```
+# step 1 - from the root folder of the repo
+cmake -B {PATH_TO_BUILD_DIR} -S {PATH_TO_REPO_ROOT} -G Ninja --preset default
+
+# step 2
+cmake --build {PATH_TO_BUILD_DIR} --target demo
+
+# step 3
+./demo {PATH_TO_IMG} {TARGET COLS} {TARGET ROWS}
+```
 
 ## Seam Carving Shell (SCS)
 
-The Seam Carving Shell can be run from the `cli.py` file at the root: `python cli.py`. The cli
-requires at least Python 3.10.
+The Seam Carving Shell (SCS) is undergoing major reconstruction and is not supported in v2.0.0.

@@ -21,7 +21,7 @@ namespace seam_carving {
      * Base class for all carvers
      */
     class Carver {
-    protected:
+    public:
         /**
          * @param img the image to find the optimal seam in
          * @returns the optimal seam to be removed
@@ -42,6 +42,14 @@ namespace seam_carving {
          */
         static void InsertVerticalSeam(const Seam &seam, cv::InputArray input, cv::OutputArray output);
         static void InsertHorizontalSeam(const Seam &seam, cv::InputArray input, cv::OutputArray output);
+
+        /**
+         * @param rows the target number of rows for the new image
+         * @param cols the target number of cols for the new image
+         * @param input the image to be carved
+         * @param output a carved version of input
+         */
+        static void Carve(const int& rows, const int& cols, cv::InputArray input, cv::OutputArray output);
     };
 }
 

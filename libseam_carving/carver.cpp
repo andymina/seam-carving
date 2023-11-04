@@ -249,4 +249,75 @@ namespace seam_carving {
 
         res.copyTo(output);
     }
+
+    void Carver::Carve(const int& rows, const int& cols, cv::InputArray input, cv::OutputArray output) {
+        // (0, 0)
+        if (rows == 0 && cols == 0) {
+            input.copyTo(output);
+            return;
+        }
+
+        // prepare result
+        cv::Mat res;
+        input.copyTo(res);
+
+        // Difference between target size and current size.
+        // Positive to insert seams, negative to remove.
+        int row_diff = rows - res.rows;
+        int col_diff = cols - res.cols;
+
+        /** HANDLE ALL CASES WHERE ONE DIMENSION IS POSITIVE */
+        // (+, +)
+        while (row_diff > 0 && col_diff > 0) {
+            const Seam verticalSeam = FindVerticalSeam(res);
+            InsertVerticalSeam(verticalSeam, res, res);
+            col_diff--; // update the remaining difference
+
+            const Seam horizontalSeam = FindHorizontalSeam(res);
+            InsertHorizontalSeam(horizontalSeam, res, res);
+            row_diff--; // update the remaining difference
+        }
+
+        // (0/-, +)
+        while (col_diff > 0) {
+            const Seam verticalSeam = FindVerticalSeam(res);
+            InsertVerticalSeam(verticalSeam, res, res);
+            col_diff--;
+        }
+
+        // (+, 0/-)
+        while (row_diff > 0) {
+            const Seam horizontalSeam = FindHorizontalSeam(res);
+            InsertHorizontalSeam(horizontalSeam, res, res);
+            row_diff--;
+        }
+
+        /** HANDLE ALL CASES WHERE ONE DIMENSION IS NEGATIVE */
+        // (-, -)
+        while (row_diff < 0 && col_diff < 0) {
+            const Seam verticalSeam = FindVerticalSeam(res);
+            RemoveVerticalSeam(verticalSeam, res, res);
+            col_diff++; // update the remaining difference
+
+            const Seam horizontalSeam = FindHorizontalSeam(res);
+            RemoveHorizontalSeam(horizontalSeam, res, res);
+            row_diff++; // update the remaining difference
+        }
+
+        // (0/+, -)
+        while (col_diff < 0) {
+            const Seam verticalSeam = FindVerticalSeam(res);
+            RemoveVerticalSeam(verticalSeam, res, res);
+            col_diff++;
+        }
+
+        // (-, 0/+)
+        while (row_diff < 0) {
+            const Seam horizontalSeam = FindHorizontalSeam(res);
+            RemoveHorizontalSeam(horizontalSeam, res, res);
+            row_diff++;
+        }
+
+        res.copyTo(output);
+    }
 }
